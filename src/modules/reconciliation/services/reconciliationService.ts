@@ -60,7 +60,9 @@ export async function getReconRecords(params: ReconListParams): Promise<ReconRec
 
 export async function getReconStats(): Promise<ReconStats> {
   const res = await axiosInstance.get<ApiResponse<ReconStats>>('/api/reconciliation/stats');
-  return res.data.data!;
+  const data = res.data.data;
+  if (data === null) throw new Error('Recon stats not available');
+  return data;
 }
 
 export async function getReconExceptions(params: ExceptionListParams): Promise<ReconException[]> {

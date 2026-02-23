@@ -14,7 +14,7 @@ export default [
       sourceType: 'module',
       parser: tsParser,
       parserOptions: {
-        project: true,
+        project: ['./tsconfig.json', './tsconfig.node.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },

@@ -51,7 +51,7 @@ function Lazy({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
 }
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
 
   {

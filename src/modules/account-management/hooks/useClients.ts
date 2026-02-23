@@ -13,7 +13,7 @@ export function useClients(params: ClientListParams) {
 export function useClientDetail(id: string | null) {
   return useQuery({
     queryKey: ['clients', id],
-    queryFn: () => getClientById(id!),
+    queryFn: () => getClientById(id as string),
     enabled: !!id,
     staleTime: 30_000,
   });

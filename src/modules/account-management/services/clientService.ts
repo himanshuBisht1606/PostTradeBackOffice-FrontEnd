@@ -31,5 +31,7 @@ export async function getClients(params: ClientListParams): Promise<ClientSummar
 
 export async function getClientById(id: string): Promise<ClientSummary> {
   const res = await axiosInstance.get<ApiResponse<ClientSummary>>(`/api/clients/${id}`);
-  return res.data.data!;
+  const data = res.data.data;
+  if (data === null) throw new Error(`Client not found: ${id}`);
+  return data;
 }

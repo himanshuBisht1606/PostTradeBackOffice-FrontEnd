@@ -43,5 +43,7 @@ export async function getTrades(params: TradeListParams): Promise<TradeSummary[]
 
 export async function getTradeById(id: string): Promise<TradeSummary> {
   const res = await axiosInstance.get<ApiResponse<TradeSummary>>(`/api/trades/${id}`);
-  return res.data.data!;
+  const data = res.data.data;
+  if (data === null) throw new Error(`Trade not found: ${id}`);
+  return data;
 }

@@ -28,5 +28,7 @@ export async function getBrokers(params: BrokerListParams): Promise<BrokerSummar
 
 export async function getBrokerById(id: string): Promise<BrokerSummary> {
   const res = await axiosInstance.get<ApiResponse<BrokerSummary>>(`/api/brokers/${id}`);
-  return res.data.data!;
+  const data = res.data.data;
+  if (data === null) throw new Error(`Broker not found: ${id}`);
+  return data;
 }

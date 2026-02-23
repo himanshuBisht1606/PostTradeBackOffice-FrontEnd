@@ -16,7 +16,7 @@ interface TradeDrawerProps {
 export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
   const { data: trade, isLoading } = useQuery({
     queryKey: ['trades', tradeId],
-    queryFn: () => getTradeById(tradeId!),
+    queryFn: () => getTradeById(tradeId as string),
     enabled: !!tradeId,
     staleTime: 30_000,
   });
