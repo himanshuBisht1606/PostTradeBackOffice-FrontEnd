@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getLedgerEntries } from '../../services/ledgerService';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
-import { LedgerType, EntryType } from '@types/enums';
+import { LedgerType, EntryType } from '@app-types/enums';
 import type { LedgerEntry } from '../../services/ledgerService';
 
 const { Title } = Typography;
@@ -107,7 +107,7 @@ export function LedgerPage() {
             placeholder="Ledger Type"
             style={{ width: '100%' }}
             allowClear
-            value={ledgerType}
+            value={ledgerType ?? null}
             onChange={(v) => { setLedgerType(v); setPage(1); }}
             options={[
               { label: 'Client Ledger', value: LedgerType.ClientLedger },
@@ -122,7 +122,7 @@ export function LedgerPage() {
             placeholder="Entry Type"
             style={{ width: '100%' }}
             allowClear
-            value={entryType}
+            value={entryType ?? null}
             onChange={(v) => { setEntryType(v); setPage(1); }}
             options={[
               { label: 'Credit', value: EntryType.Credit },

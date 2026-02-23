@@ -4,7 +4,7 @@ import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { MaskedField } from '@shared/components/data-display/MaskedField';
 import { useClientDetail } from '../../hooks/useClients';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Permission } from '@types/roles.types';
+import { Permission } from '@app-types/roles.types';
 
 interface ClientDrawerProps {
   clientId: string | null;

@@ -8,8 +8,8 @@ import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { MaskedField } from '@shared/components/data-display/MaskedField';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Permission } from '@types/roles.types';
-import { ObligationStatus } from '@types/enums';
+import { Permission } from '@app-types/roles.types';
+import { ObligationStatus } from '@app-types/enums';
 import type { SettlementObligation } from '../../services/settlementService';
 
 const { Title } = Typography;
@@ -103,7 +103,7 @@ export function ObligationListPage() {
             placeholder="Filter by status"
             style={{ width: '100%' }}
             allowClear
-            value={status}
+            value={status ?? null}
             onChange={(v) => { setStatus(v); setPage(1); }}
             options={[
               { label: 'Pending', value: ObligationStatus.Pending },

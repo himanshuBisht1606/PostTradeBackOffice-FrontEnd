@@ -6,7 +6,7 @@ import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { formatDateTime, truncateId } from '@utils/formatters';
 import { canApprove } from '@utils/permissions';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { CHECKER_ROLES } from '@types/roles.types';
+import { CHECKER_ROLES } from '@app-types/roles.types';
 import type { ApprovalRecord } from '../../services/approvalService';
 
 interface ApprovalTableProps {

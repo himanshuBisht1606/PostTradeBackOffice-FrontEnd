@@ -5,7 +5,7 @@ import { ClientTable } from './ClientTable';
 import { ClientFilters } from './ClientFilters';
 import { ClientDrawer } from './ClientDrawer';
 import type { ClientSummary } from '../../services/clientService';
-import type { EntityStatus, ClientType } from '@types/enums';
+import type { EntityStatus, ClientType } from '@app-types/enums';
 
 const { Title } = Typography;
 

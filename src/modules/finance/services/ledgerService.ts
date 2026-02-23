@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { LedgerType, EntryType } from '@types/enums';
+import type { LedgerType, EntryType } from '@app-types/enums';
 
 export interface LedgerEntry {
   ledgerId: string;
@@ -23,11 +23,11 @@ export interface LedgerEntry {
 }
 
 export interface LedgerListParams {
-  clientId?: string;
-  fromDate?: string;
-  toDate?: string;
-  ledgerType?: LedgerType;
-  entryType?: EntryType;
+  clientId?: string | undefined;
+  fromDate?: string | undefined;
+  toDate?: string | undefined;
+  ledgerType?: LedgerType | undefined;
+  entryType?: EntryType | undefined;
 }
 
 export async function getLedgerEntries(params: LedgerListParams): Promise<LedgerEntry[]> {

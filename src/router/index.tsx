@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { AppShell } from '@shared/components/layout/AppShell';
 import { ProtectedRoute } from './ProtectedRoute';
 import { LoginPage } from '@modules/auth/components/LoginPage';
-import { Role } from '@types/roles.types';
+import { Role } from '@app-types/roles.types';
 import { lazy, Suspense } from 'react';
 import { PageLoader } from '@shared/components/feedback/PageLoader';
 

@@ -1,6 +1,6 @@
-import { ROLE_PERMISSIONS } from '@types/roles.types';
-import type { PermissionKey } from '@types/roles.types';
-import { Role } from '@types/roles.types';
+import { ROLE_PERMISSIONS } from '@app-types/roles.types';
+import type { PermissionKey } from '@app-types/roles.types';
+import { Role } from '@app-types/roles.types';
 
 /**
  * Check if any of the user's roles includes the given permission.

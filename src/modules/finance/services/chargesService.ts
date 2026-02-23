@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { ChargeType, CalculationType } from '@types/enums';
+import type { ChargeType, CalculationType } from '@app-types/enums';
 
 export interface ChargeConfig {
   chargesConfigId: string;
@@ -18,8 +18,8 @@ export interface ChargeConfig {
 }
 
 export interface ChargesListParams {
-  chargeType?: ChargeType;
-  isActive?: boolean;
+  chargeType?: ChargeType | undefined;
+  isActive?: boolean | undefined;
 }
 
 export async function getChargesConfig(params: ChargesListParams): Promise<ChargeConfig[]> {

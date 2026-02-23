@@ -1,5 +1,5 @@
 import { Tag } from 'antd';
-import type { TradeStatus, SettlementStatus, ObligationStatus, ReconStatus, ExceptionStatus, EntityStatus } from '@types/enums';
+import type { TradeStatus, SettlementStatus, ObligationStatus, ReconStatus, ExceptionStatus, EntityStatus } from '@app-types/enums';
 
 type AnyStatus =
   | TradeStatus

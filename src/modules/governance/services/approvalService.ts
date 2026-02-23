@@ -29,8 +29,8 @@ export interface ApprovalRecord {
 }
 
 export interface ApprovalListParams {
-  status?: 'Pending' | 'Approved' | 'Rejected';
-  entityType?: string;
+  status?: 'Pending' | 'Approved' | 'Rejected' | undefined;
+  entityType?: string | undefined;
 }
 
 export async function getApprovals(params: ApprovalListParams): Promise<ApprovalRecord[]> {

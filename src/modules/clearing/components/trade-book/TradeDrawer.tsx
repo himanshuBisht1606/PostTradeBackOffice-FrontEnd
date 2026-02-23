@@ -6,7 +6,7 @@ import { MaskedField } from '@shared/components/data-display/MaskedField';
 import { formatCurrency, formatDate, formatQuantity } from '@utils/formatters';
 import { getTradeById } from '../../services/tradeService';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Permission } from '@types/roles.types';
+import { Permission } from '@app-types/roles.types';
 
 interface TradeDrawerProps {
   tradeId: string | null;

@@ -27,7 +27,7 @@
       "@modules/*": ["src/modules/*"],
       "@router/*": ["src/router/*"],
       "@store/*": ["src/store/*"],
-      "@types/*": ["src/types/*"],
+      "@app-types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"]
     }
   },

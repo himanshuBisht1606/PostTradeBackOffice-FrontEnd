@@ -14,7 +14,7 @@ import { DataTable } from '@shared/components/data-display/DataTable';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
-import { ReconStatus, ExceptionStatus } from '@types/enums';
+import { ReconStatus, ExceptionStatus } from '@app-types/enums';
 import type { ReconRecord } from '../services/reconciliationService';
 
 const { Title } = Typography;
@@ -146,7 +146,7 @@ export function ReconDashboardPage() {
                 placeholder="Status"
                 style={{ width: '100%' }}
                 allowClear
-                value={reconStatus}
+                value={reconStatus ?? null}
                 onChange={(v) => { setReconStatus(v); setReconPage(1); }}
                 options={[
                   { label: 'Matched', value: ReconStatus.Matched },
@@ -185,7 +185,7 @@ export function ReconDashboardPage() {
                 placeholder="Status"
                 style={{ width: '100%' }}
                 allowClear
-                value={excStatus}
+                value={excStatus ?? null}
                 onChange={(v) => { setExcStatus(v); setExcPage(1); }}
                 options={[
                   { label: 'Open', value: ExceptionStatus.Open },

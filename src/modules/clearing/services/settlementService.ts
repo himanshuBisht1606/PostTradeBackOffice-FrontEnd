@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { SettlementStatus, ObligationStatus } from '@types/enums';
+import type { SettlementStatus, ObligationStatus } from '@app-types/enums';
 
 export interface SettlementBatch {
   batchId: string;
@@ -34,12 +34,12 @@ export interface SettlementObligation {
 }
 
 export interface BatchListParams {
-  status?: SettlementStatus;
+  status?: SettlementStatus | undefined;
 }
 
 export interface ObligationListParams {
-  batchId?: string;
-  status?: ObligationStatus;
+  batchId?: string | undefined;
+  status?: ObligationStatus | undefined;
 }
 
 export async function getSettlementBatches(params: BatchListParams): Promise<SettlementBatch[]> {

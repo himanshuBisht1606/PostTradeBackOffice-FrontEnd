@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { TradeSide, TradeStatus, TradeSource } from '@types/enums';
+import type { TradeSide, TradeStatus, TradeSource } from '@app-types/enums';
 
 export interface TradeSummary {
   tradeId: string;
@@ -30,10 +30,10 @@ export interface TradeSummary {
 }
 
 export interface TradeListParams {
-  fromDate?: string;
-  toDate?: string;
-  clientId?: string;
-  status?: TradeStatus;
+  fromDate?: string | undefined;
+  toDate?: string | undefined;
+  clientId?: string | undefined;
+  status?: TradeStatus | undefined;
 }
 
 export async function getTrades(params: TradeListParams): Promise<TradeSummary[]> {

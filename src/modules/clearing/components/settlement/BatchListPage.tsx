@@ -7,7 +7,7 @@ import {
 } from '../../services/settlementService';
 import { BatchTable } from './BatchTable';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
-import { SettlementStatus } from '@types/enums';
+import { SettlementStatus } from '@app-types/enums';
 
 const { Title } = Typography;
 
@@ -54,7 +54,7 @@ export function BatchListPage() {
             placeholder="Filter by status"
             style={{ width: '100%' }}
             allowClear
-            value={status}
+            value={status ?? null}
             onChange={(v) => { setStatus(v); setPage(1); }}
             options={[
               { label: 'Pending', value: SettlementStatus.Pending },

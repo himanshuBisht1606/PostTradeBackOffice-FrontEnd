@@ -15,7 +15,7 @@ export function DataTable<T extends object>({ emptyText, ...props }: DataTablePr
     <Table<T>
       size="small"
       bordered={false}
-      locale={{ emptyText: <EmptyState description={emptyText} /> }}
+      locale={{ emptyText: <EmptyState description={emptyText ?? 'No data available'} /> }}
       rowClassName={(_, index) => (index % 2 === 0 ? 'table-row-even' : 'table-row-odd')}
       scroll={{ x: 'max-content' }}
       {...props}

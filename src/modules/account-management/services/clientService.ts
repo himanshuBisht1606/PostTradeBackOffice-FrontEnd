@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { ClientType, EntityStatus } from '@types/enums';
+import type { ClientType, EntityStatus } from '@app-types/enums';
 
 export interface ClientSummary {
   clientId: string;
@@ -19,9 +19,9 @@ export interface ClientSummary {
 }
 
 export interface ClientListParams {
-  search?: string;
-  status?: EntityStatus;
-  clientType?: ClientType;
+  search?: string | undefined;
+  status?: EntityStatus | undefined;
+  clientType?: ClientType | undefined;
 }
 
 export async function getClients(params: ClientListParams): Promise<ClientSummary[]> {

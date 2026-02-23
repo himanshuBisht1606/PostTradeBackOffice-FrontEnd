@@ -1,11 +1,11 @@
 import { Row, Col, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useDebounce } from '@shared/hooks/useDebounce';
-import { EntityStatus, ClientType } from '@types/enums';
+import { EntityStatus, ClientType } from '@app-types/enums';
 import { useState, useEffect } from 'react';
 
 interface ClientFiltersProps {
-  onChange: (filters: { search?: string; status?: EntityStatus; type?: ClientType }) => void;
+  onChange: (filters: { search?: string | undefined; status?: EntityStatus | undefined; type?: ClientType | undefined }) => void;
 }
 
 export function ClientFilters({ onChange }: ClientFiltersProps) {
@@ -34,7 +34,7 @@ export function ClientFilters({ onChange }: ClientFiltersProps) {
           placeholder="Status"
           style={{ width: '100%' }}
           allowClear
-          value={status}
+          value={status ?? null}
           onChange={setStatus}
           options={[
             { label: 'Active', value: EntityStatus.Active },
@@ -48,7 +48,7 @@ export function ClientFilters({ onChange }: ClientFiltersProps) {
           placeholder="Client Type"
           style={{ width: '100%' }}
           allowClear
-          value={type}
+          value={type ?? null}
           onChange={setType}
           options={[
             { label: 'Individual', value: ClientType.Individual },

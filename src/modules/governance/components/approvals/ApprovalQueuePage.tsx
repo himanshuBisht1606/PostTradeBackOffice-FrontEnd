@@ -79,7 +79,7 @@ export function ApprovalQueuePage() {
             placeholder="Status"
             style={{ width: '100%' }}
             allowClear
-            value={status}
+            value={status ?? null}
             onChange={(v) => { setStatus(v); setPage(1); }}
             options={[
               { label: 'Pending', value: 'Pending' },

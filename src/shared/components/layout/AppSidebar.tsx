@@ -12,7 +12,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUiStore } from '@store/uiStore';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Role } from '@types/roles.types';
+import { Role } from '@app-types/roles.types';
 
 const { Sider } = Layout;
 

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { tokenStorage } from '@core/auth/tokenStorage';
 import { decodeJwt, extractRoles } from '@core/auth/jwtDecoder';
 import { hasRole as checkHasRole, hasPermission as checkHasPermission } from '@utils/permissions';
-import type { PermissionKey } from '@types/roles.types';
+import type { PermissionKey } from '@app-types/roles.types';
 import type { AuthState } from '../types/auth.types';
 
 interface AuthStore extends AuthState {

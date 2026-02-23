@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getTrades } from '../../services/tradeService';
 import { TradeTable } from './TradeTable';
 import { TradeDrawer } from './TradeDrawer';
-import { TradeStatus, TradeSide } from '@types/enums';
+import { TradeStatus, TradeSide } from '@app-types/enums';
 import type { TradeSummary } from '../../services/tradeService';
 import type { Dayjs } from 'dayjs';
 
@@ -85,7 +85,7 @@ export function TradeListPage() {
             placeholder="Side"
             style={{ width: '100%' }}
             allowClear
-            value={side}
+            value={side ?? null}
             onChange={(v) => { setSide(v); setPage(1); }}
             options={[
               { label: 'Buy', value: TradeSide.Buy },
@@ -98,7 +98,7 @@ export function TradeListPage() {
             placeholder="Status"
             style={{ width: '100%' }}
             allowClear
-            value={status}
+            value={status ?? null}
             onChange={(v) => { setStatus(v); setPage(1); }}
             options={[
               { label: 'Booked', value: TradeStatus.Booked },

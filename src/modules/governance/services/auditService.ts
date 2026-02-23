@@ -29,11 +29,11 @@ export interface AuditLogEntry {
 }
 
 export interface AuditListParams {
-  userId?: string;
-  entityName?: string;
-  action?: string;
-  fromDate?: string;
-  toDate?: string;
+  userId?: string | undefined;
+  entityName?: string | undefined;
+  action?: string | undefined;
+  fromDate?: string | undefined;
+  toDate?: string | undefined;
 }
 
 export async function getAuditLog(params: AuditListParams): Promise<AuditLogEntry[]> {

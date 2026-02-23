@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { ReconType, ReconStatus, ExceptionType, ExceptionStatus } from '@types/enums';
+import type { ReconType, ReconStatus, ExceptionType, ExceptionStatus } from '@app-types/enums';
 
 export interface ReconRecord {
   reconId: string;
@@ -41,14 +41,14 @@ export interface ReconStats {
 }
 
 export interface ReconListParams {
-  reconDate?: string;
-  reconType?: ReconType;
-  status?: ReconStatus;
+  reconDate?: string | undefined;
+  reconType?: ReconType | undefined;
+  status?: ReconStatus | undefined;
 }
 
 export interface ExceptionListParams {
-  reconId?: string;
-  status?: ExceptionStatus;
+  reconId?: string | undefined;
+  status?: ExceptionStatus | undefined;
 }
 
 export async function getReconRecords(params: ReconListParams): Promise<ReconRecord[]> {

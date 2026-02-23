@@ -6,8 +6,8 @@ import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
 import { canApprove } from '@utils/permissions';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { SettlementStatus } from '@types/enums';
-import { Permission } from '@types/roles.types';
+import { SettlementStatus } from '@app-types/enums';
+import { Permission } from '@app-types/roles.types';
 import type { SettlementBatch } from '../../services/settlementService';
 
 interface BatchTableProps {
