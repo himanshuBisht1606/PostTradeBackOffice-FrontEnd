@@ -13,9 +13,9 @@ export function ClientListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [filters, setFilters] = useState<{
-    search?: string;
-    status?: EntityStatus;
-    type?: ClientType;
+    search?: string | undefined;
+    status?: EntityStatus | undefined;
+    type?: ClientType | undefined;
   }>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -41,7 +41,7 @@ export function ClientListPage() {
   );
 
   const handleFiltersChange = useCallback(
-    (f: { search?: string; status?: EntityStatus; type?: ClientType }) => {
+    (f: { search?: string | undefined; status?: EntityStatus | undefined; type?: ClientType | undefined }) => {
       setFilters(f);
       setPage(1);
     },
