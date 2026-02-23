@@ -16,7 +16,9 @@ const { Title } = Typography;
 export function ApprovalQueuePage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const [status, setStatus] = useState<'Pending' | 'Approved' | 'Rejected' | undefined>('Pending');
+  const [status, setStatus] = useState<'Pending' | 'Approved' | 'Rejected' | undefined>(
+    'Pending',
+  );
   const [entityType, setEntityType] = useState<string | undefined>(undefined);
   const [selected, setSelected] = useState<ApprovalRecord | null>(null);
   const queryClient = useQueryClient();
@@ -80,7 +82,10 @@ export function ApprovalQueuePage() {
             style={{ width: '100%' }}
             allowClear
             value={status ?? null}
-            onChange={(v) => { setStatus(v); setPage(1); }}
+            onChange={(v) => {
+              setStatus(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Pending', value: 'Pending' },
               { label: 'Approved', value: 'Approved' },
@@ -92,7 +97,10 @@ export function ApprovalQueuePage() {
           <Input
             placeholder="Entity Type (e.g. SettlementBatch)"
             value={entityType ?? ''}
-            onChange={(e) => { setEntityType(e.target.value || undefined); setPage(1); }}
+            onChange={(e) => {
+              setEntityType(e.target.value || undefined);
+              setPage(1);
+            }}
             allowClear
           />
         </Col>

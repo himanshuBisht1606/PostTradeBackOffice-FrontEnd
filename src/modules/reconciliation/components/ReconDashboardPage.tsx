@@ -84,7 +84,9 @@ export function ReconDashboardPage() {
       title: 'Settlement No',
       dataIndex: 'settlementNo',
       width: 160,
-      render: (v: string) => <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{v}</span>,
+      render: (v: string) => (
+        <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{v}</span>
+      ),
     },
     { title: 'Type', dataIndex: 'reconType', width: 130 },
     {
@@ -147,7 +149,10 @@ export function ReconDashboardPage() {
                 style={{ width: '100%' }}
                 allowClear
                 value={reconStatus ?? null}
-                onChange={(v) => { setReconStatus(v); setReconPage(1); }}
+                onChange={(v) => {
+                  setReconStatus(v);
+                  setReconPage(1);
+                }}
                 options={[
                   { label: 'Matched', value: ReconStatus.Matched },
                   { label: 'Variated', value: ReconStatus.Variated },
@@ -186,7 +191,10 @@ export function ReconDashboardPage() {
                 style={{ width: '100%' }}
                 allowClear
                 value={excStatus ?? null}
-                onChange={(v) => { setExcStatus(v); setExcPage(1); }}
+                onChange={(v) => {
+                  setExcStatus(v);
+                  setExcPage(1);
+                }}
                 options={[
                   { label: 'Open', value: ExceptionStatus.Open },
                   { label: 'In Progress', value: ExceptionStatus.InProgress },

@@ -43,20 +43,36 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
           <Descriptions.Item label="Status" span={1}>
             <StatusBadge status={trade.status} />
           </Descriptions.Item>
-          <Descriptions.Item label="Quantity" span={1}>{formatQuantity(trade.quantity)}</Descriptions.Item>
-          <Descriptions.Item label="Price" span={1}>{formatCurrency(trade.price)}</Descriptions.Item>
-          <Descriptions.Item label="Trade Value" span={1}>{formatCurrency(trade.tradeValue)}</Descriptions.Item>
-          <Descriptions.Item label="Net Amount" span={1}>{formatCurrency(trade.netAmount)}</Descriptions.Item>
-          <Descriptions.Item label="Total Charges" span={1}>{formatCurrency(trade.totalCharges)}</Descriptions.Item>
-          <Descriptions.Item label="Realized PnL" span={1}>
-            {canViewSensitive
-              ? <span style={{ color: '#1d3557', fontWeight: 600 }}>Calculated at Position level</span>
-              : <MaskedField />}
+          <Descriptions.Item label="Quantity" span={1}>
+            {formatQuantity(trade.quantity)}
           </Descriptions.Item>
-          <Descriptions.Item label="Brokerage" span={1}>{formatCurrency(trade.brokerage)}</Descriptions.Item>
+          <Descriptions.Item label="Price" span={1}>{formatCurrency(trade.price)}</Descriptions.Item>
+          <Descriptions.Item label="Trade Value" span={1}>
+            {formatCurrency(trade.tradeValue)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Net Amount" span={1}>
+            {formatCurrency(trade.netAmount)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Total Charges" span={1}>
+            {formatCurrency(trade.totalCharges)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Realized PnL" span={1}>
+            {canViewSensitive ? (
+              <span style={{ color: '#1d3557', fontWeight: 600 }}>
+                Calculated at Position level
+              </span>
+            ) : (
+              <MaskedField />
+            )}
+          </Descriptions.Item>
+          <Descriptions.Item label="Brokerage" span={1}>
+            {formatCurrency(trade.brokerage)}
+          </Descriptions.Item>
           <Descriptions.Item label="STT" span={1}>{formatCurrency(trade.stt)}</Descriptions.Item>
           <Descriptions.Item label="GST" span={1}>{formatCurrency(trade.gst)}</Descriptions.Item>
-          <Descriptions.Item label="Stamp Duty" span={1}>{formatCurrency(trade.stampDuty)}</Descriptions.Item>
+          <Descriptions.Item label="Stamp Duty" span={1}>
+            {formatCurrency(trade.stampDuty)}
+          </Descriptions.Item>
           <Descriptions.Item label="Trade Date" span={1}>{formatDate(trade.tradeDate)}</Descriptions.Item>
           <Descriptions.Item label="Settlement No" span={1}>{trade.settlementNo}</Descriptions.Item>
           <Descriptions.Item label="Source" span={1}>{trade.source}</Descriptions.Item>

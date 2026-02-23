@@ -33,10 +33,8 @@ export function AppSidebar() {
   const { sidebarCollapsed } = useUiStore();
   const { roles } = useAuthStore();
 
-  const isAuditorOnly =
-    roles.includes(Role.Auditor) && roles.length === 1;
-  const isPartnerOnly =
-    roles.includes(Role.Partner) && roles.length === 1;
+  const isAuditorOnly = roles.includes(Role.Auditor) && roles.length === 1;
+  const isPartnerOnly = roles.includes(Role.Partner) && roles.length === 1;
 
   const items: MenuItem[] = [
     makeItem('Dashboard', '/dashboard', <DashboardOutlined />),
@@ -108,7 +106,9 @@ export function AppSidebar() {
         }}
       >
         {!sidebarCollapsed && (
-          <span style={{ fontWeight: 700, fontSize: 13, color: '#1d3557', letterSpacing: 0.5 }}>
+          <span
+            style={{ fontWeight: 700, fontSize: 13, color: '#1d3557', letterSpacing: 0.5 }}
+          >
             PT CLEARING
           </span>
         )}

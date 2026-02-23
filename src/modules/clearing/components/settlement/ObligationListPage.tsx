@@ -104,7 +104,10 @@ export function ObligationListPage() {
             style={{ width: '100%' }}
             allowClear
             value={status ?? null}
-            onChange={(v) => { setStatus(v); setPage(1); }}
+            onChange={(v) => {
+              setStatus(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Pending', value: ObligationStatus.Pending },
               { label: 'Partially Settled', value: ObligationStatus.PartiallySettled },

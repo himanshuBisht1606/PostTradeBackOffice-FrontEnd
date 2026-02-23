@@ -22,7 +22,11 @@ export function ChargesConfigPage() {
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['charges-config', { chargeType, isActive }],
-    queryFn: () => getChargesConfig({ chargeType, isActive: isActive === undefined ? undefined : isActive === 'true' }),
+    queryFn: () =>
+      getChargesConfig({
+        chargeType,
+        isActive: isActive === undefined ? undefined : isActive === 'true',
+      }),
     staleTime: 30_000,
   });
 
@@ -55,8 +59,7 @@ export function ChargesConfigPage() {
       dataIndex: 'rate',
       width: 110,
       align: 'right',
-      render: (v: number) =>
-        canViewSensitive ? formatPercent(v, 4) : <MaskedField />,
+      render: (v: number) => (canViewSensitive ? formatPercent(v, 4) : <MaskedField />),
     },
     {
       title: 'Active',
@@ -101,7 +104,10 @@ export function ChargesConfigPage() {
             style={{ width: '100%' }}
             allowClear
             value={chargeType ?? null}
-            onChange={(v) => { setChargeType(v); setPage(1); }}
+            onChange={(v) => {
+              setChargeType(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Brokerage', value: ChargeType.Brokerage },
               { label: 'STT', value: ChargeType.STT },
@@ -118,7 +124,10 @@ export function ChargesConfigPage() {
             style={{ width: '100%' }}
             allowClear
             value={isActive ?? null}
-            onChange={(v) => { setIsActive(v); setPage(1); }}
+            onChange={(v) => {
+              setIsActive(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Active', value: 'true' },
               { label: 'Inactive', value: 'false' },

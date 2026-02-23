@@ -41,7 +41,11 @@ export function ClientListPage() {
   );
 
   const handleFiltersChange = useCallback(
-    (f: { search?: string | undefined; status?: EntityStatus | undefined; type?: ClientType | undefined }) => {
+    (f: {
+      search?: string | undefined;
+      status?: EntityStatus | undefined;
+      type?: ClientType | undefined;
+    }) => {
       setFilters(f);
       setPage(1);
     },

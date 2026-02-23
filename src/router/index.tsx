@@ -11,41 +11,71 @@ const DashboardPage = lazy(() =>
   import('@modules/dashboard/components/DashboardPage').then((m) => ({ default: m.DashboardPage })),
 );
 const ClientListPage = lazy(() =>
-  import('@modules/account-management/components/clients/ClientListPage').then((m) => ({ default: m.ClientListPage })),
+  import('@modules/account-management/components/clients/ClientListPage').then((m) => ({
+    default: m.ClientListPage,
+  })),
 );
 const BrokerListPage = lazy(() =>
-  import('@modules/account-management/components/brokers/BrokerListPage').then((m) => ({ default: m.BrokerListPage })),
+  import('@modules/account-management/components/brokers/BrokerListPage').then((m) => ({
+    default: m.BrokerListPage,
+  })),
 );
 const TradeListPage = lazy(() =>
-  import('@modules/clearing/components/trade-book/TradeListPage').then((m) => ({ default: m.TradeListPage })),
+  import('@modules/clearing/components/trade-book/TradeListPage').then((m) => ({
+    default: m.TradeListPage,
+  })),
 );
 const BatchListPage = lazy(() =>
-  import('@modules/clearing/components/settlement/BatchListPage').then((m) => ({ default: m.BatchListPage })),
+  import('@modules/clearing/components/settlement/BatchListPage').then((m) => ({
+    default: m.BatchListPage,
+  })),
 );
 const ObligationListPage = lazy(() =>
-  import('@modules/clearing/components/settlement/ObligationListPage').then((m) => ({ default: m.ObligationListPage })),
+  import('@modules/clearing/components/settlement/ObligationListPage').then((m) => ({
+    default: m.ObligationListPage,
+  })),
 );
 const LedgerPage = lazy(() =>
-  import('@modules/finance/components/ledger/LedgerPage').then((m) => ({ default: m.LedgerPage })),
+  import('@modules/finance/components/ledger/LedgerPage').then((m) => ({
+    default: m.LedgerPage,
+  })),
 );
 const ChargesConfigPage = lazy(() =>
-  import('@modules/finance/components/charges/ChargesConfigPage').then((m) => ({ default: m.ChargesConfigPage })),
+  import('@modules/finance/components/charges/ChargesConfigPage').then((m) => ({
+    default: m.ChargesConfigPage,
+  })),
 );
 const ReconDashboardPage = lazy(() =>
-  import('@modules/reconciliation/components/ReconDashboardPage').then((m) => ({ default: m.ReconDashboardPage })),
+  import('@modules/reconciliation/components/ReconDashboardPage').then((m) => ({
+    default: m.ReconDashboardPage,
+  })),
 );
 const ApprovalQueuePage = lazy(() =>
-  import('@modules/governance/components/approvals/ApprovalQueuePage').then((m) => ({ default: m.ApprovalQueuePage })),
+  import('@modules/governance/components/approvals/ApprovalQueuePage').then((m) => ({
+    default: m.ApprovalQueuePage,
+  })),
 );
 const AuditLogPage = lazy(() =>
-  import('@modules/governance/components/audit/AuditLogPage').then((m) => ({ default: m.AuditLogPage })),
+  import('@modules/governance/components/audit/AuditLogPage').then((m) => ({
+    default: m.AuditLogPage,
+  })),
 );
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
 const OPS_ROLES = [Role.OperationsController, Role.TenantOwner, Role.PlatformSuperAdmin];
-const CHECKER_ROLES = [Role.FinanceController, Role.RiskController, Role.TenantOwner, Role.PlatformSuperAdmin];
-const AUDIT_ROLES = [Role.Auditor, Role.ComplianceOfficer, Role.PlatformSuperAdmin, Role.TenantOwner];
+const CHECKER_ROLES = [
+  Role.FinanceController,
+  Role.RiskController,
+  Role.TenantOwner,
+  Role.PlatformSuperAdmin,
+];
+const AUDIT_ROLES = [
+  Role.Auditor,
+  Role.ComplianceOfficer,
+  Role.PlatformSuperAdmin,
+  Role.TenantOwner,
+];
 
 function Lazy({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<PageLoader />}>{children}</Suspense>;

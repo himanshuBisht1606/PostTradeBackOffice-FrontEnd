@@ -55,7 +55,10 @@ export function BatchListPage() {
             style={{ width: '100%' }}
             allowClear
             value={status ?? null}
-            onChange={(v) => { setStatus(v); setPage(1); }}
+            onChange={(v) => {
+              setStatus(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Pending', value: SettlementStatus.Pending },
               { label: 'Processing', value: SettlementStatus.Processing },

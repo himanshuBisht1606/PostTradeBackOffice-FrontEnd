@@ -24,10 +24,14 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
     >
       {client && (
         <Descriptions bordered column={2} size="small">
-          <Descriptions.Item label="Client Code" span={1}>{client.clientCode}</Descriptions.Item>
+          <Descriptions.Item label="Client Code" span={1}>
+            {client.clientCode}
+          </Descriptions.Item>
           <Descriptions.Item label="Name" span={1}>{client.clientName}</Descriptions.Item>
           <Descriptions.Item label="Type" span={1}>{client.clientType}</Descriptions.Item>
-          <Descriptions.Item label="Status" span={1}><StatusBadge status={client.status} /></Descriptions.Item>
+          <Descriptions.Item label="Status" span={1}>
+            <StatusBadge status={client.status} />
+          </Descriptions.Item>
           <Descriptions.Item label="Email" span={2}>{client.email}</Descriptions.Item>
           <Descriptions.Item label="Phone" span={1}>{client.phone}</Descriptions.Item>
           <Descriptions.Item label="PAN" span={1}>

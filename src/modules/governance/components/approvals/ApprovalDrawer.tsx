@@ -26,7 +26,9 @@ export function ApprovalDrawer({ record, onClose }: ApprovalDrawerProps) {
       {record && (
         <>
           <Descriptions bordered column={2} size="small" style={{ marginBottom: 16 }}>
-            <Descriptions.Item label="Entity Type" span={1}>{record.entityType}</Descriptions.Item>
+            <Descriptions.Item label="Entity Type" span={1}>
+              {record.entityType}
+            </Descriptions.Item>
             <Descriptions.Item label="Entity ID" span={1}>
               <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{record.entityId}</span>
             </Descriptions.Item>
@@ -36,18 +38,30 @@ export function ApprovalDrawer({ record, onClose }: ApprovalDrawerProps) {
             <Descriptions.Item label="Status" span={1}>
               <StatusBadge status={record.status} />
             </Descriptions.Item>
-            <Descriptions.Item label="Requested By" span={1}>{record.requestedBy}</Descriptions.Item>
-            <Descriptions.Item label="Requested At" span={1}>{formatDateTime(record.requestedAt)}</Descriptions.Item>
+            <Descriptions.Item label="Requested By" span={1}>
+              {record.requestedBy}
+            </Descriptions.Item>
+            <Descriptions.Item label="Requested At" span={1}>
+              {formatDateTime(record.requestedAt)}
+            </Descriptions.Item>
             {record.approvedBy && (
               <>
-                <Descriptions.Item label="Approved By" span={1}>{record.approvedBy}</Descriptions.Item>
-                <Descriptions.Item label="Approved At" span={1}>{record.approvedAt ? formatDateTime(record.approvedAt) : '—'}</Descriptions.Item>
+                <Descriptions.Item label="Approved By" span={1}>
+                  {record.approvedBy}
+                </Descriptions.Item>
+                <Descriptions.Item label="Approved At" span={1}>
+                  {record.approvedAt ? formatDateTime(record.approvedAt) : '—'}
+                </Descriptions.Item>
               </>
             )}
             {record.rejectedBy && (
               <>
-                <Descriptions.Item label="Rejected By" span={1}>{record.rejectedBy}</Descriptions.Item>
-                <Descriptions.Item label="Rejected At" span={1}>{record.rejectedAt ? formatDateTime(record.rejectedAt) : '—'}</Descriptions.Item>
+                <Descriptions.Item label="Rejected By" span={1}>
+                  {record.rejectedBy}
+                </Descriptions.Item>
+                <Descriptions.Item label="Rejected At" span={1}>
+                  {record.rejectedAt ? formatDateTime(record.rejectedAt) : '—'}
+                </Descriptions.Item>
               </>
             )}
           </Descriptions>

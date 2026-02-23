@@ -43,7 +43,9 @@ axiosInstance.interceptors.response.use(
     if (status === 401) {
       tokenStorage.clear();
       onUnauthorized?.();
-      return Promise.reject(new AppError(401, 'Session expired. Please log in again.', [], correlationId));
+      return Promise.reject(
+        new AppError(401, 'Session expired. Please log in again.', [], correlationId),
+      );
     }
 
     if (status === 403) {
@@ -67,7 +69,9 @@ axiosInstance.interceptors.response.use(
         description: 'An unexpected server error occurred. Please try again later.',
         duration: 5,
       });
-      return Promise.reject(new AppError(status, data?.message ?? 'Internal server error', [], correlationId));
+      return Promise.reject(
+        new AppError(status, data?.message ?? 'Internal server error', [], correlationId),
+      );
     }
 
     // Network / timeout

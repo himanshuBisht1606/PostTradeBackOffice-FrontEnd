@@ -11,7 +11,9 @@ interface MaskedFieldProps {
  * Used for: Margin %, Net Obligation, Charges %, Realized PnL.
  * Displayed when the current user lacks 'view:sensitive-fields' permission.
  */
-export function MaskedField({ reason = 'Insufficient permissions to view this field' }: MaskedFieldProps) {
+export function MaskedField({
+  reason = 'Insufficient permissions to view this field',
+}: MaskedFieldProps) {
   return (
     <Tooltip title={reason}>
       <span

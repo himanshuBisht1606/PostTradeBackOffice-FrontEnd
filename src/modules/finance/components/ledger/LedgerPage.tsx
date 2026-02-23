@@ -64,14 +64,16 @@ export function LedgerPage() {
       dataIndex: 'debit',
       width: 130,
       align: 'right',
-      render: (v: number) => (v > 0 ? <span style={{ color: '#f5222d' }}>{formatCurrency(v)}</span> : '—'),
+      render: (v: number) =>
+        v > 0 ? <span style={{ color: '#f5222d' }}>{formatCurrency(v)}</span> : '—',
     },
     {
       title: 'Credit',
       dataIndex: 'credit',
       width: 130,
       align: 'right',
-      render: (v: number) => (v > 0 ? <span style={{ color: '#52c41a' }}>{formatCurrency(v)}</span> : '—'),
+      render: (v: number) =>
+        v > 0 ? <span style={{ color: '#52c41a' }}>{formatCurrency(v)}</span> : '—',
     },
     {
       title: 'Balance',
@@ -108,7 +110,10 @@ export function LedgerPage() {
             style={{ width: '100%' }}
             allowClear
             value={ledgerType ?? null}
-            onChange={(v) => { setLedgerType(v); setPage(1); }}
+            onChange={(v) => {
+              setLedgerType(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Client Ledger', value: LedgerType.ClientLedger },
               { label: 'Broker Ledger', value: LedgerType.BrokerLedger },
@@ -123,7 +128,10 @@ export function LedgerPage() {
             style={{ width: '100%' }}
             allowClear
             value={entryType ?? null}
-            onChange={(v) => { setEntryType(v); setPage(1); }}
+            onChange={(v) => {
+              setEntryType(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Credit', value: EntryType.Credit },
               { label: 'Debit', value: EntryType.Debit },

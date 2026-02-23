@@ -15,7 +15,7 @@ export function ProtectedRoute({ requiredRoles }: ProtectedRouteProps) {
   if (!isAuthenticated || !tokenStorage.isTokenValid()) {
     return (
       <Navigate
-        to={`/login?reason=unauthorized`}
+        to="/login?reason=unauthorized"
         state={{ from: location }}
         replace
       />

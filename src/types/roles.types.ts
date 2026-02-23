@@ -71,4 +71,8 @@ export const MAKER_ROLES: Role[] = [Role.OperationsController, Role.TenantOwner]
  * Roles allowed to be Checkers (approve financial actions).
  * A checker must never approve their own action.
  */
-export const CHECKER_ROLES: Role[] = [Role.FinanceController, Role.RiskController, Role.TenantOwner];
+export const CHECKER_ROLES: Role[] = [
+  Role.FinanceController,
+  Role.RiskController,
+  Role.TenantOwner,
+];

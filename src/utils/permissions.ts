@@ -38,7 +38,12 @@ export function canApprove(
   recordCreatedBy: string,
 ): boolean {
   const isChecker = userRoles.some((r) =>
-    [Role.FinanceController, Role.RiskController, Role.TenantOwner, Role.PlatformSuperAdmin].includes(r as Role),
+    [
+      Role.FinanceController,
+      Role.RiskController,
+      Role.TenantOwner,
+      Role.PlatformSuperAdmin,
+    ].includes(r as Role),
   );
   const isNotOwnRecord = currentUserId !== recordCreatedBy;
   return isChecker && isNotOwnRecord;

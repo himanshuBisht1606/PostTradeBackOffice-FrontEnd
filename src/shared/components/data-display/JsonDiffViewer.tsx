@@ -59,8 +59,12 @@ export function JsonDiffViewer({ before, after }: JsonDiffViewerProps) {
             return (
               <tr key={key} style={{ background: changed ? '#fffbe6' : undefined }}>
                 <td style={{ ...cellStyle, fontWeight: changed ? 600 : 400 }}>{key}</td>
-                <td style={{ ...cellStyle, color: changed ? '#cf1322' : undefined }}>{beforeVal}</td>
-                <td style={{ ...cellStyle, color: changed ? '#389e0d' : undefined }}>{afterVal}</td>
+                <td style={{ ...cellStyle, color: changed ? '#cf1322' : undefined }}>
+                  {beforeVal}
+                </td>
+                <td style={{ ...cellStyle, color: changed ? '#389e0d' : undefined }}>
+                  {afterVal}
+                </td>
               </tr>
             );
           })}

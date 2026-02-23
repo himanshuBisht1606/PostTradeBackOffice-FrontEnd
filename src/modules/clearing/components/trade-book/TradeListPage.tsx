@@ -76,7 +76,10 @@ export function TradeListPage() {
             prefix={<SearchOutlined />}
             placeholder="Search by trade no or settlement no"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             allowClear
           />
         </Col>
@@ -86,7 +89,10 @@ export function TradeListPage() {
             style={{ width: '100%' }}
             allowClear
             value={side ?? null}
-            onChange={(v) => { setSide(v); setPage(1); }}
+            onChange={(v) => {
+              setSide(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Buy', value: TradeSide.Buy },
               { label: 'Sell', value: TradeSide.Sell },
@@ -99,7 +105,10 @@ export function TradeListPage() {
             style={{ width: '100%' }}
             allowClear
             value={status ?? null}
-            onChange={(v) => { setStatus(v); setPage(1); }}
+            onChange={(v) => {
+              setStatus(v);
+              setPage(1);
+            }}
             options={[
               { label: 'Booked', value: TradeStatus.Booked },
               { label: 'Confirmed', value: TradeStatus.Confirmed },

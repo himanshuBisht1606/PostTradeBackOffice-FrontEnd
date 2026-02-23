@@ -34,7 +34,10 @@ export function LedgerImbalanceIndicator({
           ) : (
             <WarningOutlined style={{ fontSize: 32, color: '#fa541c' }} />
           )}
-          <Tag color={isBalanced ? 'success' : 'error'} style={{ fontSize: 14, padding: '4px 12px' }}>
+          <Tag
+            color={isBalanced ? 'success' : 'error'}
+            style={{ fontSize: 14, padding: '4px 12px' }}
+          >
             {isBalanced ? 'BALANCED' : 'IMBALANCED'}
           </Tag>
         </div>

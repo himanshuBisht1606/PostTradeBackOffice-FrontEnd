@@ -55,7 +55,10 @@ export function BrokerListPage() {
             prefix={<SearchOutlined />}
             placeholder="Search by name or code"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             allowClear
           />
         </Col>

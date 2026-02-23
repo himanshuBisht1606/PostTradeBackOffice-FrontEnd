@@ -27,7 +27,10 @@ export function ExposureChart({ data, loading = false }: ExposureChartProps) {
           startAngle={90}
           endAngle={-270}
         >
-          <RadialBar dataKey="utilization" label={{ position: 'insideStart', fill: '#fff', fontSize: 10 }} />
+          <RadialBar
+            dataKey="utilization"
+            label={{ position: 'insideStart', fill: '#fff', fontSize: 10 }}
+          />
           <Legend iconSize={10} iconType="circle" />
           <Tooltip formatter={(v: number) => [`${v}%`, 'Utilization']} />
         </RadialBarChart>

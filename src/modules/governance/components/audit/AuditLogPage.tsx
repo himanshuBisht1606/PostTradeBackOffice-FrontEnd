@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Input, DatePicker, Alert } from 'antd';
+import { Typography, Row, Col, Input, DatePicker, Alert, Descriptions, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getAuditLog } from '../../services/auditService';
@@ -7,7 +7,6 @@ import { AuditTable } from './AuditTable';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
 import { JsonDiffViewer } from '@shared/components/data-display/JsonDiffViewer';
 import { formatDateTime } from '@utils/formatters';
-import { Descriptions, Tag } from 'antd';
 import type { AuditLogEntry } from '../../services/auditService';
 import type { Dayjs } from 'dayjs';
 
@@ -23,13 +22,22 @@ export function AuditLogPage() {
   const [selected, setSelected] = useState<AuditLogEntry | null>(null);
 
   const { data: allData, isLoading, isError } = useQuery({
-    queryKey: ['audit-log', { action: action || undefined, entityName: entityName || undefined, fromDate: dateRange?.[0], toDate: dateRange?.[1] }],
-    queryFn: () => getAuditLog({
-      action: action || undefined,
-      entityName: entityName || undefined,
-      fromDate: dateRange?.[0],
-      toDate: dateRange?.[1],
-    }),
+    queryKey: [
+      'audit-log',
+      {
+        action: action || undefined,
+        entityName: entityName || undefined,
+        fromDate: dateRange?.[0],
+        toDate: dateRange?.[1],
+      },
+    ],
+    queryFn: () =>
+      getAuditLog({
+        action: action || undefined,
+        entityName: entityName || undefined,
+        fromDate: dateRange?.[0],
+        toDate: dateRange?.[1],
+      }),
     staleTime: 30_000,
     retry: false, // Endpoint may not exist yet
   });
@@ -75,7 +83,10 @@ export function AuditLogPage() {
             prefix={<SearchOutlined />}
             placeholder="Action (e.g. Create, Update)"
             value={action}
-            onChange={(e) => { setAction(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setAction(e.target.value);
+              setPage(1);
+            }}
             allowClear
           />
         </Col>
@@ -83,7 +94,10 @@ export function AuditLogPage() {
           <Input
             placeholder="Entity Name (e.g. Trade)"
             value={entityName}
-            onChange={(e) => { setEntityName(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setEntityName(e.target.value);
+              setPage(1);
+            }}
             allowClear
           />
         </Col>
@@ -110,7 +124,9 @@ export function AuditLogPage() {
         {selected && (
           <>
             <Descriptions bordered column={2} size="small" style={{ marginBottom: 16 }}>
-              <Descriptions.Item label="Timestamp" span={2}>{formatDateTime(selected.timestamp)}</Descriptions.Item>
+              <Descriptions.Item label="Timestamp" span={2}>
+                {formatDateTime(selected.timestamp)}
+              </Descriptions.Item>
               <Descriptions.Item label="User" span={1}>{selected.username}</Descriptions.Item>
               <Descriptions.Item label="Action" span={1}>
                 <Tag color="blue">{selected.action}</Tag>
@@ -121,8 +137,12 @@ export function AuditLogPage() {
               <Descriptions.Item label="Entity ID" span={1}>
                 <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{selected.entityId}</span>
               </Descriptions.Item>
-              <Descriptions.Item label="IP Address" span={1}>{selected.ipAddress}</Descriptions.Item>
-              <Descriptions.Item label="Audit Type" span={1}>{selected.auditType}</Descriptions.Item>
+              <Descriptions.Item label="IP Address" span={1}>
+                {selected.ipAddress}
+              </Descriptions.Item>
+              <Descriptions.Item label="Audit Type" span={1}>
+                {selected.auditType}
+              </Descriptions.Item>
             </Descriptions>
 
             {(selected.oldValues ?? selected.newValues) && (

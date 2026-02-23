@@ -5,7 +5,11 @@ import { EntityStatus, ClientType } from '@app-types/enums';
 import { useState, useEffect } from 'react';
 
 interface ClientFiltersProps {
-  onChange: (filters: { search?: string | undefined; status?: EntityStatus | undefined; type?: ClientType | undefined }) => void;
+  onChange: (filters: {
+    search?: string | undefined;
+    status?: EntityStatus | undefined;
+    type?: ClientType | undefined;
+  }) => void;
 }
 
 export function ClientFilters({ onChange }: ClientFiltersProps) {
