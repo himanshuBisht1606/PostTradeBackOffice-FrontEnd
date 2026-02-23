@@ -46,7 +46,9 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
           <Descriptions.Item label="Quantity" span={1}>
             {formatQuantity(trade.quantity)}
           </Descriptions.Item>
-          <Descriptions.Item label="Price" span={1}>{formatCurrency(trade.price)}</Descriptions.Item>
+          <Descriptions.Item label="Price" span={1}>
+            {formatCurrency(trade.price)}
+          </Descriptions.Item>
           <Descriptions.Item label="Trade Value" span={1}>
             {formatCurrency(trade.tradeValue)}
           </Descriptions.Item>
@@ -73,7 +75,9 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
           <Descriptions.Item label="Stamp Duty" span={1}>
             {formatCurrency(trade.stampDuty)}
           </Descriptions.Item>
-          <Descriptions.Item label="Trade Date" span={1}>{formatDate(trade.tradeDate)}</Descriptions.Item>
+          <Descriptions.Item label="Trade Date" span={1}>
+            {formatDate(trade.tradeDate)}
+          </Descriptions.Item>
           <Descriptions.Item label="Settlement No" span={1}>{trade.settlementNo}</Descriptions.Item>
           <Descriptions.Item label="Source" span={1}>{trade.source}</Descriptions.Item>
           {trade.rejectionReason && (

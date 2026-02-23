@@ -40,7 +40,9 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
           <Descriptions.Item label="Bank Account" span={1}>
             {canViewSensitive ? (client.bankAccountNo ?? '—') : <MaskedField />}
           </Descriptions.Item>
-          <Descriptions.Item label="Bank Name" span={1}>{client.bankName ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="Bank Name" span={1}>
+            {client.bankName ?? '—'}
+          </Descriptions.Item>
           <Descriptions.Item label="Address" span={2}>{client.address ?? '—'}</Descriptions.Item>
         </Descriptions>
       )}
