@@ -1,0 +1,47 @@
+import axiosInstance from '@core/api/axiosInstance';
+import type { ApiResponse } from '@core/types/api.types';
+import type { TradeSide, TradeStatus, TradeSource } from '@types/enums';
+
+export interface TradeSummary {
+  tradeId: string;
+  tenantId: string;
+  brokerId: string;
+  clientId: string;
+  instrumentId: string;
+  tradeNo: string;
+  exchangeTradeNo: string | null;
+  side: TradeSide;
+  quantity: number;
+  price: number;
+  tradeValue: number;
+  tradeDate: string;
+  tradeTime: string;
+  settlementNo: string;
+  status: TradeStatus;
+  rejectionReason: string | null;
+  source: TradeSource;
+  brokerage: number;
+  stt: number;
+  exchangeTxnCharge: number;
+  gst: number;
+  stampDuty: number;
+  totalCharges: number;
+  netAmount: number;
+}
+
+export interface TradeListParams {
+  fromDate?: string;
+  toDate?: string;
+  clientId?: string;
+  status?: TradeStatus;
+}
+
+export async function getTrades(params: TradeListParams): Promise<TradeSummary[]> {
+  const res = await axiosInstance.get<ApiResponse<TradeSummary[]>>('/api/trades', { params });
+  return res.data.data ?? [];
+}
+
+export async function getTradeById(id: string): Promise<TradeSummary> {
+  const res = await axiosInstance.get<ApiResponse<TradeSummary>>(`/api/trades/${id}`);
+  return res.data.data!;
+}
