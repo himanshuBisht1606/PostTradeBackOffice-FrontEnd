@@ -14,7 +14,7 @@ ENV VITE_ENV=$VITE_ENV
 ENV VITE_APP_NAME=$VITE_APP_NAME
 
 # Install dependencies first (cache layer — only invalidated if package files change)
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install --ignore-scripts
 
 # Copy source
