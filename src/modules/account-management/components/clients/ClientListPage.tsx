@@ -30,8 +30,7 @@ export function ClientListPage() {
     const q = filters.search?.toLowerCase();
     if (!q) return allData;
     return allData.filter(
-      (c) =>
-        c.clientName.toLowerCase().includes(q) || c.clientCode.toLowerCase().includes(q),
+      (c) => c.clientName.toLowerCase().includes(q) || c.clientCode.toLowerCase().includes(q),
     );
   }, [allData, filters.search]);
 

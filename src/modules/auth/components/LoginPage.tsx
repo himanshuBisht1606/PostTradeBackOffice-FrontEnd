@@ -26,9 +26,7 @@ export function LoginPage() {
         padding: 24,
       }}
     >
-      <Card
-        style={{ width: '100%', maxWidth: 420, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-      >
+      <Card style={{ width: '100%', maxWidth: 420, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Title level={3} style={{ color: '#1d3557', margin: 0 }}>
             {config.appName}
@@ -39,12 +37,7 @@ export function LoginPage() {
         </div>
 
         {sessionMessage && (
-          <Alert
-            type="warning"
-            message={sessionMessage}
-            showIcon
-            style={{ marginBottom: 24 }}
-          />
+          <Alert type="warning" message={sessionMessage} showIcon style={{ marginBottom: 24 }} />
         )}
 
         <LoginForm />

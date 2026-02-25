@@ -27,13 +27,21 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
           <Descriptions.Item label="Client Code" span={1}>
             {client.clientCode}
           </Descriptions.Item>
-          <Descriptions.Item label="Name" span={1}>{client.clientName}</Descriptions.Item>
-          <Descriptions.Item label="Type" span={1}>{client.clientType}</Descriptions.Item>
+          <Descriptions.Item label="Name" span={1}>
+            {client.clientName}
+          </Descriptions.Item>
+          <Descriptions.Item label="Type" span={1}>
+            {client.clientType}
+          </Descriptions.Item>
           <Descriptions.Item label="Status" span={1}>
             <StatusBadge status={client.status} />
           </Descriptions.Item>
-          <Descriptions.Item label="Email" span={2}>{client.email}</Descriptions.Item>
-          <Descriptions.Item label="Phone" span={1}>{client.phone}</Descriptions.Item>
+          <Descriptions.Item label="Email" span={2}>
+            {client.email}
+          </Descriptions.Item>
+          <Descriptions.Item label="Phone" span={1}>
+            {client.phone}
+          </Descriptions.Item>
           <Descriptions.Item label="PAN" span={1}>
             {canViewSensitive ? (client.pan ?? '—') : <MaskedField />}
           </Descriptions.Item>
@@ -43,7 +51,9 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
           <Descriptions.Item label="Bank Name" span={1}>
             {client.bankName ?? '—'}
           </Descriptions.Item>
-          <Descriptions.Item label="Address" span={2}>{client.address ?? '—'}</Descriptions.Item>
+          <Descriptions.Item label="Address" span={2}>
+            {client.address ?? '—'}
+          </Descriptions.Item>
         </Descriptions>
       )}
     </SlideDrawer>

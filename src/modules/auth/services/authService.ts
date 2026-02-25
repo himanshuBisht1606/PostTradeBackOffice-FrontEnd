@@ -7,10 +7,7 @@ import type { LoginRequest, LoginResponse } from '../types/auth.types';
  * The only public endpoint — does not require Authorization header.
  */
 export async function login(request: LoginRequest): Promise<LoginResponse> {
-  const response = await axiosInstance.post<ApiResponse<LoginResponse>>(
-    '/api/auth/login',
-    request,
-  );
+  const response = await axiosInstance.post<ApiResponse<LoginResponse>>('/api/auth/login', request);
 
   const body = response.data;
   if (!body.success || !body.data) {

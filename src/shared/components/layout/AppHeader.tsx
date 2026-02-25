@@ -102,10 +102,7 @@ export function AppHeader({ pendingApprovalCount = 0 }: AppHeaderProps) {
           trigger={['click']}
           placement="bottomRight"
         >
-          <Avatar
-            icon={<UserOutlined />}
-            style={{ cursor: 'pointer', background: '#1d3557' }}
-          />
+          <Avatar icon={<UserOutlined />} style={{ cursor: 'pointer', background: '#1d3557' }} />
         </Dropdown>
       </Space>
     </Header>

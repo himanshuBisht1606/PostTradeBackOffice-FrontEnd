@@ -57,11 +57,7 @@ export function AuditTable({
       key: 'hasDiff',
       width: 80,
       render: (_, record) =>
-        record.oldValues || record.newValues ? (
-          <Tag color="orange">Yes</Tag>
-        ) : (
-          <Tag>No</Tag>
-        ),
+        record.oldValues || record.newValues ? <Tag color="orange">Yes</Tag> : <Tag>No</Tag>,
     },
     {
       title: 'Audit Type',

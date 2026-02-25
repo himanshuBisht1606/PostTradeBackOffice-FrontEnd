@@ -38,12 +38,8 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     axiosInstance.get<ApiResponse<{ totalCount: number }>>(
       '/api/settlement/batches?status=Pending',
     ),
-    axiosInstance.get<ApiResponse<{ totalCount: number }>>(
-      '/api/reconciliation?status=Variated',
-    ),
-    axiosInstance.get<ApiResponse<{ totalCount: number }>>(
-      '/api/settlement/batches?status=Failed',
-    ),
+    axiosInstance.get<ApiResponse<{ totalCount: number }>>('/api/reconciliation?status=Variated'),
+    axiosInstance.get<ApiResponse<{ totalCount: number }>>('/api/settlement/batches?status=Failed'),
   ]);
 
   const pendingApprovals =

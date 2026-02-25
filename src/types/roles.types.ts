@@ -53,10 +53,7 @@ export const ROLE_PERMISSIONS: Record<Role, PermissionKey[]> = {
     Permission.APPROVE_LEDGER_REVERSAL,
     Permission.MODIFY_CHARGES,
   ],
-  [Role.RiskController]: [
-    Permission.VIEW_SENSITIVE_FIELDS,
-    Permission.INCREASE_EXPOSURE_LIMIT,
-  ],
+  [Role.RiskController]: [Permission.VIEW_SENSITIVE_FIELDS, Permission.INCREASE_EXPOSURE_LIMIT],
   [Role.ComplianceOfficer]: [Permission.VIEW_AUDIT_LOG],
   [Role.Partner]: [],
   [Role.Auditor]: [Permission.VIEW_AUDIT_LOG],

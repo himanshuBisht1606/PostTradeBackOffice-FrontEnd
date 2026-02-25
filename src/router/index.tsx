@@ -95,7 +95,16 @@ const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <ProtectedRoute requiredRoles={ALL_ROLES} />,
-            children: [{ index: true, element: <Lazy><DashboardPage /></Lazy> }],
+            children: [
+              {
+                index: true,
+                element: (
+                  <Lazy>
+                    <DashboardPage />
+                  </Lazy>
+                ),
+              },
+            ],
           },
           {
             path: 'account-management',
@@ -103,12 +112,30 @@ const router = createBrowserRouter([
               {
                 path: 'clients',
                 element: <ProtectedRoute requiredRoles={ALL_ROLES} />,
-                children: [{ index: true, element: <Lazy><ClientListPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ClientListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
               {
                 path: 'brokers',
                 element: <ProtectedRoute requiredRoles={[...OPS_ROLES, Role.TenantOwner]} />,
-                children: [{ index: true, element: <Lazy><BrokerListPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BrokerListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },
@@ -118,17 +145,44 @@ const router = createBrowserRouter([
               {
                 path: 'trades',
                 element: <ProtectedRoute requiredRoles={ALL_ROLES} />,
-                children: [{ index: true, element: <Lazy><TradeListPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <TradeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
               {
                 path: 'settlement/batches',
                 element: <ProtectedRoute requiredRoles={[...OPS_ROLES, ...FINANCE_ROLES]} />,
-                children: [{ index: true, element: <Lazy><BatchListPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BatchListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
               {
                 path: 'settlement/obligations',
                 element: <ProtectedRoute requiredRoles={[...OPS_ROLES, ...FINANCE_ROLES]} />,
-                children: [{ index: true, element: <Lazy><ObligationListPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ObligationListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },
@@ -138,19 +192,46 @@ const router = createBrowserRouter([
               {
                 path: 'ledger',
                 element: <ProtectedRoute requiredRoles={[...FINANCE_ROLES, Role.Auditor]} />,
-                children: [{ index: true, element: <Lazy><LedgerPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <LedgerPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
               {
                 path: 'charges',
                 element: <ProtectedRoute requiredRoles={FINANCE_ROLES} />,
-                children: [{ index: true, element: <Lazy><ChargesConfigPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ChargesConfigPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },
           {
             path: 'reconciliation',
             element: <ProtectedRoute requiredRoles={[...OPS_ROLES, Role.RiskController]} />,
-            children: [{ index: true, element: <Lazy><ReconDashboardPage /></Lazy> }],
+            children: [
+              {
+                index: true,
+                element: (
+                  <Lazy>
+                    <ReconDashboardPage />
+                  </Lazy>
+                ),
+              },
+            ],
           },
           {
             path: 'governance',
@@ -158,12 +239,30 @@ const router = createBrowserRouter([
               {
                 path: 'approvals',
                 element: <ProtectedRoute requiredRoles={CHECKER_ROLES} />,
-                children: [{ index: true, element: <Lazy><ApprovalQueuePage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ApprovalQueuePage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
               {
                 path: 'audit',
                 element: <ProtectedRoute requiredRoles={AUDIT_ROLES} />,
-                children: [{ index: true, element: <Lazy><AuditLogPage /></Lazy> }],
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <AuditLogPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },

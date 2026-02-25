@@ -1,11 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Typography, Row, Col, Select, Input, Alert } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  getApprovals,
-  approveRecord,
-  rejectRecord,
-} from '../../services/approvalService';
+import { getApprovals, approveRecord, rejectRecord } from '../../services/approvalService';
 import { ApprovalTable } from './ApprovalTable';
 import { ApprovalDrawer } from './ApprovalDrawer';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
@@ -16,14 +12,16 @@ const { Title } = Typography;
 export function ApprovalQueuePage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const [status, setStatus] = useState<'Pending' | 'Approved' | 'Rejected' | undefined>(
-    'Pending',
-  );
+  const [status, setStatus] = useState<'Pending' | 'Approved' | 'Rejected' | undefined>('Pending');
   const [entityType, setEntityType] = useState<string | undefined>(undefined);
   const [selected, setSelected] = useState<ApprovalRecord | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: allData, isLoading, isError } = useQuery({
+  const {
+    data: allData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['approvals', { status, entityType }],
     queryFn: () => getApprovals({ status, entityType }),
     staleTime: 0,

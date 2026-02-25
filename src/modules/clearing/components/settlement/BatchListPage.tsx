@@ -1,10 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Typography, Row, Col, Select } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  getSettlementBatches,
-  processSettlementBatch,
-} from '../../services/settlementService';
+import { getSettlementBatches, processSettlementBatch } from '../../services/settlementService';
 import { BatchTable } from './BatchTable';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
 import { SettlementStatus } from '@app-types/enums';

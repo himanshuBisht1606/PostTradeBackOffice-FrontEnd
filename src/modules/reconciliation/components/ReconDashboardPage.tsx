@@ -84,9 +84,7 @@ export function ReconDashboardPage() {
       title: 'Settlement No',
       dataIndex: 'settlementNo',
       width: 160,
-      render: (v: string) => (
-        <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{v}</span>
-      ),
+      render: (v: string) => <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{v}</span>,
     },
     { title: 'Type', dataIndex: 'reconType', width: 130 },
     {

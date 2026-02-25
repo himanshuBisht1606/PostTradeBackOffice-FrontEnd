@@ -55,9 +55,7 @@ export function LedgerPage() {
       title: 'Entry',
       dataIndex: 'entryType',
       width: 90,
-      render: (v: string) => (
-        <Tag color={v === EntryType.Credit ? 'green' : 'red'}>{v}</Tag>
-      ),
+      render: (v: string) => <Tag color={v === EntryType.Credit ? 'green' : 'red'}>{v}</Tag>,
     },
     {
       title: 'Debit',

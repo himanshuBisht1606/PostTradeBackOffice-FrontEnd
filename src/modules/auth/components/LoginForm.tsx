@@ -25,21 +25,10 @@ export function LoginForm() {
   };
 
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      autoComplete="off"
-      size="large"
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit} autoComplete="off" size="large">
       {mutation.isError && (
         <Form.Item>
-          <Alert
-            type="error"
-            message={getErrorMessage(mutation.error)}
-            showIcon
-            closable
-          />
+          <Alert type="error" message={getErrorMessage(mutation.error)} showIcon closable />
         </Form.Item>
       )}
 
@@ -48,11 +37,7 @@ export function LoginForm() {
         label="Tenant Code"
         rules={[{ required: true, message: 'Please enter your tenant code' }]}
       >
-        <Input
-          prefix={<BankOutlined />}
-          placeholder="e.g. BROKER01"
-          autoComplete="organization"
-        />
+        <Input prefix={<BankOutlined />} placeholder="e.g. BROKER01" autoComplete="organization" />
       </Form.Item>
 
       <Form.Item
@@ -60,11 +45,7 @@ export function LoginForm() {
         label="Username"
         rules={[{ required: true, message: 'Please enter your username' }]}
       >
-        <Input
-          prefix={<UserOutlined />}
-          placeholder="Username"
-          autoComplete="username"
-        />
+        <Input prefix={<UserOutlined />} placeholder="Username" autoComplete="username" />
       </Form.Item>
 
       <Form.Item

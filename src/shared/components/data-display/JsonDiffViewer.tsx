@@ -17,10 +17,7 @@ function renderValue(value: unknown): string {
  */
 export function JsonDiffViewer({ before, after }: JsonDiffViewerProps) {
   const allKeys = useMemo(() => {
-    const keys = new Set<string>([
-      ...Object.keys(before ?? {}),
-      ...Object.keys(after ?? {}),
-    ]);
+    const keys = new Set<string>([...Object.keys(before ?? {}), ...Object.keys(after ?? {})]);
     return Array.from(keys).sort();
   }, [before, after]);
 
@@ -62,9 +59,7 @@ export function JsonDiffViewer({ before, after }: JsonDiffViewerProps) {
                 <td style={{ ...cellStyle, color: changed ? '#cf1322' : undefined }}>
                   {beforeVal}
                 </td>
-                <td style={{ ...cellStyle, color: changed ? '#389e0d' : undefined }}>
-                  {afterVal}
-                </td>
+                <td style={{ ...cellStyle, color: changed ? '#389e0d' : undefined }}>{afterVal}</td>
               </tr>
             );
           })}

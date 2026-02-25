@@ -70,16 +70,24 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
           <Descriptions.Item label="Brokerage" span={1}>
             {formatCurrency(trade.brokerage)}
           </Descriptions.Item>
-          <Descriptions.Item label="STT" span={1}>{formatCurrency(trade.stt)}</Descriptions.Item>
-          <Descriptions.Item label="GST" span={1}>{formatCurrency(trade.gst)}</Descriptions.Item>
+          <Descriptions.Item label="STT" span={1}>
+            {formatCurrency(trade.stt)}
+          </Descriptions.Item>
+          <Descriptions.Item label="GST" span={1}>
+            {formatCurrency(trade.gst)}
+          </Descriptions.Item>
           <Descriptions.Item label="Stamp Duty" span={1}>
             {formatCurrency(trade.stampDuty)}
           </Descriptions.Item>
           <Descriptions.Item label="Trade Date" span={1}>
             {formatDate(trade.tradeDate)}
           </Descriptions.Item>
-          <Descriptions.Item label="Settlement No" span={1}>{trade.settlementNo}</Descriptions.Item>
-          <Descriptions.Item label="Source" span={1}>{trade.source}</Descriptions.Item>
+          <Descriptions.Item label="Settlement No" span={1}>
+            {trade.settlementNo}
+          </Descriptions.Item>
+          <Descriptions.Item label="Source" span={1}>
+            {trade.source}
+          </Descriptions.Item>
           {trade.rejectionReason && (
             <Descriptions.Item label="Rejection Reason" span={2}>
               {trade.rejectionReason}

@@ -58,18 +58,14 @@ export function AppSidebar() {
             makeItem('Obligations', '/clearing/settlement/obligations'),
           ]),
 
-          makeItem('Finance', 'finance', <BankOutlined />, [
-            makeItem('Ledger', '/finance/ledger'),
-          ]),
+          makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
         ]
       : []),
 
     makeItem('Governance', 'governance', <SafetyOutlined />, [
-      ...(!isAuditorOnly && !isPartnerOnly
-        ? [makeItem('Approvals', '/governance/approvals')]
-        : []),
+      ...(!isAuditorOnly && !isPartnerOnly ? [makeItem('Approvals', '/governance/approvals')] : []),
       makeItem('Audit Log', '/governance/audit'),
     ]),
   ];
@@ -106,9 +102,7 @@ export function AppSidebar() {
         }}
       >
         {!sidebarCollapsed && (
-          <span
-            style={{ fontWeight: 700, fontSize: 13, color: '#1d3557', letterSpacing: 0.5 }}
-          >
+          <span style={{ fontWeight: 700, fontSize: 13, color: '#1d3557', letterSpacing: 0.5 }}>
             PT CLEARING
           </span>
         )}

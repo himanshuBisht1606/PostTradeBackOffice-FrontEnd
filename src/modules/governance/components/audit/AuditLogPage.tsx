@@ -21,7 +21,11 @@ export function AuditLogPage() {
   const [dateRange, setDateRange] = useState<[string, string] | undefined>(undefined);
   const [selected, setSelected] = useState<AuditLogEntry | null>(null);
 
-  const { data: allData, isLoading, isError } = useQuery({
+  const {
+    data: allData,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: [
       'audit-log',
       {
@@ -116,18 +120,16 @@ export function AuditLogPage() {
         onRowClick={setSelected}
       />
 
-      <SlideDrawer
-        title="Audit Entry Detail"
-        open={!!selected}
-        onClose={() => setSelected(null)}
-      >
+      <SlideDrawer title="Audit Entry Detail" open={!!selected} onClose={() => setSelected(null)}>
         {selected && (
           <>
             <Descriptions bordered column={2} size="small" style={{ marginBottom: 16 }}>
               <Descriptions.Item label="Timestamp" span={2}>
                 {formatDateTime(selected.timestamp)}
               </Descriptions.Item>
-              <Descriptions.Item label="User" span={1}>{selected.username}</Descriptions.Item>
+              <Descriptions.Item label="User" span={1}>
+                {selected.username}
+              </Descriptions.Item>
               <Descriptions.Item label="Action" span={1}>
                 <Tag color="blue">{selected.action}</Tag>
               </Descriptions.Item>
@@ -146,10 +148,7 @@ export function AuditLogPage() {
             </Descriptions>
 
             {(selected.oldValues ?? selected.newValues) && (
-              <JsonDiffViewer
-                before={selected.oldValues ?? {}}
-                after={selected.newValues ?? {}}
-              />
+              <JsonDiffViewer before={selected.oldValues ?? {}} after={selected.newValues ?? {}} />
             )}
           </>
         )}

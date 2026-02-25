@@ -43,9 +43,7 @@ export function decodeJwt(token: string): JwtClaims | null {
  */
 export function extractRoles(claims: JwtClaims): string[] {
   // .NET may serialize ClaimTypes.Role as either 'role' or the full Microsoft URI
-  const raw =
-    claims.role ??
-    claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+  const raw = claims.role ?? claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
   if (Array.isArray(raw)) return raw;
   if (typeof raw === 'string') return [raw];
   return [];

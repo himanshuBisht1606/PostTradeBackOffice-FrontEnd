@@ -84,8 +84,7 @@ export function ApprovalTable({
       fixed: 'right',
       render: (_, record) => {
         if (record.status !== 'Pending') return null;
-        const allowed =
-          canDoApproval && canApprove(roles, userId ?? '', record.requestedByUserId);
+        const allowed = canDoApproval && canApprove(roles, userId ?? '', record.requestedByUserId);
         if (!allowed) return <span style={{ color: '#8c8c8c', fontSize: 12 }}>—</span>;
 
         return (

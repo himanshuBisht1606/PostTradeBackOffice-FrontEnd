@@ -65,9 +65,7 @@ export function ChargesConfigPage() {
       title: 'Active',
       dataIndex: 'isActive',
       width: 80,
-      render: (v: boolean) => (
-        <Tag color={v ? 'green' : 'default'}>{v ? 'Yes' : 'No'}</Tag>
-      ),
+      render: (v: boolean) => <Tag color={v ? 'green' : 'default'}>{v ? 'Yes' : 'No'}</Tag>,
     },
     {
       title: 'Effective From',

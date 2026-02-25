@@ -13,13 +13,7 @@ export function ProtectedRoute({ requiredRoles }: ProtectedRouteProps) {
 
   // Check token validity (handles page refresh scenario)
   if (!isAuthenticated || !tokenStorage.isTokenValid()) {
-    return (
-      <Navigate
-        to="/login?reason=unauthorized"
-        state={{ from: location }}
-        replace
-      />
-    );
+    return <Navigate to="/login?reason=unauthorized" state={{ from: location }} replace />;
   }
 
   // Role guard — if no requiredRoles specified, any authenticated user passes

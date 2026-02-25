@@ -24,8 +24,7 @@ export function BrokerListPage() {
     const q = search.toLowerCase();
     if (!q) return allData;
     return allData.filter(
-      (b) =>
-        b.brokerName.toLowerCase().includes(q) || b.brokerCode.toLowerCase().includes(q),
+      (b) => b.brokerName.toLowerCase().includes(q) || b.brokerCode.toLowerCase().includes(q),
     );
   }, [allData, search]);
 
