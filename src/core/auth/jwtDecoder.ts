@@ -10,7 +10,8 @@ export interface JwtClaims {
   Username: string;
   sub: string;
   jti: string;
-  role: string | string[];
+  role?: string | string[];
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'?: string | string[];
   exp: number;
   iss: string;
   aud: string;
@@ -41,7 +42,11 @@ export function decodeJwt(token: string): JwtClaims | null {
  * The backend may send a single string or an array.
  */
 export function extractRoles(claims: JwtClaims): string[] {
-  if (Array.isArray(claims.role)) return claims.role;
-  if (typeof claims.role === 'string') return [claims.role];
+  // .NET may serialize ClaimTypes.Role as either 'role' or the full Microsoft URI
+  const raw =
+    claims.role ??
+    claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+  if (Array.isArray(raw)) return raw;
+  if (typeof raw === 'string') return [raw];
   return [];
 }
