@@ -1,0 +1,9 @@
+# Infrastructure / config — not source code
+.github/
+doc/
+README.md
+docker-compose.frontend.dev.yml
+docker-compose.frontend.prod.yml
+dist/
+node_modules/
+coverage/
