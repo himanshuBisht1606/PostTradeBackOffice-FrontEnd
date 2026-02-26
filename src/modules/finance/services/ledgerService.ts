@@ -36,3 +36,24 @@ export async function getLedgerEntries(params: LedgerListParams): Promise<Ledger
   });
   return res.data.data ?? [];
 }
+
+export interface PostLedgerEntryPayload {
+  clientId: string;
+  brokerId: string;
+  ledgerType: LedgerType;
+  entryType: EntryType;
+  debit: number;
+  credit: number;
+  postingDate: string;
+  valueDate: string;
+  referenceType: string;
+  referenceId: string;
+  narration?: string | undefined;
+}
+
+export async function postLedgerEntry(payload: PostLedgerEntryPayload): Promise<LedgerEntry> {
+  const res = await axiosInstance.post<ApiResponse<LedgerEntry>>('/api/ledger/entries', payload);
+  const data = res.data.data;
+  if (data === null) throw new Error('Failed to post ledger entry');
+  return data;
+}

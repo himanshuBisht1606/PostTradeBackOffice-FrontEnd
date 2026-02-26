@@ -1,17 +1,27 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Input, Row, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Typography, Input, Row, Col, Button } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getBrokers } from '../../services/brokerService';
 import { BrokerTable } from './BrokerTable';
+import { BrokerFormModal } from './BrokerFormModal';
 import type { BrokerSummary } from '../../services/brokerService';
+import { useAuthStore } from '@modules/auth/store/authStore';
+import { Role } from '@app-types/roles.types';
 
 const { Title } = Typography;
+
+const CAN_CREATE_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner, Role.OperationsController];
 
 export function BrokerListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<BrokerSummary | undefined>(undefined);
+
+  const { hasRole } = useAuthStore();
+  const canCreate = hasRole(CAN_CREATE_ROLES);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['brokers'],
@@ -38,15 +48,44 @@ export function BrokerListPage() {
     setPageSize(ps);
   }, []);
 
-  const handleRowClick = useCallback((_broker: BrokerSummary) => {
-    // Future: open broker drawer
+  const handleRowClick = useCallback(
+    (broker: BrokerSummary) => {
+      if (canCreate) {
+        setEditTarget(broker);
+        setModalOpen(true);
+      }
+    },
+    [canCreate],
+  );
+
+  const handleModalClose = useCallback(() => {
+    setModalOpen(false);
+    setEditTarget(undefined);
   }, []);
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Brokers
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            Brokers
+          </Title>
+        </Col>
+        {canCreate && (
+          <Col>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setEditTarget(undefined);
+                setModalOpen(true);
+              }}
+            >
+              Add Broker
+            </Button>
+          </Col>
+        )}
+      </Row>
 
       <Row gutter={12} style={{ marginBottom: 16 }}>
         <Col span={10}>
@@ -71,6 +110,12 @@ export function BrokerListPage() {
         pageSize={pageSize}
         onPageChange={handlePageChange}
         onRowClick={handleRowClick}
+      />
+
+      <BrokerFormModal
+        open={modalOpen}
+        onClose={handleModalClose}
+        initialData={editTarget}
       />
     </div>
   );

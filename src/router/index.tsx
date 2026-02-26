@@ -60,6 +60,26 @@ const AuditLogPage = lazy(() =>
     default: m.AuditLogPage,
   })),
 );
+const ExchangeListPage = lazy(() =>
+  import('@modules/master-setup/components/exchanges/ExchangeListPage').then((m) => ({
+    default: m.ExchangeListPage,
+  })),
+);
+const InstrumentListPage = lazy(() =>
+  import('@modules/master-setup/components/instruments/InstrumentListPage').then((m) => ({
+    default: m.InstrumentListPage,
+  })),
+);
+const CorporateActionsListPage = lazy(() =>
+  import('@modules/corporate-actions/components/CorporateActionsListPage').then((m) => ({
+    default: m.CorporateActionsListPage,
+  })),
+);
+const EodPanel = lazy(() =>
+  import('@modules/eod/components/EodPanel').then((m) => ({
+    default: m.EodPanel,
+  })),
+);
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
@@ -76,6 +96,9 @@ const AUDIT_ROLES = [
   Role.PlatformSuperAdmin,
   Role.TenantOwner,
 ];
+const MASTER_SETUP_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner];
+const CORP_ACTION_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
+const EOD_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner];
 
 function Lazy({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
@@ -228,6 +251,67 @@ const router = createBrowserRouter([
                 element: (
                   <Lazy>
                     <ReconDashboardPage />
+                  </Lazy>
+                ),
+              },
+            ],
+          },
+          {
+            path: 'master-setup',
+            children: [
+              {
+                path: 'exchanges',
+                element: <ProtectedRoute requiredRoles={MASTER_SETUP_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ExchangeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'instruments',
+                element: <ProtectedRoute requiredRoles={MASTER_SETUP_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <InstrumentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            path: 'corporate-actions',
+            element: <ProtectedRoute requiredRoles={CORP_ACTION_ROLES} />,
+            children: [
+              {
+                index: true,
+                element: (
+                  <Lazy>
+                    <CorporateActionsListPage />
+                  </Lazy>
+                ),
+              },
+            ],
+          },
+          {
+            path: 'eod',
+            element: <ProtectedRoute requiredRoles={EOD_ROLES} />,
+            children: [
+              {
+                index: true,
+                element: (
+                  <Lazy>
+                    <EodPanel />
                   </Lazy>
                 ),
               },

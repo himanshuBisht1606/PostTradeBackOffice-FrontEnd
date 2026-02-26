@@ -66,3 +66,17 @@ export async function getSettlementObligations(
 export async function settleObligation(id: string): Promise<void> {
   await axiosInstance.put(`/api/settlement/obligations/${id}/settle`);
 }
+
+export interface CreateBatchPayload {
+  tradeDate: string;
+  settlementDate: string;
+  exchangeId: string;
+  settlementNo?: string | undefined;
+}
+
+export async function createSettlementBatch(payload: CreateBatchPayload): Promise<SettlementBatch> {
+  const res = await axiosInstance.post<ApiResponse<SettlementBatch>>('/api/settlement/batches', payload);
+  const data = res.data.data;
+  if (data === null) throw new Error('Failed to create settlement batch');
+  return data;
+}

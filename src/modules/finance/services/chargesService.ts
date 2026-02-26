@@ -28,3 +28,23 @@ export async function getChargesConfig(params: ChargesListParams): Promise<Charg
   });
   return res.data.data ?? [];
 }
+
+export interface CreateChargePayload {
+  chargeName: string;
+  chargeType: ChargeType;
+  calculationType: CalculationType;
+  rate: number;
+  effectiveFrom: string;
+  brokerId?: string | undefined;
+  minAmount?: number | undefined;
+  maxAmount?: number | undefined;
+  effectiveTo?: string | undefined;
+  isActive?: boolean | undefined;
+}
+
+export async function createChargeConfig(payload: CreateChargePayload): Promise<ChargeConfig> {
+  const res = await axiosInstance.post<ApiResponse<ChargeConfig>>('/api/ledger/charges', payload);
+  const data = res.data.data;
+  if (data === null) throw new Error('Failed to create charge configuration');
+  return data;
+}

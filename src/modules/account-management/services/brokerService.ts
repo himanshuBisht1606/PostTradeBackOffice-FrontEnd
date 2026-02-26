@@ -32,3 +32,32 @@ export async function getBrokerById(id: string): Promise<BrokerSummary> {
   if (data === null) throw new Error(`Broker not found: ${id}`);
   return data;
 }
+
+export interface CreateBrokerPayload {
+  brokerName: string;
+  brokerCode: string;
+  contactEmail: string;
+  contactPhone: string;
+  sebiRegistrationNo?: string | undefined;
+  address?: string | undefined;
+  pan?: string | undefined;
+  gst?: string | undefined;
+}
+
+export interface UpdateBrokerPayload extends Partial<CreateBrokerPayload> {
+  status?: EntityStatus | undefined;
+}
+
+export async function createBroker(payload: CreateBrokerPayload): Promise<BrokerSummary> {
+  const res = await axiosInstance.post<ApiResponse<BrokerSummary>>('/api/brokers', payload);
+  const data = res.data.data;
+  if (data === null) throw new Error('Failed to create broker');
+  return data;
+}
+
+export async function updateBroker(id: string, payload: UpdateBrokerPayload): Promise<BrokerSummary> {
+  const res = await axiosInstance.put<ApiResponse<BrokerSummary>>(`/api/brokers/${id}`, payload);
+  const data = res.data.data;
+  if (data === null) throw new Error('Failed to update broker');
+  return data;
+}

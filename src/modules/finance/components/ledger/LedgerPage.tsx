@@ -1,20 +1,30 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Select, Tag } from 'antd';
+import { Typography, Row, Col, Select, Tag, Button } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getLedgerEntries } from '../../services/ledgerService';
 import { DataTable } from '@shared/components/data-display/DataTable';
+import { PostLedgerEntryModal } from './PostLedgerEntryModal';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
 import { LedgerType, EntryType } from '@app-types/enums';
 import type { LedgerEntry } from '../../services/ledgerService';
+import { useAuthStore } from '@modules/auth/store/authStore';
+import { Role } from '@app-types/roles.types';
 
 const { Title } = Typography;
+
+const CAN_POST_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner, Role.FinanceController];
 
 export function LedgerPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [ledgerType, setLedgerType] = useState<LedgerType | undefined>(undefined);
   const [entryType, setEntryType] = useState<EntryType | undefined>(undefined);
+  const [postModalOpen, setPostModalOpen] = useState(false);
+
+  const { hasRole } = useAuthStore();
+  const canPost = hasRole(CAN_POST_ROLES);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['ledger', { ledgerType, entryType }],
@@ -54,8 +64,8 @@ export function LedgerPage() {
     {
       title: 'Entry',
       dataIndex: 'entryType',
-      width: 90,
-      render: (v: string) => <Tag color={v === EntryType.Credit ? 'green' : 'red'}>{v}</Tag>,
+      width: 120,
+      render: (v: string) => <Tag color="blue">{v}</Tag>,
     },
     {
       title: 'Debit',
@@ -94,11 +104,26 @@ export function LedgerPage() {
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 4, color: '#1d3557' }}>
-        General Ledger
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 4 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            General Ledger
+          </Title>
+        </Col>
+        {canPost && (
+          <Col>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setPostModalOpen(true)}
+            >
+              Post Entry
+            </Button>
+          </Col>
+        )}
+      </Row>
       <p style={{ color: '#8c8c8c', marginBottom: 16, fontSize: 13 }}>
-        Read-only — append-only financial record
+        Append-only financial record
       </p>
 
       <Row gutter={12} style={{ marginBottom: 16 }}>
@@ -131,8 +156,12 @@ export function LedgerPage() {
               setPage(1);
             }}
             options={[
-              { label: 'Credit', value: EntryType.Credit },
-              { label: 'Debit', value: EntryType.Debit },
+              { label: 'Trade', value: EntryType.Trade },
+              { label: 'Charges', value: EntryType.Charges },
+              { label: 'Payment', value: EntryType.Payment },
+              { label: 'Receipt', value: EntryType.Receipt },
+              { label: 'Adjustment', value: EntryType.Adjustment },
+              { label: 'Corporate Action', value: EntryType.CorporateAction },
             ]}
           />
         </Col>
@@ -151,6 +180,11 @@ export function LedgerPage() {
           showSizeChanger: true,
           showTotal: (t) => `${t} entries`,
         }}
+      />
+
+      <PostLedgerEntryModal
+        open={postModalOpen}
+        onClose={() => setPostModalOpen(false)}
       />
     </div>
   );

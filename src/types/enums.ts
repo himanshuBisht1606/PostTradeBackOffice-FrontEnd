@@ -9,17 +9,19 @@ export enum TradeSide {
 }
 
 export enum TradeStatus {
-  Booked = 'Booked',
-  Confirmed = 'Confirmed',
+  Pending = 'Pending',
+  Validated = 'Validated',
   Settled = 'Settled',
-  Cancelled = 'Cancelled',
   Rejected = 'Rejected',
+  Amended = 'Amended',
+  Cancelled = 'Cancelled',
 }
 
 export enum TradeSource {
   Manual = 'Manual',
   Exchange = 'Exchange',
   API = 'API',
+  FileUpload = 'FileUpload',
 }
 
 export enum SettlementStatus {
@@ -44,8 +46,12 @@ export enum LedgerType {
 }
 
 export enum EntryType {
-  Debit = 'Debit',
-  Credit = 'Credit',
+  Trade = 'Trade',
+  Charges = 'Charges',
+  Payment = 'Payment',
+  Receipt = 'Receipt',
+  Adjustment = 'Adjustment',
+  CorporateAction = 'CorporateAction',
 }
 
 export enum ChargeType {
@@ -74,7 +80,7 @@ export enum ReconType {
 export enum ReconStatus {
   Pending = 'Pending',
   Matched = 'Matched',
-  Variated = 'Variated',
+  Mismatched = 'Mismatched',
   Resolved = 'Resolved',
 }
 
@@ -118,12 +124,25 @@ export enum EntityStatus {
 export enum ClientType {
   Individual = 'Individual',
   Corporate = 'Corporate',
+  FII = 'FII',
+  DII = 'DII',
 }
 
 export enum InstrumentType {
   Equity = 'Equity',
-  Futures = 'Futures',
-  Options = 'Options',
+  Derivative = 'Derivative',
+  Future = 'Future',
+  Option = 'Option',
   Currency = 'Currency',
   Commodity = 'Commodity',
+}
+
+export enum OptionType {
+  Call = 'Call',
+  Put = 'Put',
+}
+
+export enum InstrumentStatus {
+  Active = 'Active',
+  Suspended = 'Suspended',
 }

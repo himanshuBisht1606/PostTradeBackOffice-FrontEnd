@@ -8,6 +8,9 @@ import {
   BankOutlined,
   BarChartOutlined,
   SafetyOutlined,
+  SettingOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUiStore } from '@store/uiStore';
@@ -35,6 +38,12 @@ export function AppSidebar() {
 
   const isAuditorOnly = roles.includes(Role.Auditor) && roles.length === 1;
   const isPartnerOnly = roles.includes(Role.Partner) && roles.length === 1;
+  const isMasterSetupRole =
+    roles.includes(Role.PlatformSuperAdmin) || roles.includes(Role.TenantOwner);
+  const isCorpActionRole =
+    roles.includes(Role.PlatformSuperAdmin) ||
+    roles.includes(Role.TenantOwner) ||
+    roles.includes(Role.FinanceController);
 
   const items: MenuItem[] = [
     makeItem('Dashboard', '/dashboard', <DashboardOutlined />),
@@ -61,6 +70,20 @@ export function AppSidebar() {
           makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
+
+          ...(isCorpActionRole
+            ? [makeItem('Corporate Actions', '/corporate-actions', <CalendarOutlined />)]
+            : []),
+
+          ...(isMasterSetupRole
+            ? [
+                makeItem('Master Setup', 'master-setup', <SettingOutlined />, [
+                  makeItem('Exchanges', '/master-setup/exchanges'),
+                  makeItem('Instruments', '/master-setup/instruments'),
+                ]),
+                makeItem('EOD', '/eod', <ClockCircleOutlined />),
+              ]
+            : []),
         ]
       : []),
 

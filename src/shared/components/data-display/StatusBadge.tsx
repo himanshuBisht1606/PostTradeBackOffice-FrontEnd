@@ -6,6 +6,7 @@ import type {
   ReconStatus,
   ExceptionStatus,
   EntityStatus,
+  CorporateActionStatus,
 } from '@app-types/enums';
 
 type AnyStatus =
@@ -15,15 +16,17 @@ type AnyStatus =
   | ReconStatus
   | ExceptionStatus
   | EntityStatus
+  | CorporateActionStatus
   | string;
 
 const STATUS_COLOR_MAP: Record<string, string> = {
   // Trade
   Pending: 'orange',
-  Confirmed: 'blue',
+  Validated: 'blue',
   Settled: 'green',
   Cancelled: 'default',
   Rejected: 'red',
+  Amended: 'purple',
   // Settlement
   Processing: 'processing',
   Completed: 'green',
@@ -42,6 +45,8 @@ const STATUS_COLOR_MAP: Record<string, string> = {
   Deleted: 'default',
   // Obligation
   PartiallySettled: 'orange',
+  // Corporate Actions
+  Announced: 'blue',
 };
 
 interface StatusBadgeProps {

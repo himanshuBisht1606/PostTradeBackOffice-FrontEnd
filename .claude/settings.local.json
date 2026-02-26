@@ -4,7 +4,9 @@
       "Bash(cd /c/Personal/PostTradeBackOffice-FrontEnd && npm run format:check -- --write 2>&1 || npx prettier --write . 2>&1)",
       "Bash(cd \"C:/Personal/PostTradeBackOffice-FrontEnd\" && npm run format:check -- --write 2>&1 || npx prettier --write . 2>&1)",
       "Bash(cmd //c \"where node\" 2>/dev/null || cmd //c \"where npm\" 2>/dev/null)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(ls:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

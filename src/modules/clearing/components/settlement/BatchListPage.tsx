@@ -1,18 +1,33 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Select } from 'antd';
+import { Typography, Row, Col, Select, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSettlementBatches, processSettlementBatch } from '../../services/settlementService';
 import { BatchTable } from './BatchTable';
+import { CreateBatchModal } from './CreateBatchModal';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
 import { SettlementStatus } from '@app-types/enums';
+import { useAuthStore } from '@modules/auth/store/authStore';
+import { Role } from '@app-types/roles.types';
 
 const { Title } = Typography;
+
+const CAN_CREATE_ROLES = [
+  Role.PlatformSuperAdmin,
+  Role.TenantOwner,
+  Role.OperationsController,
+  Role.FinanceController,
+];
 
 export function BatchListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [status, setStatus] = useState<SettlementStatus | undefined>(SettlementStatus.Pending);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const { hasRole } = useAuthStore();
+  const canCreate = hasRole(CAN_CREATE_ROLES);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['settlement-batches', { status }],
@@ -41,9 +56,24 @@ export function BatchListPage() {
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Settlement Batches
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            Settlement Batches
+          </Title>
+        </Col>
+        {canCreate && (
+          <Col>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setCreateModalOpen(true)}
+            >
+              Create Batch
+            </Button>
+          </Col>
+        )}
+      </Row>
 
       <Row gutter={12} style={{ marginBottom: 16 }}>
         <Col span={6}>
@@ -74,6 +104,11 @@ export function BatchListPage() {
         pageSize={pageSize}
         onPageChange={handlePageChange}
         onProcess={(id) => processMutation.mutate(id)}
+      />
+
+      <CreateBatchModal
+        open={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
       />
     </div>
   );

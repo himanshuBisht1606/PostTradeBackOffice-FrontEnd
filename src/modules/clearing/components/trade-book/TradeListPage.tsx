@@ -1,16 +1,21 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Input, Select, DatePicker } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Typography, Row, Col, Input, Select, DatePicker, Button } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getTrades } from '../../services/tradeService';
 import { TradeTable } from './TradeTable';
 import { TradeDrawer } from './TradeDrawer';
+import { BookTradeModal } from './BookTradeModal';
 import { TradeStatus, TradeSide } from '@app-types/enums';
 import type { TradeSummary } from '../../services/tradeService';
 import type { Dayjs } from 'dayjs';
+import { useAuthStore } from '@modules/auth/store/authStore';
+import { Role } from '@app-types/roles.types';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
+
+const CAN_BOOK_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner, Role.OperationsController];
 
 export function TradeListPage() {
   const [page, setPage] = useState(1);
@@ -21,6 +26,10 @@ export function TradeListPage() {
   const [fromDate, setFromDate] = useState<string | undefined>(undefined);
   const [toDate, setToDate] = useState<string | undefined>(undefined);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [bookModalOpen, setBookModalOpen] = useState(false);
+
+  const { hasRole } = useAuthStore();
+  const canBook = hasRole(CAN_BOOK_ROLES);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['trades', { status, fromDate, toDate }],
@@ -66,9 +75,24 @@ export function TradeListPage() {
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Trade Book
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            Trade Book
+          </Title>
+        </Col>
+        {canBook && (
+          <Col>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setBookModalOpen(true)}
+            >
+              Book Trade
+            </Button>
+          </Col>
+        )}
+      </Row>
 
       <Row gutter={12} style={{ marginBottom: 16 }}>
         <Col span={7}>
@@ -110,11 +134,12 @@ export function TradeListPage() {
               setPage(1);
             }}
             options={[
-              { label: 'Booked', value: TradeStatus.Booked },
-              { label: 'Confirmed', value: TradeStatus.Confirmed },
+              { label: 'Pending', value: TradeStatus.Pending },
+              { label: 'Validated', value: TradeStatus.Validated },
               { label: 'Settled', value: TradeStatus.Settled },
-              { label: 'Cancelled', value: TradeStatus.Cancelled },
               { label: 'Rejected', value: TradeStatus.Rejected },
+              { label: 'Amended', value: TradeStatus.Amended },
+              { label: 'Cancelled', value: TradeStatus.Cancelled },
             ]}
           />
         </Col>
@@ -134,6 +159,8 @@ export function TradeListPage() {
       />
 
       <TradeDrawer tradeId={selectedId} onClose={() => setSelectedId(null)} />
+
+      <BookTradeModal open={bookModalOpen} onClose={() => setBookModalOpen(false)} />
     </div>
   );
 }

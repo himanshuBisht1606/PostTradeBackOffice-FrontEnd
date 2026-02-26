@@ -1,24 +1,31 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Select, Tag } from 'antd';
+import { Typography, Row, Col, Select, Tag, Button } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getChargesConfig } from '../../services/chargesService';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { MaskedField } from '@shared/components/data-display/MaskedField';
+import { ChargeConfigFormModal } from './ChargeConfigFormModal';
 import { formatDate, formatPercent, truncateId } from '@utils/formatters';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Permission } from '@app-types/roles.types';
+import { Permission, Role } from '@app-types/roles.types';
 import { ChargeType } from '@app-types/enums';
 import type { ChargeConfig } from '../../services/chargesService';
 
 const { Title } = Typography;
+
+const CAN_CREATE_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner, Role.FinanceController];
 
 export function ChargesConfigPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [chargeType, setChargeType] = useState<ChargeType | undefined>(undefined);
   const [isActive, setIsActive] = useState<'true' | 'false' | undefined>('true');
+  const [addModalOpen, setAddModalOpen] = useState(false);
   const canViewSensitive = useAuthStore((s) => s.hasPermission(Permission.VIEW_SENSITIVE_FIELDS));
+  const { hasRole } = useAuthStore();
+  const canCreate = hasRole(CAN_CREATE_ROLES);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['charges-config', { chargeType, isActive }],
@@ -91,9 +98,24 @@ export function ChargesConfigPage() {
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Charges Configuration
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            Charges Configuration
+          </Title>
+        </Col>
+        {canCreate && (
+          <Col>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setAddModalOpen(true)}
+            >
+              Add Charge
+            </Button>
+          </Col>
+        )}
+      </Row>
 
       <Row gutter={12} style={{ marginBottom: 16 }}>
         <Col span={6}>
@@ -147,6 +169,11 @@ export function ChargesConfigPage() {
           showSizeChanger: true,
           showTotal: (t) => `${t} configurations`,
         }}
+      />
+
+      <ChargeConfigFormModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
       />
     </div>
   );

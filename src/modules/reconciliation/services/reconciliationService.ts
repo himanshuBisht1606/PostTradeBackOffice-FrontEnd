@@ -76,3 +76,13 @@ export async function getReconExceptions(params: ExceptionListParams): Promise<R
 export async function resolveException(id: string, resolution: string): Promise<void> {
   await axiosInstance.put(`/api/reconciliation/exceptions/${id}/resolve`, { resolution });
 }
+
+export interface RunReconPayload {
+  reconDate: string;
+  reconType: ReconType;
+  settlementNo?: string | undefined;
+}
+
+export async function runReconciliation(payload: RunReconPayload): Promise<void> {
+  await axiosInstance.post('/api/reconciliation/run', payload);
+}

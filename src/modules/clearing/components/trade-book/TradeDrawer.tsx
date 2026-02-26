@@ -1,12 +1,17 @@
-import { Descriptions, Tag } from 'antd';
-import { useQuery } from '@tanstack/react-query';
+import { Descriptions, Tag, Button, Popconfirm } from 'antd';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { MaskedField } from '@shared/components/data-display/MaskedField';
 import { formatCurrency, formatDate, formatQuantity } from '@utils/formatters';
-import { getTradeById } from '../../services/tradeService';
+import { getTradeById, cancelTrade } from '../../services/tradeService';
 import { useAuthStore } from '@modules/auth/store/authStore';
-import { Permission } from '@app-types/roles.types';
+import { Permission, Role } from '@app-types/roles.types';
+import { TradeStatus } from '@app-types/enums';
+import { notifySuccess, notifyError } from '@utils/errorHandler';
+
+const CANCELLABLE_STATUSES: TradeStatus[] = [TradeStatus.Pending, TradeStatus.Validated];
+const CAN_CANCEL_ROLES = [Role.PlatformSuperAdmin, Role.TenantOwner, Role.OperationsController];
 
 interface TradeDrawerProps {
   tradeId: string | null;
@@ -21,6 +26,21 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
     staleTime: 30_000,
   });
   const canViewSensitive = useAuthStore((s) => s.hasPermission(Permission.VIEW_SENSITIVE_FIELDS));
+  const { hasRole } = useAuthStore();
+  const canCancel = hasRole(CAN_CANCEL_ROLES);
+  const queryClient = useQueryClient();
+
+  const cancelMutation = useMutation({
+    mutationFn: () => cancelTrade(tradeId as string),
+    onSuccess: () => {
+      notifySuccess('Trade cancelled');
+      void queryClient.invalidateQueries({ queryKey: ['trades'] });
+      onClose();
+    },
+    onError: (err) => notifyError(err, 'Failed to cancel trade'),
+  });
+
+  const isCancellable = trade && CANCELLABLE_STATUSES.includes(trade.status);
 
   return (
     <SlideDrawer
@@ -28,6 +48,21 @@ export function TradeDrawer({ tradeId, onClose }: TradeDrawerProps) {
       open={!!tradeId}
       onClose={onClose}
       isLoading={isLoading}
+      extra={
+        canCancel && isCancellable ? (
+          <Popconfirm
+            title="Cancel this trade?"
+            description="This action cannot be undone."
+            onConfirm={() => cancelMutation.mutate()}
+            okText="Cancel Trade"
+            okButtonProps={{ danger: true }}
+          >
+            <Button danger size="small" loading={cancelMutation.isPending}>
+              Cancel Trade
+            </Button>
+          </Popconfirm>
+        ) : undefined
+      }
     >
       {trade && (
         <Descriptions bordered column={2} size="small">

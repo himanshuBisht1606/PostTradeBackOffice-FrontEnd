@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Tabs, Row, Col, Select } from 'antd';
+import { Typography, Tabs, Row, Col, Select, Button } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { PlayCircleOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getReconRecords,
@@ -12,12 +13,22 @@ import { ReconStatsBar } from './ReconStatsBar';
 import { ExceptionTable } from './ExceptionTable';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
+import { RunReconModal } from './RunReconModal';
 import { formatCurrency, formatDate, truncateId } from '@utils/formatters';
 import { notifyError, notifySuccess } from '@utils/errorHandler';
 import { ReconStatus, ExceptionStatus } from '@app-types/enums';
 import type { ReconRecord } from '../services/reconciliationService';
+import { useAuthStore } from '@modules/auth/store/authStore';
+import { Role } from '@app-types/roles.types';
 
 const { Title } = Typography;
+
+const CAN_RUN_ROLES = [
+  Role.PlatformSuperAdmin,
+  Role.TenantOwner,
+  Role.OperationsController,
+  Role.RiskController,
+];
 
 export function ReconDashboardPage() {
   const [reconPage, setReconPage] = useState(1);
@@ -27,8 +38,11 @@ export function ReconDashboardPage() {
   const [excPage, setExcPage] = useState(1);
   const [excPageSize, setExcPageSize] = useState(20);
   const [excStatus, setExcStatus] = useState<ExceptionStatus | undefined>(ExceptionStatus.Open);
+  const [runReconOpen, setRunReconOpen] = useState(false);
 
   const queryClient = useQueryClient();
+  const { hasRole } = useAuthStore();
+  const canRunRecon = hasRole(CAN_RUN_ROLES);
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['recon-stats'],
@@ -153,7 +167,7 @@ export function ReconDashboardPage() {
                 }}
                 options={[
                   { label: 'Matched', value: ReconStatus.Matched },
-                  { label: 'Variated', value: ReconStatus.Variated },
+                  { label: 'Mismatched', value: ReconStatus.Mismatched },
                   { label: 'Pending', value: ReconStatus.Pending },
                   { label: 'Resolved', value: ReconStatus.Resolved },
                 ]}
@@ -218,13 +232,29 @@ export function ReconDashboardPage() {
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Reconciliation
-      </Title>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
+        <Col>
+          <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+            Reconciliation
+          </Title>
+        </Col>
+        {canRunRecon && (
+          <Col>
+            <Button
+              icon={<PlayCircleOutlined />}
+              onClick={() => setRunReconOpen(true)}
+            >
+              Run Reconciliation
+            </Button>
+          </Col>
+        )}
+      </Row>
 
       <ReconStatsBar stats={stats} loading={statsLoading} />
 
       <Tabs items={tabItems} />
+
+      <RunReconModal open={runReconOpen} onClose={() => setRunReconOpen(false)} />
     </div>
   );
 }
