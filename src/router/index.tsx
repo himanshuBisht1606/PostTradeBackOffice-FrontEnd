@@ -60,6 +60,36 @@ const AuditLogPage = lazy(() =>
     default: m.AuditLogPage,
   })),
 );
+const ExchangeListPage = lazy(() =>
+  import('@modules/master-setup/components/exchanges/ExchangeListPage').then((m) => ({
+    default: m.ExchangeListPage,
+  })),
+);
+const SegmentListPage = lazy(() =>
+  import('@modules/master-setup/components/segments/SegmentListPage').then((m) => ({
+    default: m.SegmentListPage,
+  })),
+);
+const InstrumentListPage = lazy(() =>
+  import('@modules/master-setup/components/instruments/InstrumentListPage').then((m) => ({
+    default: m.InstrumentListPage,
+  })),
+);
+const BranchListPage = lazy(() =>
+  import('@modules/master-setup/components/branches/BranchListPage').then((m) => ({
+    default: m.BranchListPage,
+  })),
+);
+const ExchangeSegmentListPage = lazy(() =>
+  import('@modules/master-setup/components/exchange-segments/ExchangeSegmentListPage').then(
+    (m) => ({ default: m.ExchangeSegmentListPage }),
+  ),
+);
+const ClientOnboardingPage = lazy(() =>
+  import('@modules/client-onboarding/components/ClientOnboardingPage').then((m) => ({
+    default: m.ClientOnboardingPage,
+  })),
+);
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
@@ -118,6 +148,20 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <ClientListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'onboarding',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ClientOnboardingPage />
                       </Lazy>
                     ),
                   },
@@ -230,6 +274,81 @@ const router = createBrowserRouter([
                     <ReconDashboardPage />
                   </Lazy>
                 ),
+              },
+            ],
+          },
+          {
+            path: 'master',
+            children: [
+              {
+                path: 'exchanges',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ExchangeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'segments',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <SegmentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'instruments',
+                element: <ProtectedRoute requiredRoles={ALL_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <InstrumentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'branches',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BranchListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'exchange-segments',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ExchangeSegmentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },

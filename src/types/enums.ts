@@ -115,9 +115,39 @@ export enum EntityStatus {
   Deleted = 'Deleted',
 }
 
+export enum ClientStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+  Closed = 'Closed',
+}
+
+export enum BrokerStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+}
+
 export enum ClientType {
   Individual = 'Individual',
   Corporate = 'Corporate',
+}
+
+export enum KYCStatus {
+  Pending = 'Pending',
+  Verified = 'Verified',
+  Expired = 'Expired',
+}
+
+export enum RiskCategory {
+  Conservative = 'Conservative',
+  Moderate = 'Moderate',
+  Aggressive = 'Aggressive',
+}
+
+export enum Depository {
+  CDSL = 'CDSL',
+  NSDL = 'NSDL',
 }
 
 export enum InstrumentType {
@@ -126,4 +156,32 @@ export enum InstrumentType {
   Options = 'Options',
   Currency = 'Currency',
   Commodity = 'Commodity',
+}
+
+export enum InstrumentStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Expired = 'Expired',
+}
+
+export enum OptionType {
+  Call = 'Call',
+  Put = 'Put',
+}
+
+export enum SettlementType {
+  T1 = 'T1',
+  T2 = 'T2',
+  Intraday = 'Intraday',
+}
+
+export enum ActivationStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+}
+
+export enum MarginType {
+  Cash = 'Cash',
+  NonCash = 'NonCash',
 }

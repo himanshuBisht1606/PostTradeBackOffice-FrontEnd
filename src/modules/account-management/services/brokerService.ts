@@ -1,6 +1,6 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { EntityStatus } from '@app-types/enums';
+import type { BrokerStatus } from '@app-types/enums';
 
 export interface BrokerSummary {
   brokerId: string;
@@ -9,7 +9,7 @@ export interface BrokerSummary {
   sebiRegistrationNo: string | null;
   contactEmail: string;
   contactPhone: string;
-  status: EntityStatus;
+  status: BrokerStatus;
   tenantId: string;
   address: string | null;
   pan: string | null;
@@ -18,7 +18,7 @@ export interface BrokerSummary {
 
 export interface BrokerListParams {
   search?: string | undefined;
-  status?: EntityStatus | undefined;
+  status?: BrokerStatus | undefined;
 }
 
 export async function getBrokers(params: BrokerListParams): Promise<BrokerSummary[]> {

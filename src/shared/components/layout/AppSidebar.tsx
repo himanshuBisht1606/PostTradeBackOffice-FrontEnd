@@ -8,6 +8,8 @@ import {
   BankOutlined,
   BarChartOutlined,
   SafetyOutlined,
+  SettingOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUiStore } from '@store/uiStore';
@@ -41,9 +43,12 @@ export function AppSidebar() {
 
     makeItem('Account Management', 'account-management', <TeamOutlined />, [
       makeItem('Clients', '/account-management/clients'),
-      ...(isAuditorOnly || isPartnerOnly
-        ? []
-        : [makeItem('Brokers', '/account-management/brokers')]),
+      ...(!isAuditorOnly && !isPartnerOnly
+        ? [
+            makeItem('New Client', '/account-management/onboarding', <UserAddOutlined />),
+            makeItem('Brokers', '/account-management/brokers'),
+          ]
+        : []),
     ]),
 
     ...(!isAuditorOnly && !isPartnerOnly
@@ -61,6 +66,18 @@ export function AppSidebar() {
           makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
+        ]
+      : []),
+
+    ...(!isAuditorOnly && !isPartnerOnly
+      ? [
+          makeItem('Master Setup', 'master', <SettingOutlined />, [
+            makeItem('Exchanges', '/master/exchanges'),
+            makeItem('Segments', '/master/segments'),
+            makeItem('Instruments', '/master/instruments'),
+            makeItem('Branches', '/master/branches'),
+            makeItem('Exchange Segments', '/master/exchange-segments'),
+          ]),
         ]
       : []),
 

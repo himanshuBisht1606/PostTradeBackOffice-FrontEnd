@@ -1,27 +1,36 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { ClientType, EntityStatus } from '@app-types/enums';
+import type { ClientType, ClientStatus, KYCStatus, RiskCategory, Depository } from '@app-types/enums';
 
 export interface ClientSummary {
   clientId: string;
+  tenantId: string;
+  brokerId: string;
+  branchId: string | null;
   clientCode: string;
   clientName: string;
   email: string;
   phone: string;
   clientType: ClientType;
-  status: EntityStatus;
-  brokerId: string;
-  tenantId: string;
+  status: ClientStatus;
   pan: string | null;
+  aadhaar: string | null;
+  dpId: string | null;
+  dematAccountNo: string | null;
+  depository: Depository | null;
   address: string | null;
+  stateCode: string | null;
+  stateName: string | null;
   bankAccountNo: string | null;
   bankName: string | null;
+  bankIFSC: string | null;
+  kycStatus: KYCStatus;
+  riskCategory: RiskCategory;
 }
 
 export interface ClientListParams {
-  search?: string | undefined;
-  status?: EntityStatus | undefined;
-  clientType?: ClientType | undefined;
+  page?: number | undefined;
+  pageSize?: number | undefined;
 }
 
 export async function getClients(params: ClientListParams): Promise<ClientSummary[]> {

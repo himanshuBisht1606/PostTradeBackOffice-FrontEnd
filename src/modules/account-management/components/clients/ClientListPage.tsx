@@ -5,7 +5,7 @@ import { ClientTable } from './ClientTable';
 import { ClientFilters } from './ClientFilters';
 import { ClientDrawer } from './ClientDrawer';
 import type { ClientSummary } from '../../services/clientService';
-import type { EntityStatus, ClientType } from '@app-types/enums';
+import type { ClientStatus, ClientType } from '@app-types/enums';
 
 const { Title } = Typography;
 
@@ -14,25 +14,25 @@ export function ClientListPage() {
   const [pageSize, setPageSize] = useState(20);
   const [filters, setFilters] = useState<{
     search?: string | undefined;
-    status?: EntityStatus | undefined;
+    status?: ClientStatus | undefined;
     type?: ClientType | undefined;
   }>({});
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const { data: allData, isLoading } = useClients({
-    status: filters.status,
-    clientType: filters.type,
-  });
+  const { data: allData, isLoading } = useClients({});
 
-  // Client-side search filter + pagination (backend returns full list)
+  // All filtering is client-side — backend returns the full tenant-scoped list
   const filtered = useMemo(() => {
     if (!allData) return [];
-    const q = filters.search?.toLowerCase();
-    if (!q) return allData;
-    return allData.filter(
-      (c) => c.clientName.toLowerCase().includes(q) || c.clientCode.toLowerCase().includes(q),
-    );
-  }, [allData, filters.search]);
+    return allData.filter((c) => {
+      const q = filters.search?.toLowerCase();
+      if (q && !c.clientName.toLowerCase().includes(q) && !c.clientCode.toLowerCase().includes(q))
+        return false;
+      if (filters.status && c.status !== filters.status) return false;
+      if (filters.type && c.clientType !== filters.type) return false;
+      return true;
+    });
+  }, [allData, filters]);
 
   const pageData = useMemo(
     () => filtered.slice((page - 1) * pageSize, page * pageSize),
@@ -42,7 +42,7 @@ export function ClientListPage() {
   const handleFiltersChange = useCallback(
     (f: {
       search?: string | undefined;
-      status?: EntityStatus | undefined;
+      status?: ClientStatus | undefined;
       type?: ClientType | undefined;
     }) => {
       setFilters(f);
