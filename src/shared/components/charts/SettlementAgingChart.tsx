@@ -22,9 +22,9 @@ interface SettlementAgingChartProps {
 }
 
 const BUCKET_COLORS: Record<string, string> = {
-  'T+1':  '#1d3557',
-  'T+2':  '#457b9d',
-  'T+3':  '#fa8c16',
+  'T+1': '#1d3557',
+  'T+2': '#457b9d',
+  'T+3': '#fa8c16',
   '>T+3': '#e63946',
 };
 
@@ -55,7 +55,12 @@ export function SettlementAgingChart({ data, loading = false }: SettlementAgingC
               props.payload?.bucket ?? '',
             ]}
           />
-          <ReferenceLine y={500} stroke="#fa8c16" strokeDasharray="4 4" label={{ value: 'SLA limit', fontSize: 10, fill: '#fa8c16' }} />
+          <ReferenceLine
+            y={500}
+            stroke="#fa8c16"
+            strokeDasharray="4 4"
+            label={{ value: 'SLA limit', fontSize: 10, fill: '#fa8c16' }}
+          />
           <Bar dataKey="count" radius={[5, 5, 0, 0]}>
             {data.map((entry) => (
               <Cell key={entry.bucket} fill={BUCKET_COLORS[entry.bucket] ?? '#457b9d'} />

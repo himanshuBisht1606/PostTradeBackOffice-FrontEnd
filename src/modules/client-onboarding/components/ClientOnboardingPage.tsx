@@ -67,7 +67,10 @@ export function ClientOnboardingPage() {
       </div>
 
       {/* Step Indicator */}
-      <Card style={{ marginBottom: 24, borderRadius: 8 }} styles={{ body: { padding: '16px 24px' } }}>
+      <Card
+        style={{ marginBottom: 24, borderRadius: 8 }}
+        styles={{ body: { padding: '16px 24px' } }}
+      >
         <Steps
           current={currentStep}
           items={STEPS.map((s) => ({ title: s.title, icon: s.icon }))}
@@ -76,10 +79,7 @@ export function ClientOnboardingPage() {
       </Card>
 
       {/* Step Content */}
-      <Card
-        style={{ borderRadius: 8, minHeight: 400 }}
-        styles={{ body: { padding: 32 } }}
-      >
+      <Card style={{ borderRadius: 8, minHeight: 400 }} styles={{ body: { padding: 32 } }}>
         {renderStep()}
       </Card>
     </div>

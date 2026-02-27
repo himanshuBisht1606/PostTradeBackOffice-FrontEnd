@@ -55,7 +55,12 @@ export function SegmentListPage() {
       render: (v: string) => <span style={{ fontFamily: 'monospace' }}>{v}</span>,
     },
     { title: 'Segment Name', dataIndex: 'segmentName', ellipsis: true },
-    { title: 'Description', dataIndex: 'description', ellipsis: true, render: (v: string | null) => v ?? '—' },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      ellipsis: true,
+      render: (v: string | null) => v ?? '—',
+    },
     {
       title: 'Active',
       dataIndex: 'isActive',

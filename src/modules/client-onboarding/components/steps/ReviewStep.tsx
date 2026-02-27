@@ -16,7 +16,14 @@ export function ReviewStep({ onPrev }: Props) {
   const store = useOnboardingStore();
   const { pan, basicDetails, address, contact, nominee, reset } = store;
 
-  const { mutate, isPending, isSuccess, data: result, isError, error } = useMutation({
+  const {
+    mutate,
+    isPending,
+    isSuccess,
+    data: result,
+    isError,
+    error,
+  } = useMutation({
     mutationFn: () => {
       const payload: Parameters<typeof submitOnboarding>[0] = {
         pan: pan!,
@@ -87,17 +94,28 @@ export function ReviewStep({ onPrev }: Props) {
         style={{ marginBottom: 20 }}
       >
         <Descriptions.Item label="Name" span={2}>
-          {[basicDetails?.prefix, basicDetails?.firstName, basicDetails?.middleName, basicDetails?.lastName]
+          {[
+            basicDetails?.prefix,
+            basicDetails?.firstName,
+            basicDetails?.middleName,
+            basicDetails?.lastName,
+          ]
             .filter(Boolean)
             .join(' ')}
         </Descriptions.Item>
         <Descriptions.Item label="DOB">{basicDetails?.dob}</Descriptions.Item>
         <Descriptions.Item label="Gender">{basicDetails?.gender}</Descriptions.Item>
-        <Descriptions.Item label="Marital Status">{basicDetails?.maritalStatus ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="Marital Status">
+          {basicDetails?.maritalStatus ?? '—'}
+        </Descriptions.Item>
         <Descriptions.Item label="Occupation">{basicDetails?.occupation}</Descriptions.Item>
-        <Descriptions.Item label="Father / Spouse">{basicDetails?.fatherSpouseName ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="Father / Spouse">
+          {basicDetails?.fatherSpouseName ?? '—'}
+        </Descriptions.Item>
         <Descriptions.Item label="Mother">{basicDetails?.motherName ?? '—'}</Descriptions.Item>
-        <Descriptions.Item label="Annual Income">{basicDetails?.grossAnnualIncome ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="Annual Income">
+          {basicDetails?.grossAnnualIncome ?? '—'}
+        </Descriptions.Item>
       </Descriptions>
 
       <Divider />
@@ -141,7 +159,9 @@ export function ReviewStep({ onPrev }: Props) {
       >
         <Descriptions.Item label="Mobile">{contact?.mobile}</Descriptions.Item>
         <Descriptions.Item label="Email">{contact?.email}</Descriptions.Item>
-        <Descriptions.Item label="Alternate Mobile">{contact?.alternateMobile ?? '—'}</Descriptions.Item>
+        <Descriptions.Item label="Alternate Mobile">
+          {contact?.alternateMobile ?? '—'}
+        </Descriptions.Item>
       </Descriptions>
 
       <Divider />
@@ -193,7 +213,10 @@ export function ReviewStep({ onPrev }: Props) {
 
       {isPending && (
         <div style={{ marginTop: 16 }}>
-          <Spin size="small" /> <Text type="secondary" style={{ marginLeft: 8 }}>Submitting to server…</Text>
+          <Spin size="small" />{' '}
+          <Text type="secondary" style={{ marginLeft: 8 }}>
+            Submitting to server…
+          </Text>
         </div>
       )}
     </div>

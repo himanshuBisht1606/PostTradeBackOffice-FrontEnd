@@ -25,7 +25,9 @@ export function ExceptionKpiStrip({ kpis, loading = false }: ExceptionKpiStripPr
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Col span={6} key={i}>
-            <Card><Skeleton active paragraph={{ rows: 1 }} /></Card>
+            <Card>
+              <Skeleton active paragraph={{ rows: 1 }} />
+            </Card>
           </Col>
         ))}
       </Row>

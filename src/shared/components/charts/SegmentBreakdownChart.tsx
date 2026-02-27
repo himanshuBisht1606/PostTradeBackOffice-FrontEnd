@@ -13,17 +13,34 @@ interface SegmentBreakdownChartProps {
 }
 
 function renderCustomLabel({
-  cx, cy, midAngle, innerRadius, outerRadius, value,
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  value,
 }: {
-  cx: number; cy: number; midAngle: number;
-  innerRadius: number; outerRadius: number; value: number;
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  value: number;
 }) {
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   return (
-    <text x={x} y={y} fill="#fff" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={700}>
+    <text
+      x={x}
+      y={y}
+      fill="#fff"
+      textAnchor="middle"
+      dominantBaseline="central"
+      fontSize={11}
+      fontWeight={700}
+    >
       {value}%
     </text>
   );

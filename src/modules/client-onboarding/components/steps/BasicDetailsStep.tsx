@@ -1,4 +1,15 @@
-import { Form, Input, Select, DatePicker, Row, Col, Button, Space, Typography, Divider } from 'antd';
+import {
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Row,
+  Col,
+  Button,
+  Space,
+  Typography,
+  Divider,
+} from 'antd';
 import dayjs from 'dayjs';
 import { useOnboardingStore } from '../../store/onboardingStore';
 import type { BasicDetailsData } from '../../types/onboarding.types';
@@ -120,11 +131,7 @@ export function BasicDetailsStep({ onNext, onPrev }: Props) {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label="Gender"
-            name="gender"
-            rules={[{ required: true, message: 'Required' }]}
-          >
+          <Form.Item label="Gender" name="gender" rules={[{ required: true, message: 'Required' }]}>
             <Select options={GENDER_OPTIONS} placeholder="Select" />
           </Form.Item>
         </Col>

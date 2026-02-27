@@ -1,6 +1,12 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { ClientType, ClientStatus, KYCStatus, RiskCategory, Depository } from '@app-types/enums';
+import type {
+  ClientType,
+  ClientStatus,
+  KYCStatus,
+  RiskCategory,
+  Depository,
+} from '@app-types/enums';
 
 export interface ClientSummary {
   clientId: string;

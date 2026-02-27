@@ -146,7 +146,9 @@ export function InstrumentListPage() {
             <Descriptions bordered column={2} size="small">
               <Descriptions.Item label="Code">{detail.instrumentCode}</Descriptions.Item>
               <Descriptions.Item label="Symbol">{detail.symbol}</Descriptions.Item>
-              <Descriptions.Item label="Name" span={2}>{detail.instrumentName}</Descriptions.Item>
+              <Descriptions.Item label="Name" span={2}>
+                {detail.instrumentName}
+              </Descriptions.Item>
               <Descriptions.Item label="ISIN">{detail.isin ?? '—'}</Descriptions.Item>
               <Descriptions.Item label="Type">{detail.instrumentType}</Descriptions.Item>
               <Descriptions.Item label="Lot Size">{detail.lotSize}</Descriptions.Item>

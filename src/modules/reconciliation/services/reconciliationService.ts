@@ -67,10 +67,7 @@ export async function getReconExceptions(params: ExceptionListParams): Promise<R
 }
 
 export async function getReconStats(): Promise<ReconStats> {
-  const [records, exceptions] = await Promise.all([
-    getReconRecords({}),
-    getReconExceptions({}),
-  ]);
+  const [records, exceptions] = await Promise.all([getReconRecords({}), getReconExceptions({})]);
 
   const today = new Date().toISOString().slice(0, 10);
 

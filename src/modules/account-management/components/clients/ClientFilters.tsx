@@ -41,10 +41,10 @@ export function ClientFilters({ onChange }: ClientFiltersProps) {
           value={status ?? null}
           onChange={setStatus}
           options={[
-            { label: 'Active',    value: ClientStatus.Active },
-            { label: 'Inactive',  value: ClientStatus.Inactive },
+            { label: 'Active', value: ClientStatus.Active },
+            { label: 'Inactive', value: ClientStatus.Inactive },
             { label: 'Suspended', value: ClientStatus.Suspended },
-            { label: 'Closed',    value: ClientStatus.Closed },
+            { label: 'Closed', value: ClientStatus.Closed },
           ]}
         />
       </Col>

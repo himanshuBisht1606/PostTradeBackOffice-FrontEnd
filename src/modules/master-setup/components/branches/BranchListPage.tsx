@@ -60,8 +60,18 @@ export function BranchListPage() {
     { title: 'Branch Name', dataIndex: 'branchName', ellipsis: true },
     { title: 'City', dataIndex: 'city', width: 120, render: (v: string | null) => v ?? '—' },
     { title: 'State', dataIndex: 'stateName', width: 140 },
-    { title: 'Contact', dataIndex: 'contactPerson', width: 160, render: (v: string | null) => v ?? '—' },
-    { title: 'Phone', dataIndex: 'contactPhone', width: 130, render: (v: string | null) => v ?? '—' },
+    {
+      title: 'Contact',
+      dataIndex: 'contactPerson',
+      width: 160,
+      render: (v: string | null) => v ?? '—',
+    },
+    {
+      title: 'Phone',
+      dataIndex: 'contactPhone',
+      width: 130,
+      render: (v: string | null) => v ?? '—',
+    },
     {
       title: 'Active',
       dataIndex: 'isActive',
@@ -122,10 +132,16 @@ export function BranchListPage() {
               <Descriptions.Item label="Code">{detail.branchCode}</Descriptions.Item>
               <Descriptions.Item label="Name">{detail.branchName}</Descriptions.Item>
               <Descriptions.Item label="City">{detail.city ?? '—'}</Descriptions.Item>
-              <Descriptions.Item label="State">{detail.stateName} ({detail.stateCode})</Descriptions.Item>
-              <Descriptions.Item label="Address" span={2}>{detail.address ?? '—'}</Descriptions.Item>
+              <Descriptions.Item label="State">
+                {detail.stateName} ({detail.stateCode})
+              </Descriptions.Item>
+              <Descriptions.Item label="Address" span={2}>
+                {detail.address ?? '—'}
+              </Descriptions.Item>
               <Descriptions.Item label="GSTIN">{detail.gstin ?? '—'}</Descriptions.Item>
-              <Descriptions.Item label="Contact Person">{detail.contactPerson ?? '—'}</Descriptions.Item>
+              <Descriptions.Item label="Contact Person">
+                {detail.contactPerson ?? '—'}
+              </Descriptions.Item>
               <Descriptions.Item label="Phone">{detail.contactPhone ?? '—'}</Descriptions.Item>
               <Descriptions.Item label="Email">{detail.contactEmail ?? '—'}</Descriptions.Item>
               <Descriptions.Item label="Active" span={2}>

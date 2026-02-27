@@ -33,8 +33,7 @@ export function ExchangeListPage() {
     if (!search) return allData;
     const q = search.toLowerCase();
     return allData.filter(
-      (e) =>
-        e.exchangeCode.toLowerCase().includes(q) || e.exchangeName.toLowerCase().includes(q),
+      (e) => e.exchangeCode.toLowerCase().includes(q) || e.exchangeName.toLowerCase().includes(q),
     );
   }, [allData, search]);
 
@@ -57,9 +56,24 @@ export function ExchangeListPage() {
     },
     { title: 'Exchange Name', dataIndex: 'exchangeName', ellipsis: true },
     { title: 'Country', dataIndex: 'country', width: 120 },
-    { title: 'Timezone', dataIndex: 'timeZone', width: 160, render: (v: string | null) => v ?? '—' },
-    { title: 'Start Time', dataIndex: 'tradingStartTime', width: 110, render: (v: string | null) => v ?? '—' },
-    { title: 'End Time', dataIndex: 'tradingEndTime', width: 110, render: (v: string | null) => v ?? '—' },
+    {
+      title: 'Timezone',
+      dataIndex: 'timeZone',
+      width: 160,
+      render: (v: string | null) => v ?? '—',
+    },
+    {
+      title: 'Start Time',
+      dataIndex: 'tradingStartTime',
+      width: 110,
+      render: (v: string | null) => v ?? '—',
+    },
+    {
+      title: 'End Time',
+      dataIndex: 'tradingEndTime',
+      width: 110,
+      render: (v: string | null) => v ?? '—',
+    },
     {
       title: 'Active',
       dataIndex: 'isActive',
@@ -121,8 +135,12 @@ export function ExchangeListPage() {
               <Descriptions.Item label="Name">{detail.exchangeName}</Descriptions.Item>
               <Descriptions.Item label="Country">{detail.country}</Descriptions.Item>
               <Descriptions.Item label="Timezone">{detail.timeZone ?? '—'}</Descriptions.Item>
-              <Descriptions.Item label="Trading Start">{detail.tradingStartTime ?? '—'}</Descriptions.Item>
-              <Descriptions.Item label="Trading End">{detail.tradingEndTime ?? '—'}</Descriptions.Item>
+              <Descriptions.Item label="Trading Start">
+                {detail.tradingStartTime ?? '—'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Trading End">
+                {detail.tradingEndTime ?? '—'}
+              </Descriptions.Item>
               <Descriptions.Item label="Active" span={2}>
                 <Tag color={detail.isActive ? 'green' : 'default'}>
                   {detail.isActive ? 'Active' : 'Inactive'}

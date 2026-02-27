@@ -21,7 +21,9 @@ export function ClientSegmentsTab({ clientId }: ClientSegmentsTabProps) {
     {
       title: 'Segment',
       dataIndex: 'exchangeSegmentId',
-      render: (v: string) => <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>,
+      render: (v: string) => (
+        <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>
+      ),
     },
     {
       title: 'Status',
@@ -41,8 +43,7 @@ export function ClientSegmentsTab({ clientId }: ClientSegmentsTabProps) {
       dataIndex: 'exposureLimit',
       width: 140,
       align: 'right',
-      render: (v: number | null) =>
-        v != null ? `₹${v.toLocaleString('en-IN')}` : '—',
+      render: (v: number | null) => (v != null ? `₹${v.toLocaleString('en-IN')}` : '—'),
     },
     {
       title: 'Activated On',

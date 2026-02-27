@@ -37,12 +37,12 @@ export function RevenueChart({ data, loading = false }: RevenueChartProps) {
         <AreaChart data={data} margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
           <defs>
             <linearGradient id="revGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#1d3557" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#1d3557" stopOpacity={0}    />
+              <stop offset="5%" stopColor="#1d3557" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="#1d3557" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="brokerageGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%"  stopColor="#e63946" stopOpacity={0.2} />
-              <stop offset="95%" stopColor="#e63946" stopOpacity={0}   />
+              <stop offset="5%" stopColor="#e63946" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#e63946" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

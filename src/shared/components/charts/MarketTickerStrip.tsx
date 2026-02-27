@@ -9,12 +9,12 @@ interface MarketIndex {
 }
 
 const INDICES: MarketIndex[] = [
-  { name: 'NIFTY 50',   value: 22547.85, change:  134.20,  changePct:  0.60 },
-  { name: 'SENSEX',     value: 74339.44, change:  412.65,  changePct:  0.56 },
-  { name: 'NIFTY BANK', value: 48124.30, change:  -87.45,  changePct: -0.18 },
-  { name: 'NIFTY IT',   value: 36892.15, change:  278.90,  changePct:  0.76 },
-  { name: 'NIFTY MID',  value: 12648.70, change:   98.30,  changePct:  0.78 },
-  { name: 'INDIA VIX',  value:    13.42, change:   -0.68,  changePct: -4.82 },
+  { name: 'NIFTY 50', value: 22547.85, change: 134.2, changePct: 0.6 },
+  { name: 'SENSEX', value: 74339.44, change: 412.65, changePct: 0.56 },
+  { name: 'NIFTY BANK', value: 48124.3, change: -87.45, changePct: -0.18 },
+  { name: 'NIFTY IT', value: 36892.15, change: 278.9, changePct: 0.76 },
+  { name: 'NIFTY MID', value: 12648.7, change: 98.3, changePct: 0.78 },
+  { name: 'INDIA VIX', value: 13.42, change: -0.68, changePct: -4.82 },
 ];
 
 function fmt(v: number, decimals = 2) {
@@ -52,7 +52,9 @@ export function MarketTickerStrip() {
       </div>
 
       {/* Divider */}
-      <div style={{ width: 1, height: 32, background: '#2a3a4a', marginRight: 24, flexShrink: 0 }} />
+      <div
+        style={{ width: 1, height: 32, background: '#2a3a4a', marginRight: 24, flexShrink: 0 }}
+      />
 
       {/* Indices */}
       <div style={{ display: 'flex', gap: 32, flexShrink: 0 }}>
@@ -69,10 +71,10 @@ export function MarketTickerStrip() {
                   {fmt(idx.value, idx.name === 'INDIA VIX' ? 2 : 2)}
                 </span>
                 <span style={{ color, fontSize: 11, fontWeight: 600 }}>
-                  {up ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                  {' '}
-                  {up ? '+' : ''}{fmt(Math.abs(idx.change), 2)}
-                  {'  '}({up ? '+' : ''}{idx.changePct.toFixed(2)}%)
+                  {up ? <ArrowUpOutlined /> : <ArrowDownOutlined />} {up ? '+' : ''}
+                  {fmt(Math.abs(idx.change), 2)}
+                  {'  '}({up ? '+' : ''}
+                  {idx.changePct.toFixed(2)}%)
                 </span>
               </div>
             </div>
@@ -83,7 +85,9 @@ export function MarketTickerStrip() {
       {/* Spacer + Settlement cycle info */}
       <div style={{ marginLeft: 'auto', flexShrink: 0, textAlign: 'right' }}>
         <div style={{ color: '#8899aa', fontSize: 10 }}>Settlement Cycle</div>
-        <div style={{ color: '#52c41a', fontSize: 13, fontWeight: 700 }}>T+1 &nbsp;|&nbsp; NSE / BSE</div>
+        <div style={{ color: '#52c41a', fontSize: 13, fontWeight: 700 }}>
+          T+1 &nbsp;|&nbsp; NSE / BSE
+        </div>
       </div>
     </div>
   );

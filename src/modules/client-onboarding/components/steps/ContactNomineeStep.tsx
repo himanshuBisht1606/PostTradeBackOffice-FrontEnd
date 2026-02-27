@@ -1,4 +1,16 @@
-import { Form, Input, Select, DatePicker, InputNumber, Row, Col, Button, Space, Typography, Divider } from 'antd';
+import {
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  InputNumber,
+  Row,
+  Col,
+  Button,
+  Space,
+  Typography,
+  Divider,
+} from 'antd';
 import dayjs from 'dayjs';
 import { useOnboardingStore } from '../../store/onboardingStore';
 import type { ContactData, NomineeData } from '../../types/onboarding.types';
@@ -34,8 +46,12 @@ interface FormValues extends ContactData {
 
 export function ContactNomineeStep({ onNext, onPrev }: Props) {
   const [form] = Form.useForm<FormValues>();
-  const { contact: savedContact, nominee: savedNominee, setContact, setNominee } =
-    useOnboardingStore();
+  const {
+    contact: savedContact,
+    nominee: savedNominee,
+    setContact,
+    setNominee,
+  } = useOnboardingStore();
 
   const handleFinish = (values: FormValues) => {
     const contactData: ContactData = { mobile: values.mobile, email: values.email };

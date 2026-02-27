@@ -70,7 +70,10 @@ export function AddressStep({ onNext, onPrev }: Props) {
     }
   };
 
-  const initialValues: Partial<AddressData> = saved ?? { permanentCountry: 'India', corrCountry: 'India' };
+  const initialValues: Partial<AddressData> = saved ?? {
+    permanentCountry: 'India',
+    corrCountry: 'India',
+  };
 
   return (
     <Form form={form} layout="vertical" initialValues={initialValues} onFinish={handleFinish}>

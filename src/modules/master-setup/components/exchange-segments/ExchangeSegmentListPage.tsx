@@ -63,13 +63,17 @@ export function ExchangeSegmentListPage() {
       title: 'Exchange ID',
       dataIndex: 'exchangeId',
       width: 100,
-      render: (v: string) => <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>,
+      render: (v: string) => (
+        <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>
+      ),
     },
     {
       title: 'Segment ID',
       dataIndex: 'segmentId',
       width: 100,
-      render: (v: string) => <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>,
+      render: (v: string) => (
+        <span style={{ color: '#8c8c8c', fontSize: 12 }}>{truncateId(v)}</span>
+      ),
     },
     {
       title: 'Active',
