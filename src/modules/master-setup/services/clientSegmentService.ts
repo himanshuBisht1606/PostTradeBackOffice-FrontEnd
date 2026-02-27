@@ -33,7 +33,9 @@ export async function activateClientSegment(
     `/api/clients/${clientId}/segments`,
     payload,
   );
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from activateClientSegment');
+  return data;
 }
 
 export async function deactivateClientSegment(
@@ -42,5 +44,7 @@ export async function deactivateClientSegment(
   const res = await axiosInstance.put<ApiResponse<ClientSegmentActivation>>(
     `/api/clients/segments/${activationId}/deactivate`,
   );
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from deactivateClientSegment');
+  return data;
 }

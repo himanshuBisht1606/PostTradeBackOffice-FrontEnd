@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Typography, Input, Row, Col, Tag, Select, Descriptions } from 'antd';
+import { Typography, Input, Row, Col, Select, Descriptions } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import type { TableColumnsType } from 'antd';
@@ -8,7 +8,8 @@ import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { getInstruments, getInstrumentById } from '../../services/instrumentService';
 import type { InstrumentRecord } from '../../services/instrumentService';
-import { InstrumentType, InstrumentStatus } from '@app-types/enums';
+import type { InstrumentStatus } from '@app-types/enums';
+import { InstrumentType } from '@app-types/enums';
 
 const { Title } = Typography;
 

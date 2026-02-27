@@ -49,7 +49,9 @@ export async function createExchangeSegment(
     '/api/exchange-segments',
     payload,
   );
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from createExchangeSegment');
+  return data;
 }
 
 export async function updateExchangeSegment(
@@ -60,5 +62,7 @@ export async function updateExchangeSegment(
     `/api/exchange-segments/${id}`,
     payload,
   );
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from updateExchangeSegment');
+  return data;
 }

@@ -25,11 +25,14 @@ export function ReviewStep({ onPrev }: Props) {
     error,
   } = useMutation({
     mutationFn: () => {
+      if (!pan || !basicDetails || !address || !contact) {
+        throw new Error('Required onboarding data is missing');
+      }
       const payload: Parameters<typeof submitOnboarding>[0] = {
-        pan: pan!,
-        basicDetails: basicDetails!,
-        address: address!,
-        contact: contact!,
+        pan,
+        basicDetails,
+        address,
+        contact,
       };
       if (nominee) payload.nominee = nominee;
       return submitOnboarding(payload);

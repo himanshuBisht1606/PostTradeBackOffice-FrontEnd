@@ -31,7 +31,9 @@ export interface CreateSegmentPayload {
 
 export async function createSegment(payload: CreateSegmentPayload): Promise<SegmentRecord> {
   const res = await axiosInstance.post<ApiResponse<SegmentRecord>>('/api/segments', payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from createSegment');
+  return data;
 }
 
 export async function updateSegment(
@@ -39,5 +41,7 @@ export async function updateSegment(
   payload: Partial<CreateSegmentPayload>,
 ): Promise<SegmentRecord> {
   const res = await axiosInstance.put<ApiResponse<SegmentRecord>>(`/api/segments/${id}`, payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from updateSegment');
+  return data;
 }

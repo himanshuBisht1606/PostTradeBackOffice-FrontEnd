@@ -45,7 +45,9 @@ export interface CreateBranchPayload {
 
 export async function createBranch(payload: CreateBranchPayload): Promise<BranchRecord> {
   const res = await axiosInstance.post<ApiResponse<BranchRecord>>('/api/branches', payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from createBranch');
+  return data;
 }
 
 export async function updateBranch(
@@ -53,5 +55,7 @@ export async function updateBranch(
   payload: Partial<CreateBranchPayload>,
 ): Promise<BranchRecord> {
   const res = await axiosInstance.put<ApiResponse<BranchRecord>>(`/api/branches/${id}`, payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from updateBranch');
+  return data;
 }

@@ -37,7 +37,9 @@ export interface CreateExchangePayload {
 
 export async function createExchange(payload: CreateExchangePayload): Promise<ExchangeRecord> {
   const res = await axiosInstance.post<ApiResponse<ExchangeRecord>>('/api/exchanges', payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from createExchange');
+  return data;
 }
 
 export async function updateExchange(
@@ -45,5 +47,7 @@ export async function updateExchange(
   payload: Partial<CreateExchangePayload>,
 ): Promise<ExchangeRecord> {
   const res = await axiosInstance.put<ApiResponse<ExchangeRecord>>(`/api/exchanges/${id}`, payload);
-  return res.data.data!;
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from updateExchange');
+  return data;
 }
