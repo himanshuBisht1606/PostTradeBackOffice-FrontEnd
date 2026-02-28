@@ -218,7 +218,7 @@ export function ContactNomineeStep({ onNext, onPrev }: Props) {
       <Space style={{ marginTop: 8 }}>
         <Button onClick={onPrev}>Back</Button>
         <Button type="primary" htmlType="submit">
-          Next — Review
+          Next — Bank Details
         </Button>
       </Space>
     </Form>

@@ -4,6 +4,8 @@ import {
   UserOutlined,
   HomeOutlined,
   PhoneOutlined,
+  BankOutlined,
+  StockOutlined,
   CheckSquareOutlined,
 } from '@ant-design/icons';
 import { useOnboardingStore } from '../store/onboardingStore';
@@ -11,6 +13,8 @@ import { PanVerificationStep } from './steps/PanVerificationStep';
 import { BasicDetailsStep } from './steps/BasicDetailsStep';
 import { AddressStep } from './steps/AddressStep';
 import { ContactNomineeStep } from './steps/ContactNomineeStep';
+import { BankDetailsStep } from './steps/BankDetailsStep';
+import { DematAccountStep } from './steps/DematAccountStep';
 import { ReviewStep } from './steps/ReviewStep';
 
 const { Title, Text } = Typography;
@@ -20,6 +24,8 @@ const STEPS = [
   { title: 'Basic Details', icon: <UserOutlined /> },
   { title: 'Address', icon: <HomeOutlined /> },
   { title: 'Contact & Nominee', icon: <PhoneOutlined /> },
+  { title: 'Bank Details', icon: <BankOutlined /> },
+  { title: 'Demat Account', icon: <StockOutlined /> },
   { title: 'Review & Submit', icon: <CheckSquareOutlined /> },
 ];
 
@@ -40,6 +46,10 @@ export function ClientOnboardingPage() {
       case 3:
         return <ContactNomineeStep onNext={goNext} onPrev={goPrev} />;
       case 4:
+        return <BankDetailsStep onNext={goNext} onPrev={goPrev} />;
+      case 5:
+        return <DematAccountStep onNext={goNext} onPrev={goPrev} />;
+      case 6:
         return <ReviewStep onPrev={goPrev} />;
       default:
         return null;

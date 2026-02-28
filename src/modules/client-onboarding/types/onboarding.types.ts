@@ -50,12 +50,29 @@ export interface NomineeData {
   nomineeAddress?: string;
 }
 
+export interface BankDetailsData {
+  bankName: string;
+  branchName: string;
+  accountNumber: string;
+  ifscCode: string;
+  accountType: string;
+}
+
+export interface DematAccountData {
+  depository: string;
+  dpId: string;
+  clientId: string;
+  dpName: string;
+}
+
 export interface OnboardingPayload {
   pan: PanStepData;
   basicDetails: BasicDetailsData;
   address: AddressData;
   contact: ContactData;
   nominee?: NomineeData;
+  bankDetails?: BankDetailsData;
+  dematAccount?: DematAccountData;
 }
 
 export interface OnboardingResult {

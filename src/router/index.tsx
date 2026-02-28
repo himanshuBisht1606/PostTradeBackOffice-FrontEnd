@@ -85,9 +85,39 @@ const ExchangeSegmentListPage = lazy(() =>
     (m) => ({ default: m.ExchangeSegmentListPage }),
   ),
 );
+const StateListPage = lazy(() =>
+  import('@modules/master-setup/components/states/StateListPage').then((m) => ({
+    default: m.StateListPage,
+  })),
+);
 const ClientOnboardingPage = lazy(() =>
   import('@modules/client-onboarding/components/ClientOnboardingPage').then((m) => ({
     default: m.ClientOnboardingPage,
+  })),
+);
+const BankListPage = lazy(() =>
+  import('@modules/master-setup/components/banks/BankListPage').then((m) => ({
+    default: m.BankListPage,
+  })),
+);
+const BankMappingListPage = lazy(() =>
+  import('@modules/master-setup/components/banks/BankMappingListPage').then((m) => ({
+    default: m.BankMappingListPage,
+  })),
+);
+const NsdlDpListPage = lazy(() =>
+  import('@modules/master-setup/components/dp-masters/NsdlDpListPage').then((m) => ({
+    default: m.NsdlDpListPage,
+  })),
+);
+const CdslDpListPage = lazy(() =>
+  import('@modules/master-setup/components/dp-masters/CdslDpListPage').then((m) => ({
+    default: m.CdslDpListPage,
+  })),
+);
+const PinCodeListPage = lazy(() =>
+  import('@modules/master-setup/components/pincodes/PinCodeListPage').then((m) => ({
+    default: m.PinCodeListPage,
   })),
 );
 
@@ -345,6 +375,90 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <ExchangeSegmentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'states',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <StateListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'banks',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BankListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'bank-mappings',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BankMappingListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'nsdl-dp',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <NsdlDpListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'cdsl-dp',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <CdslDpListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'pin-codes',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <PinCodeListPage />
                       </Lazy>
                     ),
                   },

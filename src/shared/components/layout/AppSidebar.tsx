@@ -77,6 +77,12 @@ export function AppSidebar() {
             makeItem('Instruments', '/master/instruments'),
             makeItem('Branches', '/master/branches'),
             makeItem('Exchange Segments', '/master/exchange-segments'),
+            makeItem('States', '/master/states'),
+            makeItem('Banks', '/master/banks'),
+            makeItem('Bank Mappings', '/master/bank-mappings'),
+            makeItem('NSDL DP Master', '/master/nsdl-dp'),
+            makeItem('CDSL DP Master', '/master/cdsl-dp'),
+            makeItem('Pin Codes', '/master/pin-codes'),
           ]),
         ]
       : []),

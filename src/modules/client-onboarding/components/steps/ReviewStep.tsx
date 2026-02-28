@@ -14,7 +14,7 @@ interface Props {
 export function ReviewStep({ onPrev }: Props) {
   const navigate = useNavigate();
   const store = useOnboardingStore();
-  const { pan, basicDetails, address, contact, nominee, reset } = store;
+  const { pan, basicDetails, address, contact, nominee, bankDetails, dematAccount, reset } = store;
 
   const {
     mutate,
@@ -35,6 +35,8 @@ export function ReviewStep({ onPrev }: Props) {
         contact,
       };
       if (nominee) payload.nominee = nominee;
+      if (bankDetails) payload.bankDetails = bankDetails;
+      if (dematAccount) payload.dematAccount = dematAccount;
       return submitOnboarding(payload);
     },
     onSuccess: () => {
@@ -185,6 +187,51 @@ export function ReviewStep({ onPrev }: Props) {
           <Descriptions.Item label="Mobile">{nominee.nomineeMobile ?? '—'}</Descriptions.Item>
           <Descriptions.Item label="Email">{nominee.nomineeEmail ?? '—'}</Descriptions.Item>
         </Descriptions>
+      )}
+
+      {bankDetails && (
+        <>
+          <Divider />
+          <Descriptions
+            title="Bank Details"
+            bordered
+            size="small"
+            column={3}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Bank Name">{bankDetails.bankName}</Descriptions.Item>
+            <Descriptions.Item label="Branch">{bankDetails.branchName}</Descriptions.Item>
+            <Descriptions.Item label="Account Type">{bankDetails.accountType}</Descriptions.Item>
+            <Descriptions.Item label="Account Number" span={2}>
+              <Text code>{bankDetails.accountNumber}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="IFSC Code">
+              <Text code>{bankDetails.ifscCode}</Text>
+            </Descriptions.Item>
+          </Descriptions>
+        </>
+      )}
+
+      {dematAccount && (
+        <>
+          <Divider />
+          <Descriptions
+            title="Demat Account"
+            bordered
+            size="small"
+            column={2}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Depository">{dematAccount.depository}</Descriptions.Item>
+            <Descriptions.Item label="DP Name">{dematAccount.dpName}</Descriptions.Item>
+            <Descriptions.Item label="DP ID">
+              <Text code>{dematAccount.dpId}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Client ID / Beneficiary ID">
+              <Text code>{dematAccount.clientId}</Text>
+            </Descriptions.Item>
+          </Descriptions>
+        </>
       )}
 
       {isError && (
