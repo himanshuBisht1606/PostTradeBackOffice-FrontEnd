@@ -128,7 +128,10 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
   };
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateClientPayload) => updateClient(clientId!, payload),
+    mutationFn: (payload: UpdateClientPayload) => {
+      if (!clientId) return Promise.reject(new Error('No client selected'));
+      return updateClient(clientId, payload);
+    },
     onSuccess: (updated) => {
       void qc.setQueryData(['clients', clientId], updated);
       invalidate();
@@ -139,7 +142,10 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
   });
 
   const statusMutation = useMutation({
-    mutationFn: (status: ClientStatus) => changeClientStatus(clientId!, status),
+    mutationFn: (status: ClientStatus) => {
+      if (!clientId) return Promise.reject(new Error('No client selected'));
+      return changeClientStatus(clientId, status);
+    },
     onSuccess: () => {
       invalidate();
       void qc.invalidateQueries({ queryKey: ['clients', clientId] });

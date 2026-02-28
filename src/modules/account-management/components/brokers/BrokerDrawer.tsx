@@ -70,7 +70,10 @@ export function BrokerDrawer({ brokerId, onClose }: BrokerDrawerProps) {
   };
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateBrokerPayload) => updateBroker(brokerId!, payload),
+    mutationFn: (payload: UpdateBrokerPayload) => {
+      if (!brokerId) return Promise.reject(new Error('No broker selected'));
+      return updateBroker(brokerId, payload);
+    },
     onSuccess: (updated) => {
       void qc.setQueryData(['brokers', brokerId], updated);
       invalidate();
@@ -81,7 +84,10 @@ export function BrokerDrawer({ brokerId, onClose }: BrokerDrawerProps) {
   });
 
   const statusMutation = useMutation({
-    mutationFn: (status: BrokerStatus) => changeBrokerStatus(brokerId!, status),
+    mutationFn: (status: BrokerStatus) => {
+      if (!brokerId) return Promise.reject(new Error('No broker selected'));
+      return changeBrokerStatus(brokerId, status);
+    },
     onSuccess: () => {
       invalidate();
       void qc.invalidateQueries({ queryKey: ['brokers', brokerId] });

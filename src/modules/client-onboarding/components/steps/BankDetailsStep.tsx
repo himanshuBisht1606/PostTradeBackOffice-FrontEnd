@@ -33,7 +33,7 @@ export function BankDetailsStep({ onNext, onPrev }: Props) {
   // Load IFSC mappings when bank code is known
   const { data: bankMappings = [], isFetching: mappingsFetching } = useQuery({
     queryKey: ['bankMappings', selectedBankCode],
-    queryFn: () => getBankMappingsByBankCode(selectedBankCode!),
+    queryFn: () => getBankMappingsByBankCode(selectedBankCode ?? ''),
     enabled: !!selectedBankCode,
     staleTime: 5 * 60 * 1000,
   });
