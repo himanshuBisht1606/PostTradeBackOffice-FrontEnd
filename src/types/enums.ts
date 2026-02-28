@@ -116,6 +116,7 @@ export enum EntityStatus {
 }
 
 export enum ClientStatus {
+  Registered = 'Registered',
   Active = 'Active',
   Inactive = 'Inactive',
   Suspended = 'Suspended',

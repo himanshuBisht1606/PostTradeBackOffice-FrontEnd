@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getBrokers } from '../../services/brokerService';
 import { BrokerTable } from './BrokerTable';
+import { BrokerDrawer } from './BrokerDrawer';
 import type { BrokerSummary } from '../../services/brokerService';
 
 const { Title } = Typography;
@@ -12,6 +13,7 @@ export function BrokerListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState('');
+  const [selectedBrokerId, setSelectedBrokerId] = useState<string | null>(null);
 
   const { data: allData, isLoading } = useQuery({
     queryKey: ['brokers'],
@@ -38,8 +40,8 @@ export function BrokerListPage() {
     setPageSize(ps);
   }, []);
 
-  const handleRowClick = useCallback((_broker: BrokerSummary) => {
-    // Future: open broker drawer
+  const handleRowClick = useCallback((broker: BrokerSummary) => {
+    setSelectedBrokerId(broker.brokerId);
   }, []);
 
   return (
@@ -71,6 +73,11 @@ export function BrokerListPage() {
         pageSize={pageSize}
         onPageChange={handlePageChange}
         onRowClick={handleRowClick}
+      />
+
+      <BrokerDrawer
+        brokerId={selectedBrokerId}
+        onClose={() => setSelectedBrokerId(null)}
       />
     </div>
   );
