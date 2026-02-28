@@ -1,4 +1,5 @@
-import { Steps, Card, Typography, Tag } from 'antd';
+import { useMemo } from 'react';
+import { Steps, Card, Typography, Tag, Space } from 'antd';
 import {
   IdcardOutlined,
   UserOutlined,
@@ -7,6 +8,11 @@ import {
   BankOutlined,
   StockOutlined,
   CheckSquareOutlined,
+  TeamOutlined,
+  GlobalOutlined,
+  SafetyOutlined,
+  AuditOutlined,
+  SolutionOutlined,
 } from '@ant-design/icons';
 import { useOnboardingStore } from '../store/onboardingStore';
 import { PanVerificationStep } from './steps/PanVerificationStep';
@@ -15,41 +21,111 @@ import { AddressStep } from './steps/AddressStep';
 import { ContactNomineeStep } from './steps/ContactNomineeStep';
 import { BankDetailsStep } from './steps/BankDetailsStep';
 import { DematAccountStep } from './steps/DematAccountStep';
+import { JointHoldersStep } from './steps/JointHoldersStep';
+import { FatcaStep } from './steps/FatcaStep';
+import { DeclarationStep } from './steps/DeclarationStep';
 import { ReviewStep } from './steps/ReviewStep';
+import { EntityDetailsStep } from './steps/EntityDetailsStep';
+import { AuthorizedSignatoriesStep } from './steps/AuthorizedSignatoriesStep';
 
 const { Title, Text } = Typography;
 
-const STEPS = [
-  { title: 'PAN Verification', icon: <IdcardOutlined /> },
-  { title: 'Basic Details', icon: <UserOutlined /> },
-  { title: 'Address', icon: <HomeOutlined /> },
-  { title: 'Contact & Nominee', icon: <PhoneOutlined /> },
-  { title: 'Bank Details', icon: <BankOutlined /> },
-  { title: 'Demat Account', icon: <StockOutlined /> },
-  { title: 'Review & Submit', icon: <CheckSquareOutlined /> },
+// Individual PAN types (4th char P or J)
+export const INDIVIDUAL_TYPES = new Set(['Individual', 'AJP']);
+
+type StepKey =
+  | 'pan'
+  | 'entity'
+  | 'signatories'
+  | 'basic'
+  | 'joint'
+  | 'address'
+  | 'contact'
+  | 'bank'
+  | 'demat'
+  | 'fatca'
+  | 'declaration'
+  | 'review';
+
+interface StepDef {
+  key: StepKey;
+  title: string;
+  icon: React.ReactNode;
+}
+
+const INDIV_ALL_STEPS: StepDef[] = [
+  { key: 'pan', title: 'PAN', icon: <IdcardOutlined /> },
+  { key: 'basic', title: 'Basic Details', icon: <UserOutlined /> },
+  { key: 'joint', title: 'Joint Holders', icon: <TeamOutlined /> },
+  { key: 'address', title: 'Address', icon: <HomeOutlined /> },
+  { key: 'contact', title: 'Contact & Nominee', icon: <PhoneOutlined /> },
+  { key: 'bank', title: 'Bank Details', icon: <BankOutlined /> },
+  { key: 'demat', title: 'Demat Account', icon: <StockOutlined /> },
+  { key: 'fatca', title: 'FATCA / CRS', icon: <GlobalOutlined /> },
+  { key: 'declaration', title: 'Declaration', icon: <SafetyOutlined /> },
+  { key: 'review', title: 'Review & Submit', icon: <CheckSquareOutlined /> },
+];
+
+const NONINDIV_STEPS: StepDef[] = [
+  { key: 'pan', title: 'PAN', icon: <IdcardOutlined /> },
+  { key: 'entity', title: 'Entity Details', icon: <AuditOutlined /> },
+  { key: 'signatories', title: 'Signatories', icon: <SolutionOutlined /> },
+  { key: 'address', title: 'Address', icon: <HomeOutlined /> },
+  { key: 'contact', title: 'Contact', icon: <PhoneOutlined /> },
+  { key: 'bank', title: 'Bank Details', icon: <BankOutlined /> },
+  { key: 'demat', title: 'Demat Account', icon: <StockOutlined /> },
+  { key: 'fatca', title: 'FATCA / CRS', icon: <GlobalOutlined /> },
+  { key: 'declaration', title: 'Declaration', icon: <SafetyOutlined /> },
+  { key: 'review', title: 'Review & Submit', icon: <CheckSquareOutlined /> },
 ];
 
 export function ClientOnboardingPage() {
   const { currentStep, setStep, pan } = useOnboardingStore();
 
+  const isIndividualClient = !pan || INDIVIDUAL_TYPES.has(pan.clientType);
+  const isJoint = pan?.holderType === 'Joint';
+
+  const steps = useMemo<StepDef[]>(() => {
+    if (!isIndividualClient) return NONINDIV_STEPS;
+    return INDIV_ALL_STEPS.filter((s) => s.key !== 'joint' || isJoint);
+  }, [isIndividualClient, isJoint]);
+
   const goNext = () => setStep(currentStep + 1);
   const goPrev = () => setStep(currentStep - 1);
 
+  const currentKey = steps[currentStep]?.key;
+
   const renderStep = () => {
-    switch (currentStep) {
-      case 0:
+    switch (currentKey) {
+      case 'pan':
         return <PanVerificationStep onNext={goNext} />;
-      case 1:
+      case 'entity':
+        return <EntityDetailsStep onNext={goNext} onPrev={goPrev} />;
+      case 'signatories':
+        return <AuthorizedSignatoriesStep onNext={goNext} onPrev={goPrev} />;
+      case 'basic':
         return <BasicDetailsStep onNext={goNext} onPrev={goPrev} />;
-      case 2:
+      case 'joint':
+        return <JointHoldersStep onNext={goNext} onPrev={goPrev} />;
+      case 'address':
         return <AddressStep onNext={goNext} onPrev={goPrev} />;
-      case 3:
-        return <ContactNomineeStep onNext={goNext} onPrev={goPrev} />;
-      case 4:
+      case 'contact':
+        return (
+          <ContactNomineeStep
+            onNext={goNext}
+            onPrev={goPrev}
+            showNominee={isIndividualClient}
+          />
+        );
+      case 'bank':
         return <BankDetailsStep onNext={goNext} onPrev={goPrev} />;
-      case 5:
+      case 'demat':
         return <DematAccountStep onNext={goNext} onPrev={goPrev} />;
-      case 6:
+      case 'fatca':
+        return <FatcaStep onNext={goNext} onPrev={goPrev} />;
+      case 'declaration':
+        return <DeclarationStep onNext={goNext} onPrev={goPrev} />;
+      case 'review':
         return <ReviewStep onPrev={goPrev} />;
       default:
         return null;
@@ -67,12 +143,14 @@ export function ClientOnboardingPage() {
           Register a new client by completing all required steps
         </Text>
         {pan && (
-          <span style={{ marginLeft: 12 }}>
+          <Space style={{ marginLeft: 12 }}>
             <Tag color="blue" style={{ fontWeight: 600 }}>
               {pan.pan}
             </Tag>
             <Tag color="geekblue">{pan.clientType}</Tag>
-          </span>
+            {!isIndividualClient && <Tag color="volcano">Non-Individual</Tag>}
+            {pan.holderType === 'Joint' && <Tag color="purple">Joint</Tag>}
+          </Space>
         )}
       </div>
 
@@ -83,7 +161,7 @@ export function ClientOnboardingPage() {
       >
         <Steps
           current={currentStep}
-          items={STEPS.map((s) => ({ title: s.title, icon: s.icon }))}
+          items={steps.map((s) => ({ title: s.title, icon: s.icon }))}
           size="small"
         />
       </Card>

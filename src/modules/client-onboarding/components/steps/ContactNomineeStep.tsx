@@ -31,6 +31,7 @@ const RELATIONSHIP_OPTIONS = [
 interface Props {
   onNext: () => void;
   onPrev: () => void;
+  showNominee?: boolean;
 }
 
 interface FormValues extends ContactData {
@@ -44,7 +45,7 @@ interface FormValues extends ContactData {
   nomineeAddress?: string;
 }
 
-export function ContactNomineeStep({ onNext, onPrev }: Props) {
+export function ContactNomineeStep({ onNext, onPrev, showNominee = true }: Props) {
   const [form] = Form.useForm<FormValues>();
   const {
     contact: savedContact,
@@ -58,17 +59,19 @@ export function ContactNomineeStep({ onNext, onPrev }: Props) {
     if (values.alternateMobile) contactData.alternateMobile = values.alternateMobile;
     setContact(contactData);
 
-    const nomineeData: NomineeData = {
-      nomineeName: values.nomineeName,
-      relationship: values.relationship,
-      dob: values.nomineeDob ? values.nomineeDob.format('YYYY-MM-DD') : '',
-      sharePercentage: values.sharePercentage ?? 100,
-    };
-    if (values.nomineePan) nomineeData.nomineePan = values.nomineePan;
-    if (values.nomineeMobile) nomineeData.nomineeMobile = values.nomineeMobile;
-    if (values.nomineeEmail) nomineeData.nomineeEmail = values.nomineeEmail;
-    if (values.nomineeAddress) nomineeData.nomineeAddress = values.nomineeAddress;
-    setNominee(nomineeData);
+    if (showNominee) {
+      const nomineeData: NomineeData = {
+        nomineeName: values.nomineeName,
+        relationship: values.relationship,
+        dob: values.nomineeDob ? values.nomineeDob.format('YYYY-MM-DD') : '',
+        sharePercentage: values.sharePercentage ?? 100,
+      };
+      if (values.nomineePan) nomineeData.nomineePan = values.nomineePan;
+      if (values.nomineeMobile) nomineeData.nomineeMobile = values.nomineeMobile;
+      if (values.nomineeEmail) nomineeData.nomineeEmail = values.nomineeEmail;
+      if (values.nomineeAddress) nomineeData.nomineeAddress = values.nomineeAddress;
+      setNominee(nomineeData);
+    }
 
     onNext();
   };
@@ -131,89 +134,93 @@ export function ContactNomineeStep({ onNext, onPrev }: Props) {
         </Col>
       </Row>
 
-      <Divider style={{ margin: '4px 0 16px' }} />
+      {showNominee && (
+        <>
+          <Divider style={{ margin: '4px 0 16px' }} />
 
-      {/* Nominee Details */}
-      <Text strong style={{ display: 'block', marginBottom: 12, color: '#1d3557' }}>
-        Nominee Details
-      </Text>
+          {/* Nominee Details */}
+          <Text strong style={{ display: 'block', marginBottom: 12, color: '#1d3557' }}>
+            Nominee Details
+          </Text>
 
-      <Row gutter={12}>
-        <Col span={12}>
-          <Form.Item
-            label="Nominee Name"
-            name="nomineeName"
-            rules={[{ required: true, message: 'Required' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item
-            label="Relationship"
-            name="relationship"
-            rules={[{ required: true, message: 'Required' }]}
-          >
-            <Select options={RELATIONSHIP_OPTIONS} placeholder="Select" />
-          </Form.Item>
-        </Col>
-        <Col span={6}>
-          <Form.Item
-            label="Share %"
-            name="sharePercentage"
-            rules={[{ required: true, message: 'Required' }]}
-          >
-            <InputNumber min={1} max={100} style={{ width: '100%' }} addonAfter="%" />
-          </Form.Item>
-        </Col>
-      </Row>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item
+                label="Nominee Name"
+                name="nomineeName"
+                rules={[{ required: true, message: 'Required' }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                label="Relationship"
+                name="relationship"
+                rules={[{ required: true, message: 'Required' }]}
+              >
+                <Select options={RELATIONSHIP_OPTIONS} placeholder="Select" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                label="Share %"
+                name="sharePercentage"
+                rules={[{ required: true, message: 'Required' }]}
+              >
+                <InputNumber min={1} max={100} style={{ width: '100%' }} addonAfter="%" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-      <Row gutter={12}>
-        <Col span={8}>
-          <Form.Item label="Date of Birth" name="nomineeDob">
-            <DatePicker
-              style={{ width: '100%' }}
-              format="DD-MMM-YYYY"
-              disabledDate={(d) => d.isAfter(dayjs())}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Nominee PAN"
-            name="nomineePan"
-            normalize={(val: string) => (val ?? '').toUpperCase()}
-          >
-            <Input maxLength={10} placeholder="Optional" />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Nominee Mobile"
-            name="nomineeMobile"
-            rules={[{ pattern: /^[6-9]\d{9}$/, message: 'Enter a valid 10-digit mobile number' }]}
-          >
-            <Input maxLength={10} placeholder="Optional" />
-          </Form.Item>
-        </Col>
-      </Row>
+          <Row gutter={12}>
+            <Col span={8}>
+              <Form.Item label="Date of Birth" name="nomineeDob">
+                <DatePicker
+                  style={{ width: '100%' }}
+                  format="DD-MMM-YYYY"
+                  disabledDate={(d) => d.isAfter(dayjs())}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Nominee PAN"
+                name="nomineePan"
+                normalize={(val: string) => (val ?? '').toUpperCase()}
+              >
+                <Input maxLength={10} placeholder="Optional" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                label="Nominee Mobile"
+                name="nomineeMobile"
+                rules={[{ pattern: /^[6-9]\d{9}$/, message: 'Enter a valid 10-digit mobile number' }]}
+              >
+                <Input maxLength={10} placeholder="Optional" />
+              </Form.Item>
+            </Col>
+          </Row>
 
-      <Row gutter={12}>
-        <Col span={12}>
-          <Form.Item
-            label="Nominee Email"
-            name="nomineeEmail"
-            rules={[{ type: 'email', message: 'Invalid email' }]}
-          >
-            <Input placeholder="Optional" />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="Nominee Address" name="nomineeAddress">
-            <Input placeholder="Optional" />
-          </Form.Item>
-        </Col>
-      </Row>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item
+                label="Nominee Email"
+                name="nomineeEmail"
+                rules={[{ type: 'email', message: 'Invalid email' }]}
+              >
+                <Input placeholder="Optional" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Nominee Address" name="nomineeAddress">
+                <Input placeholder="Optional" />
+              </Form.Item>
+            </Col>
+          </Row>
+        </>
+      )}
 
       <Space style={{ marginTop: 8 }}>
         <Button onClick={onPrev}>Back</Button>

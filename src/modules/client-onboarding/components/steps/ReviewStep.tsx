@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useOnboardingStore } from '../../store/onboardingStore';
 import { submitOnboarding } from '../../services/onboardingService';
+import { INDIVIDUAL_TYPES } from '../ClientOnboardingPage';
 
 const { Title, Text } = Typography;
 
@@ -14,7 +15,24 @@ interface Props {
 export function ReviewStep({ onPrev }: Props) {
   const navigate = useNavigate();
   const store = useOnboardingStore();
-  const { pan, basicDetails, address, contact, nominee, bankDetails, dematAccount, reset } = store;
+  const {
+    pan,
+    basicDetails,
+    address,
+    contact,
+    nominee,
+    bankDetails,
+    dematAccount,
+    jointHolders,
+    fatca,
+    declaration,
+    entityDetails,
+    authorizedSignatories,
+    reset,
+  } = store;
+
+  const isIndividualClient = !pan || INDIVIDUAL_TYPES.has(pan.clientType);
+  const isHUF = pan?.clientType === 'HUF';
 
   const {
     mutate,
@@ -25,18 +43,30 @@ export function ReviewStep({ onPrev }: Props) {
     error,
   } = useMutation({
     mutationFn: () => {
-      if (!pan || !basicDetails || !address || !contact) {
+      if (!pan || !address || !contact) {
         throw new Error('Required onboarding data is missing');
       }
+      if (isIndividualClient && !basicDetails) {
+        throw new Error('Basic details are required for individual clients');
+      }
+      if (!isIndividualClient && !entityDetails) {
+        throw new Error('Entity details are required for non-individual clients');
+      }
+
       const payload: Parameters<typeof submitOnboarding>[0] = {
         pan,
-        basicDetails,
         address,
         contact,
       };
+      if (isIndividualClient && basicDetails) payload.basicDetails = basicDetails;
       if (nominee) payload.nominee = nominee;
       if (bankDetails) payload.bankDetails = bankDetails;
       if (dematAccount) payload.dematAccount = dematAccount;
+      if (jointHolders.length > 0) payload.jointHolders = jointHolders;
+      if (fatca) payload.fatca = fatca;
+      if (declaration) payload.declaration = declaration;
+      if (entityDetails) payload.entityDetails = entityDetails;
+      if (authorizedSignatories.length > 0) payload.authorizedSignatories = authorizedSignatories;
       return submitOnboarding(payload);
     },
     onSuccess: () => {
@@ -72,10 +102,10 @@ export function ReviewStep({ onPrev }: Props) {
 
       {/* PAN & Client Type */}
       <Descriptions
-        title="PAN & Client Type"
+        title="PAN & Account Type"
         bordered
         size="small"
-        column={2}
+        column={3}
         style={{ marginBottom: 20 }}
       >
         <Descriptions.Item label="PAN">
@@ -86,42 +116,164 @@ export function ReviewStep({ onPrev }: Props) {
         <Descriptions.Item label="Client Type">
           <Tag color="blue">{pan?.clientType}</Tag>
         </Descriptions.Item>
+        <Descriptions.Item label="Holder Type">
+          <Tag color={pan?.holderType === 'Joint' ? 'purple' : 'green'}>{pan?.holderType}</Tag>
+        </Descriptions.Item>
       </Descriptions>
 
       <Divider />
 
-      {/* Basic Details */}
-      <Descriptions
-        title="Basic Details"
-        bordered
-        size="small"
-        column={3}
-        style={{ marginBottom: 20 }}
-      >
-        <Descriptions.Item label="Name" span={2}>
-          {[
-            basicDetails?.prefix,
-            basicDetails?.firstName,
-            basicDetails?.middleName,
-            basicDetails?.lastName,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        </Descriptions.Item>
-        <Descriptions.Item label="DOB">{basicDetails?.dob}</Descriptions.Item>
-        <Descriptions.Item label="Gender">{basicDetails?.gender}</Descriptions.Item>
-        <Descriptions.Item label="Marital Status">
-          {basicDetails?.maritalStatus ?? '—'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Occupation">{basicDetails?.occupation}</Descriptions.Item>
-        <Descriptions.Item label="Father / Spouse">
-          {basicDetails?.fatherSpouseName ?? '—'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Mother">{basicDetails?.motherName ?? '—'}</Descriptions.Item>
-        <Descriptions.Item label="Annual Income">
-          {basicDetails?.grossAnnualIncome ?? '—'}
-        </Descriptions.Item>
-      </Descriptions>
+      {isIndividualClient ? (
+        <>
+          {/* Basic Details */}
+          <Descriptions
+            title="Basic Details"
+            bordered
+            size="small"
+            column={3}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Name" span={2}>
+              {[
+                basicDetails?.prefix,
+                basicDetails?.firstName,
+                basicDetails?.middleName,
+                basicDetails?.lastName,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            </Descriptions.Item>
+            <Descriptions.Item label="DOB">{basicDetails?.dob}</Descriptions.Item>
+            <Descriptions.Item label="Gender">{basicDetails?.gender}</Descriptions.Item>
+            <Descriptions.Item label="Marital Status">
+              {basicDetails?.maritalStatus ?? '—'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Occupation">{basicDetails?.occupation}</Descriptions.Item>
+            <Descriptions.Item label="Father / Spouse">
+              {basicDetails?.fatherSpouseName ?? '—'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Mother">{basicDetails?.motherName ?? '—'}</Descriptions.Item>
+            <Descriptions.Item label="Annual Income">
+              {basicDetails?.grossAnnualIncome ?? '—'}
+            </Descriptions.Item>
+          </Descriptions>
+
+          {/* Identity & Residency */}
+          {(basicDetails?.citizenshipStatus ||
+            basicDetails?.residentialStatus ||
+            basicDetails?.identityProofType) && (
+            <>
+              <Divider />
+              <Descriptions
+                title="Identity & Residency"
+                bordered
+                size="small"
+                column={2}
+                style={{ marginBottom: 20 }}
+              >
+                <Descriptions.Item label="Citizenship Status">
+                  {basicDetails?.citizenshipStatus ?? '—'}
+                </Descriptions.Item>
+                <Descriptions.Item label="Residential Status">
+                  {basicDetails?.residentialStatus ?? '—'}
+                </Descriptions.Item>
+                {basicDetails?.identityProofType && (
+                  <>
+                    <Descriptions.Item label="Identity Proof Type">
+                      {basicDetails.identityProofType}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Identity Proof Number">
+                      <Text code>{basicDetails.identityProofNumber}</Text>
+                    </Descriptions.Item>
+                  </>
+                )}
+              </Descriptions>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          {/* Entity Details */}
+          <Descriptions
+            title="Entity Details"
+            bordered
+            size="small"
+            column={2}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Entity Name" span={2}>
+              {entityDetails?.entityName}
+            </Descriptions.Item>
+            {entityDetails?.constitutionType && (
+              <Descriptions.Item label="Constitution Type">
+                {entityDetails.constitutionType}
+              </Descriptions.Item>
+            )}
+            {entityDetails?.registrationNumber && (
+              <Descriptions.Item label="Registration / CIN">
+                <Text code>{entityDetails.registrationNumber}</Text>
+              </Descriptions.Item>
+            )}
+            {entityDetails?.dateOfConstitution && (
+              <Descriptions.Item label="Date of Constitution">
+                {entityDetails.dateOfConstitution}
+              </Descriptions.Item>
+            )}
+            {entityDetails?.gstNumber && (
+              <Descriptions.Item label="GST Number">
+                <Text code>{entityDetails.gstNumber}</Text>
+              </Descriptions.Item>
+            )}
+            {entityDetails?.annualTurnover && (
+              <Descriptions.Item label="Annual Turnover">
+                {entityDetails.annualTurnover}
+              </Descriptions.Item>
+            )}
+            {isHUF && entityDetails?.kartaName && (
+              <Descriptions.Item label="Karta Name">{entityDetails.kartaName}</Descriptions.Item>
+            )}
+            {isHUF && entityDetails?.kartaPan && (
+              <Descriptions.Item label="Karta PAN">
+                <Text code>{entityDetails.kartaPan}</Text>
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+
+          {/* Authorized Signatories */}
+          {authorizedSignatories.length > 0 && (
+            <>
+              <Divider />
+              {authorizedSignatories.map((sig, i) => (
+                <Descriptions
+                  key={i}
+                  title={`Authorized Signatory ${i + 1}`}
+                  bordered
+                  size="small"
+                  column={3}
+                  style={{ marginBottom: 16 }}
+                >
+                  <Descriptions.Item label="Name">{sig.name}</Descriptions.Item>
+                  <Descriptions.Item label="Designation">{sig.designation}</Descriptions.Item>
+                  <Descriptions.Item label="PAN">
+                    <Text code>{sig.pan}</Text>
+                  </Descriptions.Item>
+                  {sig.din && (
+                    <Descriptions.Item label="DIN">
+                      <Text code>{sig.din}</Text>
+                    </Descriptions.Item>
+                  )}
+                  {sig.mobile && (
+                    <Descriptions.Item label="Mobile">{sig.mobile}</Descriptions.Item>
+                  )}
+                  {sig.email && (
+                    <Descriptions.Item label="Email">{sig.email}</Descriptions.Item>
+                  )}
+                </Descriptions>
+              ))}
+            </>
+          )}
+        </>
+      )}
 
       <Divider />
 
@@ -171,7 +323,7 @@ export function ReviewStep({ onPrev }: Props) {
 
       <Divider />
 
-      {/* Nominee */}
+      {/* Nominee (individual only) */}
       {nominee && (
         <Descriptions
           title="Nominee Details"
@@ -187,6 +339,32 @@ export function ReviewStep({ onPrev }: Props) {
           <Descriptions.Item label="Mobile">{nominee.nomineeMobile ?? '—'}</Descriptions.Item>
           <Descriptions.Item label="Email">{nominee.nomineeEmail ?? '—'}</Descriptions.Item>
         </Descriptions>
+      )}
+
+      {/* Joint Holders */}
+      {jointHolders.length > 0 && (
+        <>
+          <Divider />
+          {jointHolders.map((h) => (
+            <Descriptions
+              key={h.holderNumber}
+              title={`${h.holderNumber === 2 ? '2nd' : '3rd'} Joint Holder`}
+              bordered
+              size="small"
+              column={3}
+              style={{ marginBottom: 20 }}
+            >
+              <Descriptions.Item label="Name">
+                {h.firstName} {h.lastName}
+              </Descriptions.Item>
+              <Descriptions.Item label="PAN">
+                <Text code>{h.pan}</Text>
+              </Descriptions.Item>
+              <Descriptions.Item label="DOB">{h.dob}</Descriptions.Item>
+              <Descriptions.Item label="Relationship">{h.relationship}</Descriptions.Item>
+            </Descriptions>
+          ))}
+        </>
       )}
 
       {bankDetails && (
@@ -230,6 +408,65 @@ export function ReviewStep({ onPrev }: Props) {
             <Descriptions.Item label="Client ID / Beneficiary ID">
               <Text code>{dematAccount.clientId}</Text>
             </Descriptions.Item>
+            {dematAccount.segments.length > 0 && (
+              <Descriptions.Item label="Trading Segments" span={2}>
+                <Space>
+                  {dematAccount.segments.map((s) => (
+                    <Tag key={s} color="blue">
+                      {s}
+                    </Tag>
+                  ))}
+                </Space>
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+        </>
+      )}
+
+      {/* FATCA */}
+      {fatca && (
+        <>
+          <Divider />
+          <Descriptions
+            title="FATCA / CRS"
+            bordered
+            size="small"
+            column={2}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Tax Residency Country">{fatca.taxCountry}</Descriptions.Item>
+            <Descriptions.Item label="TIN">{fatca.tin ?? '—'}</Descriptions.Item>
+            <Descriptions.Item label="US Person">
+              <Tag color={fatca.isUsPerson ? 'red' : 'green'}>
+                {fatca.isUsPerson ? 'Yes' : 'No'}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Source of Wealth">{fatca.sourceOfWealth}</Descriptions.Item>
+          </Descriptions>
+        </>
+      )}
+
+      {/* Declaration */}
+      {declaration && (
+        <>
+          <Divider />
+          <Descriptions
+            title="Declaration"
+            bordered
+            size="small"
+            column={2}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Information Accurate">
+              <Tag color={declaration.informationAccurate ? 'green' : 'red'}>
+                {declaration.informationAccurate ? 'Confirmed' : 'Not Confirmed'}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="Terms Accepted">
+              <Tag color={declaration.acceptedTerms ? 'green' : 'red'}>
+                {declaration.acceptedTerms ? 'Accepted' : 'Not Accepted'}
+              </Tag>
+            </Descriptions.Item>
           </Descriptions>
         </>
       )}
@@ -238,10 +475,10 @@ export function ReviewStep({ onPrev }: Props) {
         <Alert
           type="warning"
           showIcon
-          message="API not yet available"
+          message="Submission Error"
           description={
             (error as Error)?.message ??
-            'The backend API is not yet implemented. Onboarding data has been captured and will be submitted once the API is ready.'
+            'The backend API returned an error. Please check your details and try again.'
           }
           style={{ marginBottom: 16 }}
         />

@@ -1,6 +1,7 @@
 export interface PanStepData {
   pan: string;
   clientType: string;
+  holderType: 'Single' | 'Joint';
 }
 
 export interface BasicDetailsData {
@@ -15,6 +16,10 @@ export interface BasicDetailsData {
   maritalStatus?: string;
   occupation: string;
   grossAnnualIncome?: string;
+  citizenshipStatus?: string;
+  residentialStatus?: string;
+  identityProofType?: string;
+  identityProofNumber?: string;
 }
 
 export interface AddressData {
@@ -63,16 +68,63 @@ export interface DematAccountData {
   dpId: string;
   clientId: string;
   dpName: string;
+  segments: string[];
+}
+
+export interface JointHolderData {
+  holderNumber: 2 | 3;
+  pan: string;
+  firstName: string;
+  lastName: string;
+  dob: string; // ISO 'YYYY-MM-DD'
+  relationship: string;
+}
+
+export interface FatcaData {
+  taxCountry: string;
+  tin?: string;
+  isUsPerson: boolean;
+  sourceOfWealth: string;
+}
+
+export interface DeclarationData {
+  acceptedTerms: boolean;
+  informationAccurate: boolean;
+}
+
+export interface EntityDetailsData {
+  entityName: string;
+  registrationNumber?: string;
+  dateOfConstitution?: string; // ISO YYYY-MM-DD
+  constitutionType?: string;
+  gstNumber?: string;
+  annualTurnover?: string;
+  kartaName?: string;   // HUF only
+  kartaPan?: string;    // HUF only
+}
+
+export interface AuthorizedSignatoryData {
+  name: string;
+  designation: string;
+  pan: string;
+  din?: string;
+  mobile?: string;
+  email?: string;
 }
 
 export interface OnboardingPayload {
   pan: PanStepData;
-  basicDetails: BasicDetailsData;
+  basicDetails?: BasicDetailsData;
   address: AddressData;
   contact: ContactData;
   nominee?: NomineeData;
   bankDetails?: BankDetailsData;
   dematAccount?: DematAccountData;
+  jointHolders?: JointHolderData[];
+  fatca?: FatcaData;
+  declaration?: DeclarationData;
+  entityDetails?: EntityDetailsData;
+  authorizedSignatories?: AuthorizedSignatoryData[];
 }
 
 export interface OnboardingResult {

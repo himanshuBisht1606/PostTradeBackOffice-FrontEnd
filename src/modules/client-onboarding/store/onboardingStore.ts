@@ -7,6 +7,11 @@ import type {
   NomineeData,
   BankDetailsData,
   DematAccountData,
+  JointHolderData,
+  FatcaData,
+  DeclarationData,
+  EntityDetailsData,
+  AuthorizedSignatoryData,
 } from '../types/onboarding.types';
 
 interface OnboardingState {
@@ -18,6 +23,11 @@ interface OnboardingState {
   nominee: NomineeData | null;
   bankDetails: BankDetailsData | null;
   dematAccount: DematAccountData | null;
+  jointHolders: JointHolderData[];
+  fatca: FatcaData | null;
+  declaration: DeclarationData | null;
+  entityDetails: EntityDetailsData | null;
+  authorizedSignatories: AuthorizedSignatoryData[];
 
   setStep: (step: number) => void;
   setPan: (data: PanStepData) => void;
@@ -27,6 +37,11 @@ interface OnboardingState {
   setNominee: (data: NomineeData) => void;
   setBankDetails: (data: BankDetailsData) => void;
   setDematAccount: (data: DematAccountData) => void;
+  setJointHolders: (data: JointHolderData[]) => void;
+  setFatca: (data: FatcaData) => void;
+  setDeclaration: (data: DeclarationData) => void;
+  setEntityDetails: (data: EntityDetailsData) => void;
+  setAuthorizedSignatories: (data: AuthorizedSignatoryData[]) => void;
   reset: () => void;
 }
 
@@ -39,6 +54,11 @@ const initialState = {
   nominee: null,
   bankDetails: null,
   dematAccount: null,
+  jointHolders: [],
+  fatca: null,
+  declaration: null,
+  entityDetails: null,
+  authorizedSignatories: [],
 };
 
 export const useOnboardingStore = create<OnboardingState>((set) => ({
@@ -51,5 +71,10 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   setNominee: (data) => set({ nominee: data }),
   setBankDetails: (data) => set({ bankDetails: data }),
   setDematAccount: (data) => set({ dematAccount: data }),
+  setJointHolders: (data) => set({ jointHolders: data }),
+  setFatca: (data) => set({ fatca: data }),
+  setDeclaration: (data) => set({ declaration: data }),
+  setEntityDetails: (data) => set({ entityDetails: data }),
+  setAuthorizedSignatories: (data) => set({ authorizedSignatories: data }),
   reset: () => set(initialState),
 }));

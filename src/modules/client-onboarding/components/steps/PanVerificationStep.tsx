@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Form, Input, Button, Typography, Tag, Space, Alert } from 'antd';
-import { IdcardOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Typography, Tag, Space, Alert, Radio } from 'antd';
+import { IdcardOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { useOnboardingStore } from '../../store/onboardingStore';
 
 const { Text } = Typography;
@@ -30,18 +30,29 @@ interface Props {
   onNext: () => void;
 }
 
+type FormValues = { pan: string; holderType: 'Single' | 'Joint' };
+
 export function PanVerificationStep({ onNext }: Props) {
-  const [form] = Form.useForm<{ pan: string }>();
+  const [form] = Form.useForm<FormValues>();
   const { pan: saved, setPan } = useOnboardingStore();
   const [detectedType, setDetectedType] = useState<string>(saved?.clientType ?? '');
 
-  const handleValuesChange = (_: unknown, all: { pan?: string }) => {
-    setDetectedType(detectClientType(all.pan ?? ''));
+  const isIndividual = detectedType === 'Individual';
+
+  const handleValuesChange = (_: unknown, all: Partial<FormValues>) => {
+    const type = detectClientType(all.pan ?? '');
+    setDetectedType(type);
+    // Non-individual PANs are always Single
+    if (type !== 'Individual' && type !== '') {
+      form.setFieldValue('holderType', 'Single');
+    }
   };
 
-  const handleFinish = (values: { pan: string }) => {
+  const handleFinish = (values: FormValues) => {
     const pan = values.pan.toUpperCase();
-    setPan({ pan, clientType: detectClientType(pan) });
+    const clientType = detectClientType(pan);
+    const holderType = clientType === 'Individual' ? values.holderType : 'Single';
+    setPan({ pan, clientType, holderType });
     onNext();
   };
 
@@ -49,7 +60,7 @@ export function PanVerificationStep({ onNext }: Props) {
     <Form
       form={form}
       layout="vertical"
-      initialValues={{ pan: saved?.pan ?? '' }}
+      initialValues={{ pan: saved?.pan ?? '', holderType: saved?.holderType ?? 'Single' }}
       onValuesChange={handleValuesChange}
       onFinish={handleFinish}
       style={{ maxWidth: 520 }}
@@ -87,6 +98,29 @@ export function PanVerificationStep({ onNext }: Props) {
               {detectedType}
             </Tag>
           </Space>
+        </Form.Item>
+      )}
+
+      {isIndividual && (
+        <Form.Item
+          label="Account Holder Type"
+          name="holderType"
+          rules={[{ required: true, message: 'Please select holder type' }]}
+        >
+          <Radio.Group>
+            <Radio.Button value="Single">
+              <Space>
+                <UserOutlined />
+                Single Holder
+              </Space>
+            </Radio.Button>
+            <Radio.Button value="Joint">
+              <Space>
+                <TeamOutlined />
+                Joint Holders
+              </Space>
+            </Radio.Button>
+          </Radio.Group>
         </Form.Item>
       )}
 
