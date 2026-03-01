@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Select, Space, Typography, Alert, Descriptions, Tag, Divider } from 'antd';
+import { Button, Select, Space, Typography, Alert, Descriptions, Tag, Divider, Form } from 'antd';
 import {
   BranchesOutlined,
   EnvironmentOutlined,
@@ -22,6 +22,7 @@ interface Props {
 export function BranchSelectionStep({ onNext, onPrev }: Props) {
   const { branch, setBranch } = useOnboardingStore();
   const [selectedBranch, setSelectedBranch] = useState<BranchRecord | null>(null);
+  const [touched, setTouched] = useState(false);
 
   const { data: branches = [], isLoading, isError } = useQuery({
     queryKey: ['branches'],
@@ -37,6 +38,7 @@ export function BranchSelectionStep({ onNext, onPrev }: Props) {
     }));
 
   const handleChange = (value: string | undefined) => {
+    setTouched(true);
     if (!value) {
       setBranch(null);
       setSelectedBranch(null);
@@ -53,6 +55,12 @@ export function BranchSelectionStep({ onNext, onPrev }: Props) {
     }
   };
 
+  const handleNext = () => {
+    setTouched(true);
+    if (!branch) return;
+    onNext();
+  };
+
   // Restore the selectedBranch object on re-mount if store already has a branch selected
   const displayBranch =
     selectedBranch ??
@@ -64,37 +72,47 @@ export function BranchSelectionStep({ onNext, onPrev }: Props) {
         Branch Assignment
       </Title>
       <Text type="secondary" style={{ display: 'block', marginBottom: 24 }}>
-        Select the branch under which this client will be registered. This field is optional.
+        Select the branch under which this client will be registered. A branch must be selected
+        before proceeding.
       </Text>
 
       {isError && (
         <Alert
-          type="warning"
+          type="error"
           showIcon
-          message="Could not load branches. You can skip this step and assign a branch later."
+          message="Could not load branches. Please refresh the page and try again."
           style={{ marginBottom: 20 }}
         />
       )}
 
       <div style={{ maxWidth: 520 }}>
-        <Text strong style={{ display: 'block', marginBottom: 8 }}>
-          <BranchesOutlined style={{ marginRight: 6 }} />
-          Branch
-        </Text>
-        <Select
-          style={{ width: '100%' }}
-          placeholder="Select a branch (optional)"
-          loading={isLoading}
-          allowClear
-          showSearch
-          value={branch?.branchId ?? undefined}
-          onChange={handleChange}
-          filterOption={(input, opt) =>
-            (opt?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
-          options={options}
-          size="large"
-        />
+        <Form layout="vertical">
+          <Form.Item
+            label={
+              <Text strong>
+                <BranchesOutlined style={{ marginRight: 6 }} />
+                Branch <span style={{ color: '#ff4d4f' }}>*</span>
+              </Text>
+            }
+            validateStatus={touched && !branch ? 'error' : ''}
+            help={touched && !branch ? 'Please select a branch to continue' : undefined}
+          >
+            <Select
+              style={{ width: '100%' }}
+              placeholder="Select a branch"
+              loading={isLoading}
+              showSearch
+              value={branch?.branchId ?? undefined}
+              onChange={handleChange}
+              filterOption={(input, opt) =>
+                (opt?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={options}
+              size="large"
+              {...(touched && !branch ? { status: 'error' as const } : {})}
+            />
+          </Form.Item>
+        </Form>
       </div>
 
       {displayBranch && (
@@ -203,8 +221,8 @@ export function BranchSelectionStep({ onNext, onPrev }: Props) {
 
       <Space style={{ marginTop: 32 }}>
         <Button onClick={onPrev}>Back</Button>
-        <Button type="primary" onClick={onNext}>
-          {branch ? 'Next' : 'Skip'}
+        <Button type="primary" onClick={handleNext}>
+          Next
         </Button>
       </Space>
     </div>

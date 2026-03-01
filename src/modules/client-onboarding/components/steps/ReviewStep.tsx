@@ -47,6 +47,9 @@ export function ReviewStep({ onPrev }: Props) {
       if (!pan || !address || !contact) {
         throw new Error('Required onboarding data is missing');
       }
+      if (!branch) {
+        throw new Error('Branch selection is required');
+      }
       if (isIndividualClient && !basicDetails) {
         throw new Error('Basic details are required for individual clients');
       }
