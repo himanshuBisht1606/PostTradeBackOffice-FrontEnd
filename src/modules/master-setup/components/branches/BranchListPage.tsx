@@ -126,19 +126,20 @@ export function BranchListPage() {
 
   const openEdit = (record: BranchRecord) => {
     setEditingRecord(record);
-    editForm.setFieldsValue({
+    const vals: BranchFormValues = {
       branchCode: record.branchCode,
       branchName: record.branchName,
-      address: record.address ?? undefined,
-      city: record.city ?? undefined,
       stateCode: record.stateCode,
       stateName: record.stateName,
-      gstin: record.gstin ?? undefined,
-      contactPerson: record.contactPerson ?? undefined,
-      contactPhone: record.contactPhone ?? undefined,
-      contactEmail: record.contactEmail ?? undefined,
       isActive: record.isActive,
-    });
+    };
+    if (record.address !== null) vals.address = record.address;
+    if (record.city !== null) vals.city = record.city;
+    if (record.gstin !== null) vals.gstin = record.gstin;
+    if (record.contactPerson !== null) vals.contactPerson = record.contactPerson;
+    if (record.contactPhone !== null) vals.contactPhone = record.contactPhone;
+    if (record.contactEmail !== null) vals.contactEmail = record.contactEmail;
+    editForm.setFieldsValue(vals);
     setEditOpen(true);
   };
 
@@ -149,13 +150,13 @@ export function BranchListPage() {
       stateCode: values.stateCode.trim(),
       stateName: values.stateName.trim(),
       isActive: values.isActive,
-      address: values.address?.trim(),
-      city: values.city?.trim(),
-      gstin: values.gstin?.trim(),
-      contactPerson: values.contactPerson?.trim(),
-      contactPhone: values.contactPhone?.trim(),
-      contactEmail: values.contactEmail?.trim(),
     };
+    if (values.address !== undefined) payload.address = values.address.trim();
+    if (values.city !== undefined) payload.city = values.city.trim();
+    if (values.gstin !== undefined) payload.gstin = values.gstin.trim();
+    if (values.contactPerson !== undefined) payload.contactPerson = values.contactPerson.trim();
+    if (values.contactPhone !== undefined) payload.contactPhone = values.contactPhone.trim();
+    if (values.contactEmail !== undefined) payload.contactEmail = values.contactEmail.trim();
     updateMutation.mutate({ id: editingRecord.branchId, payload });
   };
 
