@@ -16,7 +16,7 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
@@ -27,7 +27,7 @@ import { useClientDetail } from '../../hooks/useClients';
 import { useAuthStore } from '@modules/auth/store/authStore';
 import { Permission } from '@app-types/roles.types';
 import { ClientStatus, KYCStatus, RiskCategory, Depository } from '@app-types/enums';
-import { updateClient, changeClientStatus } from '../../services/clientService';
+import { updateClient, changeClientStatus, deleteClient } from '../../services/clientService';
 import type { UpdateClientPayload, ClientDetail } from '../../services/clientService';
 
 const { Text } = Typography;
@@ -155,6 +155,19 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
     onError: () => void message.error('Failed to update status'),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => {
+      if (!clientId) return Promise.reject(new Error('No client selected'));
+      return deleteClient(clientId);
+    },
+    onSuccess: () => {
+      invalidate();
+      onClose();
+      void message.success('Client deleted');
+    },
+    onError: () => void message.error('Failed to delete client'),
+  });
+
   const openEdit = (c: ClientDetail) => {
     const vals: EditFormValues = {
       clientName: c.clientName,
@@ -247,9 +260,23 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
         isLoading={isLoading}
         extra={
           client && (
-            <Button icon={<EditOutlined />} onClick={() => openEdit(client)}>
-              Edit
-            </Button>
+            <Space>
+              <Button icon={<EditOutlined />} onClick={() => openEdit(client)}>
+                Edit
+              </Button>
+              <Popconfirm
+                title="Delete client"
+                description={`Permanently remove "${client.clientName}" from the system?`}
+                onConfirm={() => deleteMutation.mutate()}
+                okText="Delete"
+                okButtonProps={{ danger: true, loading: deleteMutation.isPending }}
+                cancelText="Cancel"
+              >
+                <Button danger icon={<DeleteOutlined />} loading={deleteMutation.isPending}>
+                  Delete
+                </Button>
+              </Popconfirm>
+            </Space>
           )
         }
       >

@@ -13,6 +13,7 @@ import {
   SafetyOutlined,
   AuditOutlined,
   SolutionOutlined,
+  BranchesOutlined,
 } from '@ant-design/icons';
 import { useOnboardingStore } from '../store/onboardingStore';
 import { PanVerificationStep } from './steps/PanVerificationStep';
@@ -27,6 +28,7 @@ import { DeclarationStep } from './steps/DeclarationStep';
 import { ReviewStep } from './steps/ReviewStep';
 import { EntityDetailsStep } from './steps/EntityDetailsStep';
 import { AuthorizedSignatoriesStep } from './steps/AuthorizedSignatoriesStep';
+import { BranchSelectionStep } from './steps/BranchSelectionStep';
 
 const { Title, Text } = Typography;
 
@@ -35,6 +37,7 @@ export const INDIVIDUAL_TYPES = new Set(['Individual', 'AJP']);
 
 type StepKey =
   | 'pan'
+  | 'branch'
   | 'entity'
   | 'signatories'
   | 'basic'
@@ -55,6 +58,7 @@ interface StepDef {
 
 const INDIV_ALL_STEPS: StepDef[] = [
   { key: 'pan', title: 'PAN', icon: <IdcardOutlined /> },
+  { key: 'branch', title: 'Branch', icon: <BranchesOutlined /> },
   { key: 'basic', title: 'Basic Details', icon: <UserOutlined /> },
   { key: 'joint', title: 'Joint Holders', icon: <TeamOutlined /> },
   { key: 'address', title: 'Address', icon: <HomeOutlined /> },
@@ -68,6 +72,7 @@ const INDIV_ALL_STEPS: StepDef[] = [
 
 const NONINDIV_STEPS: StepDef[] = [
   { key: 'pan', title: 'PAN', icon: <IdcardOutlined /> },
+  { key: 'branch', title: 'Branch', icon: <BranchesOutlined /> },
   { key: 'entity', title: 'Entity Details', icon: <AuditOutlined /> },
   { key: 'signatories', title: 'Signatories', icon: <SolutionOutlined /> },
   { key: 'address', title: 'Address', icon: <HomeOutlined /> },
@@ -99,6 +104,8 @@ export function ClientOnboardingPage() {
     switch (currentKey) {
       case 'pan':
         return <PanVerificationStep onNext={goNext} />;
+      case 'branch':
+        return <BranchSelectionStep onNext={goNext} onPrev={goPrev} />;
       case 'entity':
         return <EntityDetailsStep onNext={goNext} onPrev={goPrev} />;
       case 'signatories':

@@ -12,6 +12,7 @@ import type {
   DeclarationData,
   EntityDetailsData,
   AuthorizedSignatoryData,
+  BranchSelectionData,
 } from '../types/onboarding.types';
 
 interface OnboardingState {
@@ -28,6 +29,7 @@ interface OnboardingState {
   declaration: DeclarationData | null;
   entityDetails: EntityDetailsData | null;
   authorizedSignatories: AuthorizedSignatoryData[];
+  branch: BranchSelectionData | null;
 
   setStep: (step: number) => void;
   setPan: (data: PanStepData) => void;
@@ -42,6 +44,7 @@ interface OnboardingState {
   setDeclaration: (data: DeclarationData) => void;
   setEntityDetails: (data: EntityDetailsData) => void;
   setAuthorizedSignatories: (data: AuthorizedSignatoryData[]) => void;
+  setBranch: (data: BranchSelectionData | null) => void;
   reset: () => void;
 }
 
@@ -59,6 +62,7 @@ const initialState = {
   declaration: null,
   entityDetails: null,
   authorizedSignatories: [],
+  branch: null,
 };
 
 export const useOnboardingStore = create<OnboardingState>((set) => ({
@@ -76,5 +80,6 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   setDeclaration: (data) => set({ declaration: data }),
   setEntityDetails: (data) => set({ entityDetails: data }),
   setAuthorizedSignatories: (data) => set({ authorizedSignatories: data }),
+  setBranch: (data) => set({ branch: data }),
   reset: () => set(initialState),
 }));

@@ -17,6 +17,7 @@ export function ReviewStep({ onPrev }: Props) {
   const store = useOnboardingStore();
   const {
     pan,
+    branch,
     basicDetails,
     address,
     contact,
@@ -58,6 +59,7 @@ export function ReviewStep({ onPrev }: Props) {
         address,
         contact,
       };
+      if (branch) payload.branchId = branch.branchId;
       if (isIndividualClient && basicDetails) payload.basicDetails = basicDetails;
       if (nominee) payload.nominee = nominee;
       if (bankDetails) payload.bankDetails = bankDetails;
@@ -120,6 +122,24 @@ export function ReviewStep({ onPrev }: Props) {
           <Tag color={pan?.holderType === 'Joint' ? 'purple' : 'green'}>{pan?.holderType}</Tag>
         </Descriptions.Item>
       </Descriptions>
+
+      {branch && (
+        <>
+          <Divider />
+          <Descriptions
+            title="Branch Assignment"
+            bordered
+            size="small"
+            column={2}
+            style={{ marginBottom: 20 }}
+          >
+            <Descriptions.Item label="Branch Code">
+              <Text code>{branch.branchCode}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Branch Name">{branch.branchName}</Descriptions.Item>
+          </Descriptions>
+        </>
+      )}
 
       <Divider />
 

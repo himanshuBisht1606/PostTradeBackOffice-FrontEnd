@@ -59,3 +59,7 @@ export async function updateBranch(
   if (!data) throw new Error('Unexpected null response from updateBranch');
   return data;
 }
+
+export async function deleteBranch(id: string): Promise<void> {
+  await axiosInstance.delete(`/api/branches/${id}`);
+}

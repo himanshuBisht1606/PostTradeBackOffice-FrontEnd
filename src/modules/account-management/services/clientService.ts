@@ -118,3 +118,7 @@ export async function updateClient(id: string, payload: UpdateClientPayload): Pr
 export async function changeClientStatus(id: string, status: ClientStatus): Promise<void> {
   await axiosInstance.patch(`/api/clients/${id}/status`, { status });
 }
+
+export async function deleteClient(id: string): Promise<void> {
+  await axiosInstance.delete(`/api/clients/${id}`);
+}

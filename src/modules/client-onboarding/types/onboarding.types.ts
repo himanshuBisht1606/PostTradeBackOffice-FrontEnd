@@ -112,8 +112,15 @@ export interface AuthorizedSignatoryData {
   email?: string;
 }
 
+export interface BranchSelectionData {
+  branchId: string;
+  branchCode: string;
+  branchName: string;
+}
+
 export interface OnboardingPayload {
   pan: PanStepData;
+  branchId?: string;
   basicDetails?: BasicDetailsData;
   address: AddressData;
   contact: ContactData;
