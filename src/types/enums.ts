@@ -186,3 +186,26 @@ export enum MarginType {
   Cash = 'Cash',
   NonCash = 'NonCash',
 }
+
+// Capital Market File Import
+export enum CmFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Margin = 'Margin',
+  Obligation = 'Obligation',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+}
+
+export enum CmImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum CmTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FileWatcher = 'FileWatcher',
+  Scheduler = 'Scheduler',
+}

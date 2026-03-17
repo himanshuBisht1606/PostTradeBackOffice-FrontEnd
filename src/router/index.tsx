@@ -120,6 +120,11 @@ const PinCodeListPage = lazy(() =>
     default: m.PinCodeListPage,
   })),
 );
+const CmImportPage = lazy(() =>
+  import('@modules/post-trade/components/CmImportPage').then((m) => ({
+    default: m.CmImportPage,
+  })),
+);
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
@@ -459,6 +464,25 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <PinCodeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            path: 'post-trade',
+            children: [
+              {
+                path: 'cm/import',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <CmImportPage />
                       </Lazy>
                     ),
                   },
