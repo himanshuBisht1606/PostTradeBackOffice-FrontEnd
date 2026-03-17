@@ -20,7 +20,7 @@ interface Props {
 export function CmBatchLogsDrawer({ batchId, batchLabel, onClose }: Props) {
   const { data: logs, isLoading } = useQuery({
     queryKey: ['cm-batch-logs', batchId],
-    queryFn: () => getCmImportBatchLogs(batchId!),
+    queryFn: () => getCmImportBatchLogs(batchId as string),
     enabled: !!batchId,
     staleTime: 30_000,
   });
