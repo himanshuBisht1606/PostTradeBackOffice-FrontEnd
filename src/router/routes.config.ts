@@ -58,6 +58,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
   },
 
   { path: '/post-trade/cm/import', requiredRoles: OPS_ROLES, label: 'CM File Import' },
+  { path: '/post-trade/fo/import', requiredRoles: OPS_ROLES, label: 'FO File Import' },
 
   { path: '/governance/approvals', requiredRoles: CHECKER_ROLES, label: 'Approvals' },
   { path: '/governance/audit', requiredRoles: AUDIT_ROLES, label: 'Audit Log' },

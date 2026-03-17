@@ -209,3 +209,26 @@ export enum CmTriggerSource {
   FileWatcher = 'FileWatcher',
   Scheduler = 'Scheduler',
 }
+
+// Futures & Options File Import
+export enum FoFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+  Position = 'Position',
+  ContractMaster = 'ContractMaster',
+}
+
+export enum FoImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum FoTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FolderWatch = 'FolderWatch',
+  Scheduler = 'Scheduler',
+}

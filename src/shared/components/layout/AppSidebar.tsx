@@ -70,6 +70,7 @@ export function AppSidebar() {
 
           makeItem('Post-Trade', 'post-trade', <ImportOutlined />, [
             makeItem('CM File Import', '/post-trade/cm/import'),
+            makeItem('FO File Import', '/post-trade/fo/import'),
           ]),
         ]
       : []),
