@@ -10,13 +10,14 @@ async function uploadFile(
   file: File,
   tradingDate: string,
   exchange: string,
+  timeoutMs = 300_000,
 ): Promise<ImportResult> {
   const form = new FormData();
   form.append('file', file);
   const res = await axiosInstance.post<ApiResponse<ImportResult>>(
     `${BASE}/${endpoint}?tradingDate=${tradingDate}&exchange=${encodeURIComponent(exchange)}`,
     form,
-    { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 120_000 },
+    { headers: { 'Content-Type': 'multipart/form-data' }, timeout: timeoutMs },
   );
   const data = res.data.data;
   if (data === null) throw new Error('Import returned no data');
@@ -26,7 +27,7 @@ async function uploadFile(
 // ── Import endpoints ──────────────────────────────────────────────────────────
 
 export function importFoContractMaster(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/contract-master', file, tradingDate, exchange);
+  return uploadFile('import/contract-master', file, tradingDate, exchange, 600_000); // 10 min — NSE file is 34 MB / 99K rows
 }
 
 export function importFoTrade(file: File, tradingDate: string, exchange: string) {
