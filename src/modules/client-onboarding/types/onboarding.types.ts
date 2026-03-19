@@ -136,5 +136,5 @@ export interface OnboardingPayload {
 
 export interface OnboardingResult {
   clientId: string;
-  clientCode: string;
+  registrationNumber: string;
 }

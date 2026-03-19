@@ -87,10 +87,13 @@ export function ReviewStep({ onPrev }: Props) {
           Client Onboarded Successfully!
         </Title>
         <Text type="secondary" style={{ display: 'block', marginBottom: 8 }}>
-          Client Code: <strong>{result?.clientCode}</strong>
+          Registration Number: <strong style={{ fontFamily: 'monospace' }}>{result?.registrationNumber}</strong>
+        </Text>
+        <Text type="secondary" style={{ display: 'block', marginBottom: 4 }}>
+          Client ID: <strong>{result?.clientId}</strong>
         </Text>
         <Text type="secondary" style={{ display: 'block', marginBottom: 32 }}>
-          Client ID: <strong>{result?.clientId}</strong>
+          Client Code will be assigned by ops before trading can begin.
         </Text>
         <Button type="primary" onClick={() => void navigate('/account-management/clients')}>
           Go to Client List

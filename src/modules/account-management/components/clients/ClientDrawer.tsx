@@ -16,7 +16,7 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, IdcardOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
@@ -27,7 +27,7 @@ import { useClientDetail } from '../../hooks/useClients';
 import { useAuthStore } from '@modules/auth/store/authStore';
 import { Permission } from '@app-types/roles.types';
 import { ClientStatus, KYCStatus, RiskCategory, Depository } from '@app-types/enums';
-import { updateClient, changeClientStatus, deleteClient } from '../../services/clientService';
+import { updateClient, changeClientStatus, deleteClient, assignClientCode } from '../../services/clientService';
 import type { UpdateClientPayload, ClientDetail } from '../../services/clientService';
 
 const { Text } = Typography;
@@ -122,6 +122,8 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [editForm] = Form.useForm<EditFormValues>();
   const [pendingStatus, setPendingStatus] = useState<ClientStatus | null>(null);
+  const [assignCodeOpen, setAssignCodeOpen] = useState(false);
+  const [assignCodeForm] = Form.useForm<{ clientCode: string }>();
 
   const invalidate = () => {
     void qc.invalidateQueries({ queryKey: ['clients'] });
@@ -153,6 +155,21 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
       setPendingStatus(null);
     },
     onError: () => void message.error('Failed to update status'),
+  });
+
+  const assignCodeMutation = useMutation({
+    mutationFn: (clientCode: string) => {
+      if (!clientId) return Promise.reject(new Error('No client selected'));
+      return assignClientCode(clientId, clientCode);
+    },
+    onSuccess: () => {
+      invalidate();
+      void qc.invalidateQueries({ queryKey: ['clients', clientId] });
+      setAssignCodeOpen(false);
+      assignCodeForm.resetFields();
+      void message.success('Client code assigned — client is now Active');
+    },
+    onError: () => void message.error('Failed to assign client code'),
   });
 
   const deleteMutation = useMutation({
@@ -261,6 +278,15 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
         extra={
           client && (
             <Space>
+              {!client.clientCode && (
+                <Button
+                  icon={<IdcardOutlined />}
+                  type="primary"
+                  onClick={() => setAssignCodeOpen(true)}
+                >
+                  Assign Code
+                </Button>
+              )}
               <Button icon={<EditOutlined />} onClick={() => openEdit(client)}>
                 Edit
               </Button>
@@ -344,7 +370,14 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
                     </div>
 
                     <Descriptions bordered column={2} size="small">
-                      <Descriptions.Item label="Client Code">{client.clientCode}</Descriptions.Item>
+                      <Descriptions.Item label="Reg. No.">
+                        <span style={{ fontFamily: 'monospace' }}>{client.registrationNumber}</span>
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Client Code">
+                        {client.clientCode
+                          ? <span style={{ fontFamily: 'monospace' }}>{client.clientCode}</span>
+                          : <Tag color="default">Not Assigned</Tag>}
+                      </Descriptions.Item>
                       <Descriptions.Item label="Type">{client.clientType}</Descriptions.Item>
                       <Descriptions.Item label="Name" span={2}>{client.clientName}</Descriptions.Item>
                       <Descriptions.Item label="Email" span={2}>{client.email}</Descriptions.Item>
@@ -405,9 +438,48 @@ export function ClientDrawer({ clientId, onClose }: ClientDrawerProps) {
         )}
       </SlideDrawer>
 
+      {/* Assign Code Modal */}
+      <Modal
+        title={`Assign Client Code — ${client?.registrationNumber ?? ''}`}
+        open={assignCodeOpen}
+        onCancel={() => { setAssignCodeOpen(false); assignCodeForm.resetFields(); }}
+        footer={null}
+        width={420}
+        destroyOnClose
+      >
+        <Form
+          form={assignCodeForm}
+          layout="vertical"
+          onFinish={(vals: { clientCode: string }) => assignCodeMutation.mutate(vals.clientCode)}
+          style={{ marginTop: 8 }}
+        >
+          <Form.Item
+            label="Client Code"
+            name="clientCode"
+            rules={[
+              { required: true, message: 'Required' },
+              { max: 20, message: 'Max 20 characters' },
+            ]}
+            extra="Broker-assigned trading code that matches exchange files (NSE/BSE). Once assigned the client will be set to Active."
+          >
+            <Input
+              placeholder="e.g. AB1234"
+              style={{ fontFamily: 'monospace', textTransform: 'uppercase' }}
+              onChange={(e) => assignCodeForm.setFieldValue('clientCode', e.target.value.toUpperCase())}
+            />
+          </Form.Item>
+          <Space>
+            <Button onClick={() => { setAssignCodeOpen(false); assignCodeForm.resetFields(); }}>Cancel</Button>
+            <Button type="primary" htmlType="submit" loading={assignCodeMutation.isPending}>
+              Assign &amp; Activate
+            </Button>
+          </Space>
+        </Form>
+      </Modal>
+
       {/* Edit Modal */}
       <Modal
-        title={`Edit Client — ${client?.clientCode ?? ''}`}
+        title={`Edit Client — ${client?.registrationNumber ?? ''}`}
         open={editOpen}
         onCancel={() => setEditOpen(false)}
         footer={null}

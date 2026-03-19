@@ -84,11 +84,24 @@ export async function getCmImportBatches(params: CmBatchListParams = {}): Promis
   return res.data.data ?? [];
 }
 
-export async function getCmImportBatchLogs(batchId: string): Promise<CmImportBatchLog[]> {
-  const res = await axiosInstance.get<ApiResponse<CmImportBatchLog[]>>(
+export interface BatchLogsPagedResult {
+  summary: { level: string; message: string; count: number }[];
+  items: CmImportBatchLog[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export async function getCmImportBatchLogs(
+  batchId: string,
+  page = 1,
+  pageSize = 50,
+): Promise<BatchLogsPagedResult> {
+  const res = await axiosInstance.get<ApiResponse<BatchLogsPagedResult>>(
     `${BASE}/import/batches/${batchId}/logs`,
+    { params: { page, pageSize } },
   );
-  return res.data.data ?? [];
+  return res.data.data ?? { summary: [], items: [], totalCount: 0, page, pageSize };
 }
 
 export async function deleteCmImportBatch(batchId: string): Promise<void> {
