@@ -184,25 +184,25 @@ export function BrokerDrawer({ brokerId, onClose }: BrokerDrawerProps) {
   };
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateBrokerPayload) => updateBroker(brokerId!, payload),
+    mutationFn: (payload: UpdateBrokerPayload) => updateBroker(brokerId ?? '', payload),
     onSuccess: () => { invalidate(); setEditOpen(false); void message.success('Broker updated'); },
     onError: () => void message.error('Failed to update broker'),
   });
 
   const statusMutation = useMutation({
-    mutationFn: (status: BrokerStatus) => changeBrokerStatus(brokerId!, status),
+    mutationFn: (status: BrokerStatus) => changeBrokerStatus(brokerId ?? '', status),
     onSuccess: () => { invalidate(); void message.success('Status updated'); setPendingStatus(null); },
     onError: () => void message.error('Failed to update status'),
   });
 
   const membershipMutation = useMutation({
-    mutationFn: (payload: UpsertMembershipPayload) => upsertBrokerMembership(brokerId!, payload),
+    mutationFn: (payload: UpsertMembershipPayload) => upsertBrokerMembership(brokerId ?? '', payload),
     onSuccess: () => { invalidate(); setMembershipOpen(false); void message.success('Membership saved'); },
     onError: () => void message.error('Failed to save membership'),
   });
 
   const deleteMembershipMutation = useMutation({
-    mutationFn: (membershipId: string) => deleteBrokerMembership(brokerId!, membershipId),
+    mutationFn: (membershipId: string) => deleteBrokerMembership(brokerId ?? '', membershipId),
     onSuccess: () => { invalidate(); void message.success('Membership removed'); },
     onError: () => void message.error('Failed to remove membership'),
   });

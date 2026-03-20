@@ -35,9 +35,6 @@ function makeItem(
   return { key, icon, children, label, type } as MenuItem;
 }
 
-function makeGroup(label: string, key: string, children: MenuItem[]): MenuItem {
-  return { key, label, type: 'group', children } as MenuItem;
-}
 
 export function AppSidebar() {
   const navigate = useNavigate();

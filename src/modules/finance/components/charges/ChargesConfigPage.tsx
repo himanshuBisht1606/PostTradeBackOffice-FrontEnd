@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import {
   Typography, Row, Col, Select, Tag, Button, Modal, Form,
-  Input, InputNumber, DatePicker, Switch, Space, Tooltip,
+  Input, InputNumber, DatePicker, Space, Tooltip,
 } from 'antd';
 import { PlusOutlined, EditOutlined, StopOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import type { TableColumnsType } from 'antd';
