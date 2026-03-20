@@ -21,6 +21,41 @@ export interface InstrumentRecord {
   status: InstrumentStatus;
 }
 
+export interface FoContractRecord {
+  contractRowId: string;
+  tradingDate: string;
+  exchange: string;
+  finInstrmId: string;
+  tckrSymb: string;
+  finInstrmNm: string;
+  xpryDt: string;
+  expiryDate: string | null;
+  strkPric: number;
+  optnTp: string;
+  finInstrmTp: string;
+  sttlmMtd: string;
+  stockNm: string;
+  minLot: number;
+  newBrdLotQty: number;
+  registeredInstrumentId: string | null;
+}
+
+export interface CreateInstrumentPayload {
+  instrumentCode: string;
+  instrumentName: string;
+  symbol: string;
+  isin?: string | null;
+  exchangeId: string;
+  segmentId: string;
+  instrumentType: InstrumentType;
+  lotSize: number;
+  tickSize: number;
+  series?: string | null;
+  expiryDate?: string | null;
+  strikePrice?: number | null;
+  optionType?: OptionType | null;
+}
+
 export async function getInstruments(): Promise<InstrumentRecord[]> {
   const res = await axiosInstance.get<ApiResponse<InstrumentRecord[]>>('/api/instruments');
   return res.data.data ?? [];
@@ -30,5 +65,37 @@ export async function getInstrumentById(id: string): Promise<InstrumentRecord> {
   const res = await axiosInstance.get<ApiResponse<InstrumentRecord>>(`/api/instruments/${id}`);
   const data = res.data.data;
   if (data === null) throw new Error(`Instrument not found: ${id}`);
+  return data;
+}
+
+export async function createInstrument(payload: CreateInstrumentPayload): Promise<InstrumentRecord> {
+  const res = await axiosInstance.post<ApiResponse<InstrumentRecord>>('/api/instruments', payload);
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from createInstrument');
+  return data;
+}
+
+export async function getFoContracts(params?: {
+  exchange?: string;
+  tradingDate?: string;
+  symbol?: string;
+  contractType?: string;
+  optionType?: string;
+  page?: number;
+  pageSize?: number;
+}): Promise<FoContractRecord[]> {
+  const res = await axiosInstance.get<ApiResponse<FoContractRecord[]>>(
+    '/api/post-trade/fo/contract-masters',
+    { params },
+  );
+  return res.data.data ?? [];
+}
+
+export async function registerFoContract(contractRowId: string): Promise<InstrumentRecord> {
+  const res = await axiosInstance.post<ApiResponse<InstrumentRecord>>(
+    `/api/post-trade/fo/contract-masters/${contractRowId}/register`,
+  );
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from registerFoContract');
   return data;
 }

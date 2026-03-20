@@ -55,6 +55,24 @@ export enum ChargeType {
   ExchangeTxn = 'ExchangeTxn',
   SEBI = 'SEBI',
   StampDuty = 'StampDuty',
+  IPFT = 'IPFT',
+  DPCharge = 'DPCharge',
+  ClearingCharge = 'ClearingCharge',
+  Other = 'Other',
+}
+
+export enum TradeSegment {
+  All = 'All',
+  CM = 'CM',
+  FO = 'FO',
+  CDS = 'CDS',
+  COM = 'COM',
+}
+
+export enum ChargeApplicableTo {
+  Both = 'Both',
+  Buy = 'Buy',
+  Sell = 'Sell',
 }
 
 export enum CalculationType {
@@ -127,6 +145,22 @@ export enum BrokerStatus {
   Active = 'Active',
   Inactive = 'Inactive',
   Suspended = 'Suspended',
+}
+
+export enum BrokerEntityType {
+  Proprietorship = 'Proprietorship',
+  Partnership = 'Partnership',
+  LLP = 'LLP',
+  PrivateLimited = 'PrivateLimited',
+  PublicLimited = 'PublicLimited',
+  Other = 'Other',
+}
+
+export enum MembershipType {
+  TradingMember = 'TradingMember',
+  ClearingMember = 'ClearingMember',
+  SelfClearingMember = 'SelfClearingMember',
+  TradingAndClearing = 'TradingAndClearing',
 }
 
 export enum ClientType {
