@@ -20,7 +20,6 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { TableColumnsType } from 'antd';
 import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
@@ -29,9 +28,10 @@ import {
   getInstruments,
   getInstrumentById,
   createInstrument,
-  getFoContracts,
+  getFoContractsCurated,
+  registerFoContractCurated,
 } from '../../services/instrumentService';
-import type { InstrumentRecord, FoContractRecord, CreateInstrumentPayload } from '../../services/instrumentService';
+import type { InstrumentRecord, FoContractCuratedRecord, CreateInstrumentPayload } from '../../services/instrumentService';
 import type { InstrumentStatus } from '@app-types/enums';
 import { InstrumentType, OptionType } from '@app-types/enums';
 import { getExchangeSegments } from '../../services/exchangeSegmentService';
@@ -46,33 +46,6 @@ const CONTRACT_TYPE_OPTIONS = [
   { label: 'OPTIDX — Index Option', value: 'IDO' },
   { label: 'OPTSTK — Stock Option', value: 'STO' },
 ];
-
-const CONTRACT_TYPE_LABEL: Record<string, string> = {
-  IDF: 'FUTIDX',
-  STF: 'FUTSTK',
-  IDO: 'OPTIDX',
-  STO: 'OPTSTK',
-};
-
-const CONTRACT_TYPE_COLOR: Record<string, string> = {
-  IDF: 'cyan',
-  STF: 'geekblue',
-  IDO: 'orange',
-  STO: 'gold',
-};
-
-const OPTION_TYPE_COLOR: Record<string, string> = {
-  CE: 'blue',
-  PE: 'volcano',
-};
-
-/** Builds contract name like OPTIDXNIFTY25MAR2026 */
-function buildContractName(finInstrmTp: string, symbol: string, expiryDate: string | null): string {
-  const label = CONTRACT_TYPE_LABEL[finInstrmTp] ?? finInstrmTp;
-  if (!expiryDate) return `${label}${symbol}`;
-  const expiry = dayjs(expiryDate).format('DDMMMYYYY').toUpperCase();
-  return `${label}${symbol}${expiry}`;
-}
 
 // ── Instruments Tab ───────────────────────────────────────────────────────────
 
@@ -415,49 +388,125 @@ function InstrumentsTab() {
   );
 }
 
-// ── FO Contracts Tab (read-only, like trade book) ─────────────────────────────
+// ── FO Contracts Tab — from FoContracts (curated) table ──────────────────────
+
+const INSTR_TYPE_COLOR: Record<string, string> = {
+  FUTIDX: 'cyan', FUTSTK: 'geekblue', OPTIDX: 'orange', OPTSTK: 'gold',
+};
 
 function FoContractsTab() {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const pageSize = 50;
   const [exchange, setExchange] = useState<string | undefined>(undefined);
   const [tradingDate, setTradingDate] = useState<string | undefined>(undefined);
-  const [contractType, setContractType] = useState<string | undefined>(undefined);
+  const [instrumentType, setInstrumentType] = useState<string | undefined>(undefined);
   const [optionType, setOptionType] = useState<string | undefined>(undefined);
   const [symbol, setSymbol] = useState('');
-  const [selectedContract, setSelectedContract] = useState<FoContractRecord | null>(null);
-
+  const [selected, setSelected] = useState<FoContractCuratedRecord | null>(null);
   const resetPage = () => setPage(1);
 
   const { data: contracts = [], isLoading } = useQuery({
-    queryKey: ['fo-contracts', exchange, tradingDate, contractType, optionType, symbol, page],
-    queryFn: () => {
-      const params: Parameters<typeof getFoContracts>[0] = { page, pageSize };
-      if (exchange) params.exchange = exchange;
-      if (tradingDate) params.tradingDate = tradingDate;
-      if (contractType) params.contractType = contractType;
-      if (optionType) params.optionType = optionType;
-      if (symbol.trim()) params.symbol = symbol.trim();
-      return getFoContracts(params);
-    },
+    queryKey: ['fo-contracts-curated', exchange, tradingDate, instrumentType, optionType, symbol, page],
+    queryFn: () => getFoContractsCurated({
+      exchange: exchange ?? undefined,
+      tradingDate: tradingDate ?? undefined,
+      instrumentType: instrumentType ?? undefined,
+      optionType: optionType ?? undefined,
+      symbol: symbol.trim() || undefined,
+      page,
+      pageSize,
+    }),
     staleTime: 30_000,
   });
 
-  const columns: TableColumnsType<FoContractRecord> = [
-    { title: 'TradingDate', dataIndex: 'tradingDate', width: 110 },
-    { title: 'Exchange', dataIndex: 'exchange', width: 80 },
-    { title: 'FinInstrmTp', dataIndex: 'finInstrmTp', width: 95 },
-    { title: 'TckrSymb', dataIndex: 'tckrSymb', width: 130 },
-    { title: 'FinInstrmNm', dataIndex: 'finInstrmNm', width: 200, ellipsis: true },
-    { title: 'StockNm', dataIndex: 'stockNm', width: 160, ellipsis: true },
-    { title: 'XpryDt', dataIndex: 'xpryDt', width: 110 },
-    { title: 'StrkPric', dataIndex: 'strkPric', width: 100, align: 'right' as const },
-    { title: 'OptnTp', dataIndex: 'optnTp', width: 75 },
-    { title: 'SttlmMtd', dataIndex: 'sttlmMtd', width: 85 },
-    { title: 'MinLot', dataIndex: 'minLot', width: 75, align: 'right' as const },
-    { title: 'NewBrdLotQty', dataIndex: 'newBrdLotQty', width: 110, align: 'right' as const },
-    { title: 'FinInstrmId', dataIndex: 'finInstrmId', width: 150, ellipsis: true,
-      render: (v: string) => <span style={{ fontFamily: 'monospace', fontSize: 11 }}>{v}</span> },
+  const registerMutation = useMutation({
+    mutationFn: (contractId: string) => registerFoContractCurated(contractId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['fo-contracts-curated'] });
+      void queryClient.invalidateQueries({ queryKey: ['instruments'] });
+      void message.success('Contract registered as instrument');
+      setSelected(null);
+    },
+    onError: (err: Error) => {
+      void message.error(err.message ?? 'Registration failed');
+    },
+  });
+
+  const INSTR_TYPE_OPTIONS = [
+    { label: 'FUTIDX — Index Future',  value: 'FUTIDX' },
+    { label: 'FUTSTK — Stock Future',  value: 'FUTSTK' },
+    { label: 'OPTIDX — Index Option',  value: 'OPTIDX' },
+    { label: 'OPTSTK — Stock Option',  value: 'OPTSTK' },
+  ];
+
+  const columns: TableColumnsType<FoContractCuratedRecord> = [
+    {
+      title: 'Contract Name',
+      dataIndex: 'contractName',
+      width: 210,
+      ellipsis: true,
+      render: (v: string) => <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{v}</span>,
+    },
+    {
+      title: 'Type',
+      dataIndex: 'instrumentType',
+      width: 90,
+      render: (v: string) => <Tag color={INSTR_TYPE_COLOR[v] ?? 'default'}>{v}</Tag>,
+    },
+    { title: 'Symbol', dataIndex: 'symbol', width: 110, render: (v: string) => <strong>{v}</strong> },
+    {
+      title: 'Expiry',
+      dataIndex: 'expiryDate',
+      width: 105,
+      render: (v: string) => formatDate(v),
+    },
+    {
+      title: 'Strike (₹)',
+      dataIndex: 'strikePrice',
+      width: 100,
+      align: 'right' as const,
+      render: (v: number) => v > 0 ? v.toLocaleString('en-IN') : '—',
+    },
+    {
+      title: 'Opt',
+      dataIndex: 'optionType',
+      width: 55,
+      render: (v: string) => v === 'FX' ? '—' : <Tag color={v === 'CE' ? 'blue' : 'volcano'} style={{ margin: 0 }}>{v}</Tag>,
+    },
+    { title: 'Lot', dataIndex: 'lotSize', width: 65, align: 'right' as const },
+    { title: 'F×', dataIndex: 'fMultiplier', width: 55, align: 'right' as const,
+      render: (v: number) => v === 1 ? '1' : v },
+    { title: 'Exchange', dataIndex: 'exchange', width: 75,
+      render: (v: string) => <Tag color={v === 'NFO' ? 'blue' : 'purple'}>{v}</Tag> },
+    {
+      title: 'Status',
+      dataIndex: 'registeredInstrumentId',
+      width: 105,
+      render: (v: string | null) =>
+        v
+          ? <Tag color="green">Registered</Tag>
+          : <Tag color="default">Unregistered</Tag>,
+    },
+    {
+      title: '',
+      key: 'action',
+      width: 80,
+      render: (_: unknown, record: FoContractCuratedRecord) =>
+        record.registeredInstrumentId ? null : (
+          <Button
+            size="small"
+            type="primary"
+            loading={registerMutation.isPending && registerMutation.variables === record.contractId}
+            onClick={(e) => {
+              e.stopPropagation();
+              registerMutation.mutate(record.contractId);
+            }}
+          >
+            Register
+          </Button>
+        ),
+    },
   ];
 
   return (
@@ -470,13 +519,10 @@ function FoContractsTab() {
               placeholder="Trading Date"
               format="DD-MMM-YYYY"
               allowClear
-              onChange={(d) => {
-                setTradingDate(d ? d.format('YYYY-MM-DD') : undefined);
-                resetPage();
-              }}
+              onChange={(d) => { setTradingDate(d ? d.format('YYYY-MM-DD') : undefined); resetPage(); }}
             />
           </Col>
-          <Col span={5}>
+          <Col span={4}>
             <Select
               placeholder="Exchange"
               style={{ width: '100%' }}
@@ -484,24 +530,24 @@ function FoContractsTab() {
               value={exchange ?? null}
               onChange={(v) => { setExchange(v ?? undefined); resetPage(); }}
               options={[
-                { label: 'NFO (NSE F&O)', value: 'NFO' },
-                { label: 'BFO (BSE F&O)', value: 'BFO' },
+                { label: 'NFO', value: 'NFO' },
+                { label: 'BFO', value: 'BFO' },
               ]}
             />
           </Col>
           <Col span={6}>
             <Select
-              placeholder="Contract Type"
+              placeholder="Instrument Type"
               style={{ width: '100%' }}
               allowClear
-              value={contractType ?? null}
-              onChange={(v) => { setContractType(v ?? undefined); resetPage(); }}
-              options={CONTRACT_TYPE_OPTIONS}
+              value={instrumentType ?? null}
+              onChange={(v) => { setInstrumentType(v ?? undefined); resetPage(); }}
+              options={INSTR_TYPE_OPTIONS}
             />
           </Col>
           <Col span={4}>
             <Select
-              placeholder="CE / PE"
+              placeholder="CE / PE / FX"
               style={{ width: '100%' }}
               allowClear
               value={optionType ?? null}
@@ -509,15 +555,14 @@ function FoContractsTab() {
               options={[
                 { label: 'CE (Call)', value: 'CE' },
                 { label: 'PE (Put)', value: 'PE' },
+                { label: 'FX (Futures)', value: 'FX' },
               ]}
             />
           </Col>
-        </Row>
-        <Row gutter={12}>
-          <Col span={10}>
+          <Col span={5}>
             <Input
               prefix={<SearchOutlined />}
-              placeholder="Search by symbol"
+              placeholder="Symbol"
               value={symbol}
               allowClear
               onChange={(e) => { setSymbol(e.target.value); resetPage(); }}
@@ -526,13 +571,13 @@ function FoContractsTab() {
         </Row>
       </Space>
 
-      <DataTable<FoContractRecord>
+      <DataTable<FoContractCuratedRecord>
         columns={columns}
         dataSource={contracts}
         loading={isLoading}
-        rowKey="contractRowId"
+        rowKey="contractId"
         size="small"
-        scroll={{ x: 900 }}
+        scroll={{ x: 960 }}
         pagination={{
           current: page,
           pageSize,
@@ -542,64 +587,67 @@ function FoContractsTab() {
           showTotal: (t) => `${t}+ contracts`,
         }}
         onRow={(record) => ({
-          onClick: () => setSelectedContract(record),
+          onClick: () => setSelected(record),
           style: { cursor: 'pointer' },
         })}
       />
 
       {/* Contract detail drawer */}
       <SlideDrawer
-        title={selectedContract
-          ? buildContractName(selectedContract.finInstrmTp, selectedContract.tckrSymb, selectedContract.expiryDate)
-          : 'Contract Detail'}
-        open={!!selectedContract}
-        onClose={() => setSelectedContract(null)}
+        title={selected?.contractName ?? 'Contract Detail'}
+        open={!!selected}
+        onClose={() => setSelected(null)}
       >
-        {selectedContract && (
+        {selected && (
           <div style={{ padding: 24 }}>
-            <div style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 600, marginBottom: 16, color: '#1d3557' }}>
-              {buildContractName(selectedContract.finInstrmTp, selectedContract.tckrSymb, selectedContract.expiryDate)}
+            <div style={{ fontFamily: 'monospace', fontSize: 14, fontWeight: 700, marginBottom: 16, color: '#1d3557' }}>
+              {selected.contractName}
             </div>
             <Descriptions bordered column={2} size="small">
-              <Descriptions.Item label="Symbol">
-                <strong>{selectedContract.tckrSymb}</strong>
-              </Descriptions.Item>
-              <Descriptions.Item label="Stock Name">
-                {selectedContract.finInstrmNm || selectedContract.stockNm || '—'}
-              </Descriptions.Item>
+              <Descriptions.Item label="Symbol"><strong>{selected.symbol}</strong></Descriptions.Item>
+              <Descriptions.Item label="Underlying">{selected.underlyingSymbol || '—'}</Descriptions.Item>
               <Descriptions.Item label="Exchange">
-                <Tag color={selectedContract.exchange === 'NFO' ? 'blue' : 'purple'}>
-                  {selectedContract.exchange}
-                </Tag>
+                <Tag color={selected.exchange === 'NFO' ? 'blue' : 'purple'}>{selected.exchange}</Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Instrument">
-                <Tag color={CONTRACT_TYPE_COLOR[selectedContract.finInstrmTp] ?? 'default'}>
-                  {CONTRACT_TYPE_LABEL[selectedContract.finInstrmTp] ?? selectedContract.finInstrmTp}
-                </Tag>
+              <Descriptions.Item label="Type">
+                <Tag color={INSTR_TYPE_COLOR[selected.instrumentType] ?? 'default'}>{selected.instrumentType}</Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="Trading Date">
-                {formatDate(selectedContract.tradingDate)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Expiry">
-                {selectedContract.expiryDate ? formatDate(selectedContract.expiryDate) : '—'}
-              </Descriptions.Item>
-              <Descriptions.Item label="Strike Price">
-                {selectedContract.strkPric > 0
-                  ? selectedContract.strkPric.toLocaleString('en-IN')
-                  : '—'}
+              <Descriptions.Item label="Trading Date">{formatDate(selected.tradingDate)}</Descriptions.Item>
+              <Descriptions.Item label="Expiry Date">{formatDate(selected.expiryDate)}</Descriptions.Item>
+              <Descriptions.Item label="Strike (₹)">
+                {selected.strikePrice > 0 ? selected.strikePrice.toLocaleString('en-IN') : '—'}
               </Descriptions.Item>
               <Descriptions.Item label="Option Type">
-                {selectedContract.optnTp ? (
-                  <Tag color={OPTION_TYPE_COLOR[selectedContract.optnTp] ?? 'default'}>
-                    {selectedContract.optnTp}
-                  </Tag>
-                ) : '—'}
+                {selected.optionType !== 'FX'
+                  ? <Tag color={selected.optionType === 'CE' ? 'blue' : 'volcano'}>{selected.optionType}</Tag>
+                  : '— (Futures)'}
               </Descriptions.Item>
-              <Descriptions.Item label="Lot Size">{selectedContract.newBrdLotQty.toLocaleString('en-IN')}</Descriptions.Item>
-              <Descriptions.Item label="Fin Instrument ID">
-                <span style={{ fontFamily: 'monospace', fontSize: 11 }}>{selectedContract.finInstrmId}</span>
+              <Descriptions.Item label="Lot Size">{selected.lotSize.toLocaleString('en-IN')}</Descriptions.Item>
+              <Descriptions.Item label="F-Multiplier">{selected.fMultiplier}</Descriptions.Item>
+              <Descriptions.Item label="Tick Size">{selected.tickSize}</Descriptions.Item>
+              <Descriptions.Item label="Settlement">{selected.sttlmMtd ?? '—'}</Descriptions.Item>
+              <Descriptions.Item label="ISIN" span={2}>{selected.isin ?? '—'}</Descriptions.Item>
+              <Descriptions.Item label="Fin Instr ID" span={2}>
+                <span style={{ fontFamily: 'monospace', fontSize: 11 }}>{selected.finInstrmId ?? '—'}</span>
+              </Descriptions.Item>
+              <Descriptions.Item label="Status" span={2}>
+                {selected.registeredInstrumentId
+                  ? <Tag color="green">Registered as Instrument</Tag>
+                  : <Tag color="orange">Not yet registered</Tag>}
               </Descriptions.Item>
             </Descriptions>
+            {!selected.registeredInstrumentId && (
+              <div style={{ marginTop: 20 }}>
+                <Button
+                  type="primary"
+                  block
+                  loading={registerMutation.isPending}
+                  onClick={() => registerMutation.mutate(selected.contractId)}
+                >
+                  Register as Instrument
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </SlideDrawer>

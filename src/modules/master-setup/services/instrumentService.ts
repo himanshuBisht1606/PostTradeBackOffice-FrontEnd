@@ -40,6 +40,27 @@ export interface FoContractRecord {
   registeredInstrumentId: string | null;
 }
 
+/** Curated FoContract row — from FoContracts table with normalized fields */
+export interface FoContractCuratedRecord {
+  contractId: string;
+  exchange: string;
+  tradingDate: string;
+  instrumentType: string;    // FUTIDX | FUTSTK | OPTIDX | OPTSTK
+  symbol: string;
+  contractName: string;      // FUTIDXNIFTY27MAR2025
+  expiryDate: string;        // yyyy-MM-dd
+  strikePrice: number;       // in ₹ (already ÷ 100)
+  optionType: string;        // CE | PE | FX
+  lotSize: number;
+  fMultiplier: number;
+  finInstrmId: string | null;
+  underlyingSymbol: string;
+  isin: string | null;
+  tickSize: number;
+  sttlmMtd: string | null;
+  registeredInstrumentId: string | null;
+}
+
 export interface CreateInstrumentPayload {
   instrumentCode: string;
   instrumentName: string;
@@ -97,5 +118,32 @@ export async function registerFoContract(contractRowId: string): Promise<Instrum
   );
   const data = res.data.data;
   if (!data) throw new Error('Unexpected null response from registerFoContract');
+  return data;
+}
+
+// ── Curated FO Contracts (FoContracts table) ──────────────────────────────────
+
+export async function getFoContractsCurated(params?: {
+  exchange?: string | undefined;
+  tradingDate?: string | undefined;
+  symbol?: string | undefined;
+  instrumentType?: string | undefined;
+  optionType?: string | undefined;
+  page?: number | undefined;
+  pageSize?: number | undefined;
+}): Promise<FoContractCuratedRecord[]> {
+  const res = await axiosInstance.get<ApiResponse<FoContractCuratedRecord[]>>(
+    '/api/post-trade/fo/contracts',
+    { params },
+  );
+  return res.data.data ?? [];
+}
+
+export async function registerFoContractCurated(contractId: string): Promise<InstrumentRecord> {
+  const res = await axiosInstance.post<ApiResponse<InstrumentRecord>>(
+    `/api/post-trade/fo/contracts/${contractId}/register`,
+  );
+  const data = res.data.data;
+  if (!data) throw new Error('Unexpected null response from registerFoContractCurated');
   return data;
 }

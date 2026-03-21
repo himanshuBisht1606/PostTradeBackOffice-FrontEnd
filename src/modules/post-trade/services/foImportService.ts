@@ -31,23 +31,23 @@ export function importFoContractMaster(file: File, tradingDate: string, exchange
 }
 
 export function importFoTrade(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/trade', file, tradingDate, exchange);
+  return uploadFile('import/trade', file, tradingDate, exchange, 600_000); // 10 min — 3-phase pipeline (staging→date table→trade book)
 }
 
 export function importFoBhavCopy(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/bhavcopy', file, tradingDate, exchange);
+  return uploadFile('import/bhavcopy', file, tradingDate, exchange, 600_000);
 }
 
 export function importFoStt(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/stt', file, tradingDate, exchange);
+  return uploadFile('import/stt', file, tradingDate, exchange, 600_000);
 }
 
 export function importFoStampDuty(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/stamp-duty', file, tradingDate, exchange);
+  return uploadFile('import/stamp-duty', file, tradingDate, exchange, 600_000);
 }
 
 export function importFoPosition(file: File, tradingDate: string, exchange: string) {
-  return uploadFile('import/position', file, tradingDate, exchange);
+  return uploadFile('import/position', file, tradingDate, exchange, 600_000);
 }
 
 // ── Batch queries ─────────────────────────────────────────────────────────────
