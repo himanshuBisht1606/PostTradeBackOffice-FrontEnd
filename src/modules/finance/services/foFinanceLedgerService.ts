@@ -62,7 +62,9 @@ export async function computeFoFinanceLedger(
     '/api/clearing/fo/finance-ledger/compute',
     request,
   );
-  return res.data.data!;
+  const data = res.data.data;
+  if (data === null || data === undefined) throw new Error('Compute returned no data');
+  return data;
 }
 
 export async function deleteFoFinanceLedger(tradeDate: string, exchange: string): Promise<void> {
