@@ -99,7 +99,10 @@ export function AppSidebar() {
             makeItem('Obligations', '/clearing/settlement/obligations'),
           ]),
 
-          makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
+          makeItem('Finance', 'finance', <BankOutlined />, [
+            makeItem('Ledger', '/finance/ledger'),
+            makeItem('FO Finance Ledger', '/finance/fo-ledger'),
+          ]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
 

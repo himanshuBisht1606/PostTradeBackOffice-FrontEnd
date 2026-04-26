@@ -49,6 +49,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
     requiredRoles: [...FINANCE_ROLES, Role.Auditor],
     label: 'Ledger',
   },
+  { path: '/finance/fo-ledger', requiredRoles: [...FINANCE_ROLES, ...OPS_ROLES], label: 'FO Finance Ledger' },
   { path: '/finance/charges', requiredRoles: FINANCE_ROLES, label: 'Charges Config' },
 
   {

@@ -130,6 +130,11 @@ const FoImportPage = lazy(() =>
     default: m.FoImportPage,
   })),
 );
+const FoFinanceLedgerPage = lazy(() =>
+  import('@modules/finance/components/fo-ledger/FoFinanceLedgerPage').then((m) => ({
+    default: m.FoFinanceLedgerPage,
+  })),
+);
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
@@ -282,6 +287,20 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <LedgerPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'fo-ledger',
+                element: <ProtectedRoute requiredRoles={[...FINANCE_ROLES, ...OPS_ROLES]} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <FoFinanceLedgerPage />
                       </Lazy>
                     ),
                   },
