@@ -1,47 +1,62 @@
-import { useState, useCallback, useMemo } from 'react';
-import { Typography, Row, Col, Input, Select, DatePicker } from 'antd';
+import { useState, useCallback } from 'react';
+import { Typography, Row, Col, Input, Select, DatePicker, Space, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { getTrades } from '../../services/tradeService';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { TradeTable } from './TradeTable';
 import { TradeDrawer } from './TradeDrawer';
-import { TradeStatus, TradeSide } from '@app-types/enums';
-import type { TradeSummary } from '../../services/tradeService';
-import type { Dayjs } from 'dayjs';
+import { getFoTradeBook } from '../../services/foTradeBookService';
+import type { FoTradeBookItem } from '../../services/foTradeBookService';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
+const today = dayjs().format('YYYY-MM-DD');
+
 export function TradeListPage() {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
-  const [search, setSearch] = useState('');
-  const [side, setSide] = useState<TradeSide | undefined>(undefined);
-  const [status, setStatus] = useState<TradeStatus | undefined>(undefined);
-  const [fromDate, setFromDate] = useState<string | undefined>(undefined);
-  const [toDate, setToDate] = useState<string | undefined>(undefined);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pageSize, setPageSize] = useState(50);
+  const [dateFrom, setDateFrom] = useState<string>(today);
+  const [dateTo, setDateTo] = useState<string>(today);
+  const [exchange, setExchange] = useState<string | undefined>(undefined);
+  const [contractType, setContractType] = useState<string | undefined>(undefined);
+  const [optionType, setOptionType] = useState<string | undefined>(undefined);
+  const [side, setSide] = useState<string | undefined>(undefined);
+  const [symbolSearch, setSymbolSearch] = useState('');
+  const [clientCodeSearch, setClientCodeSearch] = useState('');
+  const [selectedTrade, setSelectedTrade] = useState<FoTradeBookItem | null>(null);
 
-  const { data: allData, isLoading } = useQuery({
-    queryKey: ['trades', { status, fromDate, toDate }],
-    queryFn: () => getTrades({ status, fromDate, toDate }),
+  const { data, isLoading } = useQuery({
+    queryKey: ['fo-trade-book', dateFrom, dateTo, exchange, contractType, optionType, side, symbolSearch, clientCodeSearch, page, pageSize],
+    queryFn: () =>
+      getFoTradeBook({
+        dateFrom,
+        dateTo,
+        exchange: exchange || undefined,
+        contractType: contractType || undefined,
+        optionType: optionType || undefined,
+        side: side || undefined,
+        symbol: symbolSearch.trim() || undefined,
+        clientCode: clientCodeSearch.trim() || undefined,
+        page,
+        pageSize,
+      }),
     staleTime: 30_000,
   });
 
-  const filtered = useMemo(() => {
-    if (!allData) return [];
-    const q = search.toLowerCase();
-    return allData.filter((t) => {
-      const matchSide = !side || t.side === side;
-      const matchSearch =
-        !q || t.tradeNo.toLowerCase().includes(q) || t.settlementNo.toLowerCase().includes(q);
-      return matchSide && matchSearch;
-    });
-  }, [allData, search, side]);
-
-  const pageData = useMemo(
-    () => filtered.slice((page - 1) * pageSize, page * pageSize),
-    [filtered, page, pageSize],
+  const handleDateChange = useCallback(
+    (dates: [Dayjs | null, Dayjs | null] | null) => {
+      if (dates?.[0] && dates[1]) {
+        setDateFrom(dates[0].format('YYYY-MM-DD'));
+        setDateTo(dates[1].format('YYYY-MM-DD'));
+      } else {
+        setDateFrom(today);
+        setDateTo(today);
+      }
+      setPage(1);
+    },
+    [],
   );
 
   const handlePageChange = useCallback((p: number, ps: number) => {
@@ -49,91 +64,121 @@ export function TradeListPage() {
     setPageSize(ps);
   }, []);
 
-  const handleRowClick = useCallback((trade: TradeSummary) => {
-    setSelectedId(trade.tradeId);
-  }, []);
-
-  const handleDateChange = useCallback((dates: [Dayjs | null, Dayjs | null] | null) => {
-    if (dates?.[0] && dates[1]) {
-      setFromDate(dates[0].format('YYYY-MM-DD'));
-      setToDate(dates[1].format('YYYY-MM-DD'));
-    } else {
-      setFromDate(undefined);
-      setToDate(undefined);
-    }
-    setPage(1);
-  }, []);
+  const resetPage = () => setPage(1);
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Trade Book
-      </Title>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+        <Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+          FO Trade Book
+        </Title>
+        {data && (
+          <Tag color="blue">{data.totalCount.toLocaleString('en-IN')} records</Tag>
+        )}
+      </div>
 
-      <Row gutter={12} style={{ marginBottom: 16 }}>
-        <Col span={7}>
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="Search by trade no or settlement no"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            allowClear
-          />
-        </Col>
-        <Col span={4}>
-          <Select<TradeSide>
-            placeholder="Side"
-            style={{ width: '100%' }}
-            allowClear
-            value={side ?? null}
-            onChange={(v) => {
-              setSide(v);
-              setPage(1);
-            }}
-            options={[
-              { label: 'Buy', value: TradeSide.Buy },
-              { label: 'Sell', value: TradeSide.Sell },
-            ]}
-          />
-        </Col>
-        <Col span={5}>
-          <Select<TradeStatus>
-            placeholder="Status"
-            style={{ width: '100%' }}
-            allowClear
-            value={status ?? null}
-            onChange={(v) => {
-              setStatus(v);
-              setPage(1);
-            }}
-            options={[
-              { label: 'Booked', value: TradeStatus.Booked },
-              { label: 'Confirmed', value: TradeStatus.Confirmed },
-              { label: 'Settled', value: TradeStatus.Settled },
-              { label: 'Cancelled', value: TradeStatus.Cancelled },
-              { label: 'Rejected', value: TradeStatus.Rejected },
-            ]}
-          />
-        </Col>
-        <Col span={8}>
-          <RangePicker style={{ width: '100%' }} onChange={handleDateChange} />
-        </Col>
-      </Row>
+      {/* ── Filters ─────────────────────────────────────────────────────── */}
+      <Space direction="vertical" size={8} style={{ width: '100%', marginBottom: 16 }}>
+        <Row gutter={12}>
+          <Col span={8}>
+            <RangePicker
+              style={{ width: '100%' }}
+              defaultValue={[dayjs(today), dayjs(today)]}
+              onChange={handleDateChange}
+              allowClear={false}
+            />
+          </Col>
+          <Col span={4}>
+            <Select
+              placeholder="Exchange"
+              style={{ width: '100%' }}
+              allowClear
+              value={exchange ?? null}
+              onChange={(v) => { setExchange(v ?? undefined); resetPage(); }}
+              options={[
+                { label: 'NFO (NSE F&O)', value: 'NFO' },
+                { label: 'BFO (BSE F&O)', value: 'BFO' },
+              ]}
+            />
+          </Col>
+          <Col span={5}>
+            <Select
+              placeholder="Contract Type"
+              style={{ width: '100%' }}
+              allowClear
+              value={contractType ?? null}
+              onChange={(v) => { setContractType(v ?? undefined); resetPage(); }}
+              options={[
+                { label: 'FUTIDX — Index Future', value: 'FUTIDX' },
+                { label: 'FUTSTK — Stock Future', value: 'FUTSTK' },
+                { label: 'OPTIDX — Index Option', value: 'OPTIDX' },
+                { label: 'OPTSTK — Stock Option', value: 'OPTSTK' },
+              ]}
+            />
+          </Col>
+          <Col span={4}>
+            <Select
+              placeholder="Option Type"
+              style={{ width: '100%' }}
+              allowClear
+              value={optionType ?? null}
+              onChange={(v) => { setOptionType(v ?? undefined); resetPage(); }}
+              options={[
+                { label: 'CE (Call)', value: 'CE' },
+                { label: 'PE (Put)', value: 'PE' },
+                { label: 'FX (Futures)', value: 'FX' },
+              ]}
+            />
+          </Col>
+          <Col span={3}>
+            <Select
+              placeholder="Side"
+              style={{ width: '100%' }}
+              allowClear
+              value={side ?? null}
+              onChange={(v) => { setSide(v ?? undefined); resetPage(); }}
+              options={[
+                { label: 'Buy', value: 'B' },
+                { label: 'Sell', value: 'S' },
+              ]}
+            />
+          </Col>
+        </Row>
 
+        <Row gutter={12}>
+          <Col span={8}>
+            <Input
+              prefix={<SearchOutlined />}
+              placeholder="Search symbol or instrument name"
+              value={symbolSearch}
+              allowClear
+              onChange={(e) => { setSymbolSearch(e.target.value); resetPage(); }}
+            />
+          </Col>
+          <Col span={6}>
+            <Input
+              prefix={<SearchOutlined />}
+              placeholder="Search client code"
+              value={clientCodeSearch}
+              allowClear
+              onChange={(e) => { setClientCodeSearch(e.target.value); resetPage(); }}
+            />
+          </Col>
+        </Row>
+      </Space>
+
+      {/* ── Table ──────────────────────────────────────────────────────── */}
       <TradeTable
-        data={pageData}
+        data={data?.items ?? []}
         loading={isLoading}
-        total={filtered.length}
+        total={data?.totalCount ?? 0}
         page={page}
         pageSize={pageSize}
         onPageChange={handlePageChange}
-        onRowClick={handleRowClick}
+        onRowClick={setSelectedTrade}
       />
 
-      <TradeDrawer tradeId={selectedId} onClose={() => setSelectedId(null)} />
+      <TradeDrawer trade={selectedTrade} onClose={() => setSelectedTrade(null)} />
     </div>
   );
 }

@@ -58,19 +58,29 @@ export async function getReconRecords(params: ReconListParams): Promise<ReconRec
   return res.data.data ?? [];
 }
 
-export async function getReconStats(): Promise<ReconStats> {
-  const res = await axiosInstance.get<ApiResponse<ReconStats>>('/api/reconciliation/stats');
-  const data = res.data.data;
-  if (data === null) throw new Error('Recon stats not available');
-  return data;
-}
-
 export async function getReconExceptions(params: ExceptionListParams): Promise<ReconException[]> {
   const res = await axiosInstance.get<ApiResponse<ReconException[]>>(
     '/api/reconciliation/exceptions',
     { params },
   );
   return res.data.data ?? [];
+}
+
+export async function getReconStats(): Promise<ReconStats> {
+  const [records, exceptions] = await Promise.all([getReconRecords({}), getReconExceptions({})]);
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  return {
+    totalRecords: records.length,
+    matched: records.filter((r) => r.status === 'Matched').length,
+    variated: records.filter((r) => r.status === 'Variated').length,
+    pending: records.filter((r) => r.status === 'Pending').length,
+    openExceptions: exceptions.filter((e) => e.status === 'Open').length,
+    resolvedToday: exceptions.filter(
+      (e) => e.status === 'Resolved' && e.resolvedAt?.startsWith(today),
+    ).length,
+  };
 }
 
 export async function resolveException(id: string, resolution: string): Promise<void> {

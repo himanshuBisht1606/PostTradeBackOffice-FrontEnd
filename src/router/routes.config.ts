@@ -49,6 +49,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
     requiredRoles: [...FINANCE_ROLES, Role.Auditor],
     label: 'Ledger',
   },
+  { path: '/finance/fo-ledger', requiredRoles: [...FINANCE_ROLES, ...OPS_ROLES], label: 'FO Finance Ledger' },
   { path: '/finance/charges', requiredRoles: FINANCE_ROLES, label: 'Charges Config' },
 
   {
@@ -56,6 +57,9 @@ export const ROUTE_CONFIG: RouteConfig[] = [
     requiredRoles: [...OPS_ROLES, Role.RiskController],
     label: 'Reconciliation',
   },
+
+  { path: '/post-trade/cm/import', requiredRoles: OPS_ROLES, label: 'CM File Import' },
+  { path: '/post-trade/fo/import', requiredRoles: OPS_ROLES, label: 'FO File Import' },
 
   { path: '/governance/approvals', requiredRoles: CHECKER_ROLES, label: 'Approvals' },
   { path: '/governance/audit', requiredRoles: AUDIT_ROLES, label: 'Audit Log' },

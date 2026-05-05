@@ -1,8 +1,19 @@
 import type { TableColumnsType } from 'antd';
+import { Tag } from 'antd';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { truncateId } from '@utils/formatters';
 import type { BrokerSummary } from '../../services/brokerService';
+import type { BrokerEntityType } from '@app-types/enums';
+
+const ENTITY_TYPE_LABELS: Record<string, string> = {
+  Proprietorship: 'Proprietorship',
+  Partnership: 'Partnership',
+  LLP: 'LLP',
+  PrivateLimited: 'Pvt. Ltd.',
+  PublicLimited: 'Ltd.',
+  Other: 'Other',
+};
 
 interface BrokerTableProps {
   data: BrokerSummary[];
@@ -27,19 +38,34 @@ export function BrokerTable({
     {
       title: 'Broker Code',
       dataIndex: 'brokerCode',
-      width: 130,
+      width: 120,
       render: (v: string) => <span style={{ fontFamily: 'monospace' }}>{v}</span>,
     },
     { title: 'Name', dataIndex: 'brokerName', ellipsis: true },
+    {
+      title: 'Type',
+      dataIndex: 'entityType',
+      width: 100,
+      render: (v: BrokerEntityType) => <Tag>{ENTITY_TYPE_LABELS[v] ?? v}</Tag>,
+    },
     {
       title: 'Status',
       dataIndex: 'status',
       width: 110,
       render: (v: string) => <StatusBadge status={v} />,
     },
+    {
+      title: 'City / State',
+      key: 'location',
+      ellipsis: true,
+      render: (_: unknown, r: BrokerSummary) =>
+        r.registeredCity || r.registeredState
+          ? `${r.registeredCity ?? ''}${r.registeredCity && r.registeredState ? ', ' : ''}${r.registeredState ?? ''}`
+          : '—',
+    },
+    { title: 'SEBI Reg No', dataIndex: 'sebiRegistrationNo', width: 150 },
     { title: 'Email', dataIndex: 'contactEmail', ellipsis: true },
     { title: 'Phone', dataIndex: 'contactPhone', width: 130 },
-    { title: 'SEBI Reg No', dataIndex: 'sebiRegistrationNo', width: 150 },
     {
       title: 'ID',
       dataIndex: 'brokerId',

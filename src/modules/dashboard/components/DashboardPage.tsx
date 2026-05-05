@@ -2,14 +2,16 @@ import { useEffect } from 'react';
 import { Row, Col, Typography } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { ExceptionKpiStrip } from './ExceptionKpiStrip';
+import { MarketTickerStrip } from '@shared/components/charts/MarketTickerStrip';
 import { RevenueChart } from '@shared/components/charts/RevenueChart';
 import { SettlementAgingChart } from '@shared/components/charts/SettlementAgingChart';
 import { ExposureChart } from '@shared/components/charts/ExposureChart';
 import { LedgerImbalanceIndicator } from '@shared/components/charts/LedgerImbalanceIndicator';
+import { SegmentBreakdownChart } from '@shared/components/charts/SegmentBreakdownChart';
 import { getDashboardSummary } from '../services/dashboardService';
 import { notifyError } from '@utils/errorHandler';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 export function DashboardPage() {
   const { data, isLoading, error } = useQuery({
@@ -28,31 +30,50 @@ export function DashboardPage() {
     reconBreaks: 0,
     exposureBreaches: 0,
     settlementFailures: 0,
+    marginShortfall: 0,
+    todayTurnover: 0,
+    openPositionsValue: 0,
+    t1PendingCount: 0,
+    activeClients: 0,
   };
 
   return (
     <div>
-      <Title level={4} style={{ marginBottom: 20, color: '#1d3557' }}>
-        Operations Dashboard
-      </Title>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 16 }}>
+        <Typography.Title level={4} style={{ margin: 0, color: '#1d3557' }}>
+          Post-Trade Operations Dashboard
+        </Typography.Title>
+        <Text type="secondary" style={{ fontSize: 12 }}>
+          NSE &middot; BSE &middot; MCX &middot; CDSL · NSDL
+        </Text>
+      </div>
 
-      {/* Exception-first: anomaly KPIs always rendered first */}
+      {/* Market Ticker */}
+      <MarketTickerStrip />
+
+      {/* Exception-first KPI strips */}
       <ExceptionKpiStrip kpis={kpis} loading={isLoading} />
 
-      <Row gutter={16}>
-        <Col span={12}>
+      {/* Row 1 — Revenue trend + Segment breakdown */}
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={16}>
           <RevenueChart data={data?.revenueTrend ?? []} loading={isLoading} />
         </Col>
-        <Col span={12}>
-          <SettlementAgingChart data={data?.settlementAging ?? []} loading={isLoading} />
+        <Col span={8}>
+          <SegmentBreakdownChart data={data?.segmentBreakdown ?? []} loading={isLoading} />
         </Col>
       </Row>
 
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={12}>
+      {/* Row 2 — Settlement aging + Exposure + Ledger */}
+      <Row gutter={16}>
+        <Col span={10}>
+          <SettlementAgingChart data={data?.settlementAging ?? []} loading={isLoading} />
+        </Col>
+        <Col span={7}>
           <ExposureChart data={data?.exposureUtilization ?? []} loading={isLoading} />
         </Col>
-        <Col span={12}>
+        <Col span={7}>
           <LedgerImbalanceIndicator
             imbalanceAmount={data?.ledgerImbalanceAmount ?? 0}
             affectedAccounts={data?.ledgerAffectedAccounts ?? 0}

@@ -60,6 +60,81 @@ const AuditLogPage = lazy(() =>
     default: m.AuditLogPage,
   })),
 );
+const ExchangeListPage = lazy(() =>
+  import('@modules/master-setup/components/exchanges/ExchangeListPage').then((m) => ({
+    default: m.ExchangeListPage,
+  })),
+);
+const SegmentListPage = lazy(() =>
+  import('@modules/master-setup/components/segments/SegmentListPage').then((m) => ({
+    default: m.SegmentListPage,
+  })),
+);
+const InstrumentListPage = lazy(() =>
+  import('@modules/master-setup/components/instruments/InstrumentListPage').then((m) => ({
+    default: m.InstrumentListPage,
+  })),
+);
+const BranchListPage = lazy(() =>
+  import('@modules/master-setup/components/branches/BranchListPage').then((m) => ({
+    default: m.BranchListPage,
+  })),
+);
+const ExchangeSegmentListPage = lazy(() =>
+  import('@modules/master-setup/components/exchange-segments/ExchangeSegmentListPage').then(
+    (m) => ({ default: m.ExchangeSegmentListPage }),
+  ),
+);
+const StateListPage = lazy(() =>
+  import('@modules/master-setup/components/states/StateListPage').then((m) => ({
+    default: m.StateListPage,
+  })),
+);
+const ClientOnboardingPage = lazy(() =>
+  import('@modules/client-onboarding/components/ClientOnboardingPage').then((m) => ({
+    default: m.ClientOnboardingPage,
+  })),
+);
+const BankListPage = lazy(() =>
+  import('@modules/master-setup/components/banks/BankListPage').then((m) => ({
+    default: m.BankListPage,
+  })),
+);
+const BankMappingListPage = lazy(() =>
+  import('@modules/master-setup/components/banks/BankMappingListPage').then((m) => ({
+    default: m.BankMappingListPage,
+  })),
+);
+const NsdlDpListPage = lazy(() =>
+  import('@modules/master-setup/components/dp-masters/NsdlDpListPage').then((m) => ({
+    default: m.NsdlDpListPage,
+  })),
+);
+const CdslDpListPage = lazy(() =>
+  import('@modules/master-setup/components/dp-masters/CdslDpListPage').then((m) => ({
+    default: m.CdslDpListPage,
+  })),
+);
+const PinCodeListPage = lazy(() =>
+  import('@modules/master-setup/components/pincodes/PinCodeListPage').then((m) => ({
+    default: m.PinCodeListPage,
+  })),
+);
+const CmImportPage = lazy(() =>
+  import('@modules/post-trade/components/CmImportPage').then((m) => ({
+    default: m.CmImportPage,
+  })),
+);
+const FoImportPage = lazy(() =>
+  import('@modules/post-trade/components/FoImportPage').then((m) => ({
+    default: m.FoImportPage,
+  })),
+);
+const FoFinanceLedgerPage = lazy(() =>
+  import('@modules/finance/components/fo-ledger/FoFinanceLedgerPage').then((m) => ({
+    default: m.FoFinanceLedgerPage,
+  })),
+);
 
 const ALL_ROLES = Object.values(Role);
 const FINANCE_ROLES = [Role.FinanceController, Role.TenantOwner, Role.PlatformSuperAdmin];
@@ -118,6 +193,20 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <ClientListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'onboarding',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ClientOnboardingPage />
                       </Lazy>
                     ),
                   },
@@ -204,6 +293,20 @@ const router = createBrowserRouter([
                 ],
               },
               {
+                path: 'fo-ledger',
+                element: <ProtectedRoute requiredRoles={[...FINANCE_ROLES, ...OPS_ROLES]} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <FoFinanceLedgerPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
                 path: 'charges',
                 element: <ProtectedRoute requiredRoles={FINANCE_ROLES} />,
                 children: [
@@ -230,6 +333,198 @@ const router = createBrowserRouter([
                     <ReconDashboardPage />
                   </Lazy>
                 ),
+              },
+            ],
+          },
+          {
+            path: 'master',
+            children: [
+              {
+                path: 'exchanges',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ExchangeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'segments',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <SegmentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'instruments',
+                element: <ProtectedRoute requiredRoles={ALL_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <InstrumentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'branches',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BranchListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'exchange-segments',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <ExchangeSegmentListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'states',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <StateListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'banks',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BankListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'bank-mappings',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <BankMappingListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'nsdl-dp',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <NsdlDpListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'cdsl-dp',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <CdslDpListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'pin-codes',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <PinCodeListPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            path: 'post-trade',
+            children: [
+              {
+                path: 'cm/import',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <CmImportPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'fo/import',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <FoImportPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
               },
             ],
           },

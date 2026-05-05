@@ -55,6 +55,24 @@ export enum ChargeType {
   ExchangeTxn = 'ExchangeTxn',
   SEBI = 'SEBI',
   StampDuty = 'StampDuty',
+  IPFT = 'IPFT',
+  DPCharge = 'DPCharge',
+  ClearingCharge = 'ClearingCharge',
+  Other = 'Other',
+}
+
+export enum TradeSegment {
+  All = 'All',
+  CM = 'CM',
+  FO = 'FO',
+  CDS = 'CDS',
+  COM = 'COM',
+}
+
+export enum ChargeApplicableTo {
+  Both = 'Both',
+  Buy = 'Buy',
+  Sell = 'Sell',
 }
 
 export enum CalculationType {
@@ -115,9 +133,56 @@ export enum EntityStatus {
   Deleted = 'Deleted',
 }
 
+export enum ClientStatus {
+  Registered = 'Registered',
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+  Closed = 'Closed',
+}
+
+export enum BrokerStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+}
+
+export enum BrokerEntityType {
+  Proprietorship = 'Proprietorship',
+  Partnership = 'Partnership',
+  LLP = 'LLP',
+  PrivateLimited = 'PrivateLimited',
+  PublicLimited = 'PublicLimited',
+  Other = 'Other',
+}
+
+export enum MembershipType {
+  TradingMember = 'TradingMember',
+  ClearingMember = 'ClearingMember',
+  SelfClearingMember = 'SelfClearingMember',
+  TradingAndClearing = 'TradingAndClearing',
+}
+
 export enum ClientType {
   Individual = 'Individual',
   Corporate = 'Corporate',
+}
+
+export enum KYCStatus {
+  Pending = 'Pending',
+  Verified = 'Verified',
+  Expired = 'Expired',
+}
+
+export enum RiskCategory {
+  Conservative = 'Conservative',
+  Moderate = 'Moderate',
+  Aggressive = 'Aggressive',
+}
+
+export enum Depository {
+  CDSL = 'CDSL',
+  NSDL = 'NSDL',
 }
 
 export enum InstrumentType {
@@ -126,4 +191,78 @@ export enum InstrumentType {
   Options = 'Options',
   Currency = 'Currency',
   Commodity = 'Commodity',
+}
+
+export enum InstrumentStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Expired = 'Expired',
+}
+
+export enum OptionType {
+  Call = 'Call',
+  Put = 'Put',
+}
+
+export enum SettlementType {
+  T1 = 'T1',
+  T2 = 'T2',
+  Intraday = 'Intraday',
+}
+
+export enum ActivationStatus {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Suspended = 'Suspended',
+}
+
+export enum MarginType {
+  Cash = 'Cash',
+  NonCash = 'NonCash',
+}
+
+// Capital Market File Import
+export enum CmFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Margin = 'Margin',
+  Obligation = 'Obligation',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+}
+
+export enum CmImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum CmTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FileWatcher = 'FileWatcher',
+  Scheduler = 'Scheduler',
+}
+
+// Futures & Options File Import
+export enum FoFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+  Position = 'Position',
+  ContractMaster = 'ContractMaster',
+}
+
+export enum FoImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum FoTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FolderWatch = 'FolderWatch',
+  Scheduler = 'Scheduler',
 }

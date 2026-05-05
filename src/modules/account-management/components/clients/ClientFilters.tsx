@@ -1,20 +1,20 @@
 import { Row, Col, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useDebounce } from '@shared/hooks/useDebounce';
-import { EntityStatus, ClientType } from '@app-types/enums';
+import { ClientStatus, ClientType } from '@app-types/enums';
 import { useState, useEffect } from 'react';
 
 interface ClientFiltersProps {
   onChange: (filters: {
     search?: string | undefined;
-    status?: EntityStatus | undefined;
+    status?: ClientStatus | undefined;
     type?: ClientType | undefined;
   }) => void;
 }
 
 export function ClientFilters({ onChange }: ClientFiltersProps) {
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<EntityStatus | undefined>(undefined);
+  const [status, setStatus] = useState<ClientStatus | undefined>(undefined);
   const [type, setType] = useState<ClientType | undefined>(undefined);
   const debouncedSearch = useDebounce(search, 400);
 
@@ -34,16 +34,18 @@ export function ClientFilters({ onChange }: ClientFiltersProps) {
         />
       </Col>
       <Col span={6}>
-        <Select<EntityStatus>
+        <Select<ClientStatus>
           placeholder="Status"
           style={{ width: '100%' }}
           allowClear
           value={status ?? null}
           onChange={setStatus}
           options={[
-            { label: 'Active', value: EntityStatus.Active },
-            { label: 'Inactive', value: EntityStatus.Inactive },
-            { label: 'Deleted', value: EntityStatus.Deleted },
+            { label: 'Registered', value: ClientStatus.Registered },
+            { label: 'Active', value: ClientStatus.Active },
+            { label: 'Inactive', value: ClientStatus.Inactive },
+            { label: 'Suspended', value: ClientStatus.Suspended },
+            { label: 'Closed', value: ClientStatus.Closed },
           ]}
         />
       </Col>
