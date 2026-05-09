@@ -13,7 +13,8 @@ export interface ClientSummary {
   tenantId: string;
   brokerId: string;
   branchId: string | null;
-  clientCode: string;
+  registrationNumber: string;
+  clientCode: string | null;       // null until ops assigns it
   clientName: string;
   email: string;
   phone: string;
@@ -121,4 +122,8 @@ export async function changeClientStatus(id: string, status: ClientStatus): Prom
 
 export async function deleteClient(id: string): Promise<void> {
   await axiosInstance.delete(`/api/clients/${id}`);
+}
+
+export async function assignClientCode(id: string, clientCode: string): Promise<void> {
+  await axiosInstance.patch(`/api/clients/${id}/assign-code`, { clientCode });
 }

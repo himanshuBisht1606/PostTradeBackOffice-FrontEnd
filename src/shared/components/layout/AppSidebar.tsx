@@ -11,6 +11,10 @@ import {
   SettingOutlined,
   UserAddOutlined,
   ImportOutlined,
+  ApartmentOutlined,
+  DatabaseOutlined,
+  SafetyCertificateOutlined,
+  FundOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUiStore } from '@store/uiStore';
@@ -26,9 +30,11 @@ function makeItem(
   key: string,
   icon?: React.ReactNode,
   children?: MenuItem[],
+  type?: 'group',
 ): MenuItem {
-  return { key, icon, children, label } as MenuItem;
+  return { key, icon, children, label, type } as MenuItem;
 }
+
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -38,6 +44,35 @@ export function AppSidebar() {
 
   const isAuditorOnly = roles.includes(Role.Auditor) && roles.length === 1;
   const isPartnerOnly = roles.includes(Role.Partner) && roles.length === 1;
+
+  const masterSetupChildren: MenuItem[] = [
+    // ── Exchange & Segments ───────────────────────────────────────────────────
+    makeItem('Exchange & Segments', 'master-exchange-group', <ApartmentOutlined />, [
+      makeItem('Exchanges', '/master/exchanges'),
+      makeItem('Segments', '/master/segments'),
+      makeItem('Exchange Segments', '/master/exchange-segments'),
+    ]),
+
+    // ── Instruments ───────────────────────────────────────────────────────────
+    makeItem('Instruments', '/master/instruments', <FundOutlined />),
+
+    // ── Branches ─────────────────────────────────────────────────────────────
+    makeItem('Branches', '/master/branches'),
+
+    // ── Reference Data ────────────────────────────────────────────────────────
+    makeItem('Reference Data', 'master-ref-group', <DatabaseOutlined />, [
+      makeItem('States', '/master/states'),
+      makeItem('Pin Codes', '/master/pin-codes'),
+      makeItem('Banks', '/master/banks'),
+      makeItem('Bank Mappings', '/master/bank-mappings'),
+    ]),
+
+    // ── Depository Masters ────────────────────────────────────────────────────
+    makeItem('Depository', 'master-dp-group', <SafetyCertificateOutlined />, [
+      makeItem('NSDL DP Master', '/master/nsdl-dp'),
+      makeItem('CDSL DP Master', '/master/cdsl-dp'),
+    ]),
+  ];
 
   const items: MenuItem[] = [
     makeItem('Dashboard', '/dashboard', <DashboardOutlined />),
@@ -64,31 +99,19 @@ export function AppSidebar() {
             makeItem('Obligations', '/clearing/settlement/obligations'),
           ]),
 
-          makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
+          makeItem('Finance', 'finance', <BankOutlined />, [
+            makeItem('Ledger', '/finance/ledger'),
+            makeItem('FO Finance Ledger', '/finance/fo-ledger'),
+          ]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
 
-          makeItem('Post Trade', 'post-trade', <ImportOutlined />, [
-            makeItem('FO Import', '/post-trade/fo/import'),
+          makeItem('Post-Trade', 'post-trade', <ImportOutlined />, [
+            makeItem('CM File Import', '/post-trade/cm/import'),
+            makeItem('FO File Import', '/post-trade/fo/import'),
           ]),
-        ]
-      : []),
 
-    ...(!isAuditorOnly && !isPartnerOnly
-      ? [
-          makeItem('Master Setup', 'master', <SettingOutlined />, [
-            makeItem('Exchanges', '/master/exchanges'),
-            makeItem('Segments', '/master/segments'),
-            makeItem('Instruments', '/master/instruments'),
-            makeItem('Branches', '/master/branches'),
-            makeItem('Exchange Segments', '/master/exchange-segments'),
-            makeItem('States', '/master/states'),
-            makeItem('Banks', '/master/banks'),
-            makeItem('Bank Mappings', '/master/bank-mappings'),
-            makeItem('NSDL DP Master', '/master/nsdl-dp'),
-            makeItem('CDSL DP Master', '/master/cdsl-dp'),
-            makeItem('Pin Codes', '/master/pin-codes'),
-          ]),
+          makeItem('Master Setup', 'master', <SettingOutlined />, masterSetupChildren),
         ]
       : []),
 
@@ -99,10 +122,30 @@ export function AppSidebar() {
   ];
 
   const selectedKeys = [location.pathname];
-  const openKeys = items
-    .filter((item) => item && 'children' in item && item.children)
-    .map((item) => item?.key as string)
-    .filter((key) => location.pathname.startsWith('/' + key.replace('/', '')));
+
+  // Build open keys from current path — walk nested items
+  const allParentKeys: string[] = [];
+  const collectParents = (menuItems: MenuItem[], path: string) => {
+    for (const item of menuItems) {
+      if (!item) continue;
+      const i = item as { key: string; children?: MenuItem[] };
+      if (i.children) {
+        const childHit = i.children.some((c) => {
+          const ci = c as { key: string; children?: MenuItem[] };
+          if (ci.key === path) return true;
+          if (ci.children) {
+            const subHit = ci.children.some((sc) => (sc as { key: string }).key === path);
+            if (subHit) allParentKeys.push(ci.key);
+            return subHit;
+          }
+          return false;
+        });
+        if (childHit) allParentKeys.push(i.key);
+        collectParents(i.children, path);
+      }
+    }
+  };
+  collectParents(items, location.pathname);
 
   return (
     <Sider
@@ -138,7 +181,7 @@ export function AppSidebar() {
       <Menu
         mode="inline"
         selectedKeys={selectedKeys}
-        defaultOpenKeys={openKeys}
+        defaultOpenKeys={['master', 'account-management', ...allParentKeys]}
         items={items}
         style={{ border: 'none', paddingTop: 8 }}
         onClick={({ key }) => {

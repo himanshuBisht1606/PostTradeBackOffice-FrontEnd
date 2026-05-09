@@ -1,4 +1,5 @@
 import type { TableColumnsType } from 'antd';
+import { Tag } from 'antd';
 import { DataTable } from '@shared/components/data-display/DataTable';
 import { StatusBadge } from '@shared/components/data-display/StatusBadge';
 import { truncateId } from '@utils/formatters';
@@ -25,10 +26,19 @@ export function ClientTable({
 }: ClientTableProps) {
   const columns: TableColumnsType<ClientSummary> = [
     {
+      title: 'Reg. No.',
+      dataIndex: 'registrationNumber',
+      width: 110,
+      render: (v: string) => <span style={{ fontFamily: 'monospace', fontSize: 12 }}>{v}</span>,
+    },
+    {
       title: 'Client Code',
       dataIndex: 'clientCode',
-      width: 130,
-      render: (v: string) => <span style={{ fontFamily: 'monospace' }}>{v}</span>,
+      width: 120,
+      render: (v: string | null) =>
+        v
+          ? <span style={{ fontFamily: 'monospace' }}>{v}</span>
+          : <Tag color="default" style={{ fontSize: 11 }}>Not Assigned</Tag>,
     },
     { title: 'Name', dataIndex: 'clientName', ellipsis: true },
     { title: 'Type', dataIndex: 'clientType', width: 120 },

@@ -26,7 +26,7 @@ export function ClientListPage() {
     if (!allData) return [];
     return allData.filter((c) => {
       const q = filters.search?.toLowerCase();
-      if (q && !c.clientName.toLowerCase().includes(q) && !c.clientCode.toLowerCase().includes(q))
+      if (q && !c.clientName.toLowerCase().includes(q) && !(c.clientCode ?? '').toLowerCase().includes(q) && !c.registrationNumber.toLowerCase().includes(q))
         return false;
       if (filters.status && c.status !== filters.status) return false;
       if (filters.type && c.clientType !== filters.type) return false;

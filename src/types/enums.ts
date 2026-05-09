@@ -55,6 +55,24 @@ export enum ChargeType {
   ExchangeTxn = 'ExchangeTxn',
   SEBI = 'SEBI',
   StampDuty = 'StampDuty',
+  IPFT = 'IPFT',
+  DPCharge = 'DPCharge',
+  ClearingCharge = 'ClearingCharge',
+  Other = 'Other',
+}
+
+export enum TradeSegment {
+  All = 'All',
+  CM = 'CM',
+  FO = 'FO',
+  CDS = 'CDS',
+  COM = 'COM',
+}
+
+export enum ChargeApplicableTo {
+  Both = 'Both',
+  Buy = 'Buy',
+  Sell = 'Sell',
 }
 
 export enum CalculationType {
@@ -129,6 +147,22 @@ export enum BrokerStatus {
   Suspended = 'Suspended',
 }
 
+export enum BrokerEntityType {
+  Proprietorship = 'Proprietorship',
+  Partnership = 'Partnership',
+  LLP = 'LLP',
+  PrivateLimited = 'PrivateLimited',
+  PublicLimited = 'PublicLimited',
+  Other = 'Other',
+}
+
+export enum MembershipType {
+  TradingMember = 'TradingMember',
+  ClearingMember = 'ClearingMember',
+  SelfClearingMember = 'SelfClearingMember',
+  TradingAndClearing = 'TradingAndClearing',
+}
+
 export enum ClientType {
   Individual = 'Individual',
   Corporate = 'Corporate',
@@ -185,4 +219,50 @@ export enum ActivationStatus {
 export enum MarginType {
   Cash = 'Cash',
   NonCash = 'NonCash',
+}
+
+// Capital Market File Import
+export enum CmFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Margin = 'Margin',
+  Obligation = 'Obligation',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+}
+
+export enum CmImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum CmTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FileWatcher = 'FileWatcher',
+  Scheduler = 'Scheduler',
+}
+
+// Futures & Options File Import
+export enum FoFileType {
+  Trade = 'Trade',
+  BhavCopy = 'BhavCopy',
+  Stt = 'Stt',
+  StampDuty = 'StampDuty',
+  Position = 'Position',
+  ContractMaster = 'ContractMaster',
+}
+
+export enum FoImportStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Completed = 'Completed',
+  Failed = 'Failed',
+}
+
+export enum FoTriggerSource {
+  ManualUpload = 'ManualUpload',
+  FolderWatch = 'FolderWatch',
+  Scheduler = 'Scheduler',
 }

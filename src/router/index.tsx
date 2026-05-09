@@ -120,9 +120,19 @@ const PinCodeListPage = lazy(() =>
     default: m.PinCodeListPage,
   })),
 );
+const CmImportPage = lazy(() =>
+  import('@modules/post-trade/components/CmImportPage').then((m) => ({
+    default: m.CmImportPage,
+  })),
+);
 const FoImportPage = lazy(() =>
   import('@modules/post-trade/components/FoImportPage').then((m) => ({
     default: m.FoImportPage,
+  })),
+);
+const FoFinanceLedgerPage = lazy(() =>
+  import('@modules/finance/components/fo-ledger/FoFinanceLedgerPage').then((m) => ({
+    default: m.FoFinanceLedgerPage,
   })),
 );
 
@@ -277,6 +287,20 @@ const router = createBrowserRouter([
                     element: (
                       <Lazy>
                         <LedgerPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
+              {
+                path: 'fo-ledger',
+                element: <ProtectedRoute requiredRoles={[...FINANCE_ROLES, ...OPS_ROLES]} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <FoFinanceLedgerPage />
                       </Lazy>
                     ),
                   },
@@ -474,6 +498,20 @@ const router = createBrowserRouter([
           {
             path: 'post-trade',
             children: [
+              {
+                path: 'cm/import',
+                element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <Lazy>
+                        <CmImportPage />
+                      </Lazy>
+                    ),
+                  },
+                ],
+              },
               {
                 path: 'fo/import',
                 element: <ProtectedRoute requiredRoles={OPS_ROLES} />,
