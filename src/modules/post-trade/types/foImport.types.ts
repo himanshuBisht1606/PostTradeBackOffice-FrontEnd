@@ -27,20 +27,6 @@ export interface FoImportBatchLog {
   rawData: string | null;
 }
 
-export interface FoImportBatchLogSummary {
-  level: string;
-  message: string;
-  count: number;
-}
-
-export interface FoImportBatchLogsPagedResponse {
-  summary: FoImportBatchLogSummary[];
-  items: FoImportBatchLog[];
-  totalCount: number;
-  page: number;
-  pageSize: number;
-}
-
 export interface FoContractMaster {
   contractRowId: string;
   tradingDate: string;

@@ -1,6 +1,5 @@
 import axiosInstance from '@core/api/axiosInstance';
 import type { ApiResponse } from '@core/types/api.types';
-import type { FoImportBatchLogsPagedResponse } from '../types/foImport.types';
 
 export type FoFileType = 'ContractMaster' | 'Trade' | 'BhavCopy' | 'Stt' | 'StampDuty' | 'Position';
 export type FoImportStatus = 'Processing' | 'Completed' | 'Failed';
@@ -59,18 +58,6 @@ export const importFoStampDuty = (file: File, tradingDate: string, exchange: str
 
 export const importFoPosition = (file: File, tradingDate: string, exchange: string) =>
   uploadFile('/api/post-trade/fo/import/position', file, tradingDate, exchange);
-
-export async function getFoImportBatchLogs(
-  batchId: string,
-  page = 1,
-  pageSize = 50,
-): Promise<FoImportBatchLogsPagedResponse> {
-  const res = await axiosInstance.get<ApiResponse<FoImportBatchLogsPagedResponse>>(
-    `/api/post-trade/fo/import/batches/${batchId}/logs`,
-    { params: { page, pageSize } },
-  );
-  return res.data.data!;
-}
 
 export async function getFoImportBatches(params: {
   fileType?: FoFileType;
