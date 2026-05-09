@@ -4,7 +4,7 @@ import type { TableColumnsType } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { SlideDrawer } from '@shared/components/data-display/SlideDrawer';
 import { getFoImportBatchLogs } from '../services/foImportService';
-import type { FoImportBatchLog } from '../types/foImport.types';
+import type { FoImportBatchLog, FoImportBatchLogSummary } from '../types/foImport.types';
 
 const { Text, Title } = Typography;
 
@@ -78,7 +78,7 @@ export function FoBatchLogsDrawer({ batchId, batchLabel, onClose }: Props) {
           <div style={{ marginBottom: 16 }}>
             <Text strong style={{ display: 'block', marginBottom: 6 }}>Summary ({data.summary.length} distinct messages)</Text>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 180, overflowY: 'auto' }}>
-              {data.summary.map((s, i) => (
+              {data.summary.map((s: FoImportBatchLogSummary, i: number) => (
                 <Space key={i} size={8} wrap>
                   <Tag color={levelColor[s.level] ?? 'default'} style={{ margin: 0 }}>{s.level}</Tag>
                   <Badge count={s.count} color={s.level === 'Error' ? 'red' : 'orange'} overflowCount={999999} />
