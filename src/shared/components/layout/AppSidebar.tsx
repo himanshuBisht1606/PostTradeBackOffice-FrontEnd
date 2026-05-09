@@ -10,6 +10,7 @@ import {
   SafetyOutlined,
   SettingOutlined,
   UserAddOutlined,
+  ImportOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUiStore } from '@store/uiStore';
@@ -66,6 +67,10 @@ export function AppSidebar() {
           makeItem('Finance', 'finance', <BankOutlined />, [makeItem('Ledger', '/finance/ledger')]),
 
           makeItem('Reconciliation', '/reconciliation', <BarChartOutlined />),
+
+          makeItem('Post Trade', 'post-trade', <ImportOutlined />, [
+            makeItem('FO Import', '/post-trade/fo/import'),
+          ]),
         ]
       : []),
 
