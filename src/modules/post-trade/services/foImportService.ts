@@ -39,7 +39,8 @@ async function uploadFile(
     headers: { 'Content-Type': 'multipart/form-data' },
     timeout: 120_000, // 2 min — large files can take time to transfer
   });
-  return res.data.data!;
+  if (res.data.data === null) throw new Error('Upload succeeded but server returned no data');
+  return res.data.data;
 }
 
 export const importFoContractMaster = (file: File, tradingDate: string, exchange: string) =>
@@ -69,7 +70,8 @@ export async function getFoImportBatchLogs(
     `/api/post-trade/fo/import/batches/${batchId}/logs`,
     { params: { page, pageSize } },
   );
-  return res.data.data!;
+  if (res.data.data === null) throw new Error('No log data returned for batch');
+  return res.data.data;
 }
 
 export async function getFoImportBatches(params: {

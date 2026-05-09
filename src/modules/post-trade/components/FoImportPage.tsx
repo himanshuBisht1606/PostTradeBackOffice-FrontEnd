@@ -82,7 +82,7 @@ function ImportPanel({ fileType, label, accept = '.csv,.zip,.dat', importFn }: I
         if (!latest) return;
         setState((prev) => ({ ...prev, batch: latest }));
         if (latest.status === 'Completed' || latest.status === 'Failed') {
-          clearInterval(pollRef.current!);
+          if (pollRef.current) clearInterval(pollRef.current);
           pollRef.current = null;
           if (latest.status === 'Completed') {
             notification.success({
